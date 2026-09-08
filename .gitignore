@@ -1,0 +1,12 @@
+# Build outputs
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.idea/
+.vscode/
+
+# Scratch & temp files
+scratch/
+tmp/

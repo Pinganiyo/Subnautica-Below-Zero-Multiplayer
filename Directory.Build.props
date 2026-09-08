@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Deterministic>true</Deterministic>
+    <!-- Game Managed Path -->
+    <GameManagedPath Condition="'$(GameManagedPath)' == '' and '$(SUBNAUTICA_DIR)' != ''">$(SUBNAUTICA_DIR)/SubnauticaZero_Data/Managed</GameManagedPath>
+    <GameManagedPath Condition="'$(GameManagedPath)' == '' and Exists('/home/rko735/.steam/debian-installation/steamapps/common/SubnauticaZero/SubnauticaZero_Data/Managed')">/home/rko735/.steam/debian-installation/steamapps/common/SubnauticaZero/SubnauticaZero_Data/Managed</GameManagedPath>
+    <GameManagedPath Condition="'$(GameManagedPath)' == '' and Exists('$(HOME)/.steam/steam/steamapps/common/SubnauticaZero/SubnauticaZero_Data/Managed')">$(HOME)/.steam/steam/steamapps/common/SubnauticaZero/SubnauticaZero_Data/Managed</GameManagedPath>
+    <GameManagedPath Condition="'$(GameManagedPath)' == ''">../../SubnauticaZero_Data/Managed</GameManagedPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Enables building net472 with standard .NET SDK on Linux/macOS/Windows -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
+  </ItemGroup>
+</Project>
