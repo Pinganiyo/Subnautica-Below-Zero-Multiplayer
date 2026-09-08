@@ -19,49 +19,55 @@ namespace Subnautica.Client.MonoBehaviours.Player
             switch (playerId)
             {
                 case 2:
-                    // Player 2: Arctic White / Silver suit with brilliant specular sheen
-                    tintColor = new Color(2.4f, 2.4f, 2.5f, 1.0f);
-                    specColor = new Color(1.8f, 1.8f, 1.8f, 1.0f);
-                    return true;
-
-                case 3:
-                    // Player 3: Ocean Cyan
+                    // Player 2: Ocean Cyan
                     tintColor = new Color(0.2f, 2.0f, 2.5f, 1.0f);
                     specColor = new Color(0.3f, 1.5f, 2.0f, 1.0f);
                     return true;
 
-                case 4:
-                    // Player 4: Solar Orange
+                case 3:
+                    // Player 3: Solar Orange
                     tintColor = new Color(2.5f, 1.2f, 0.2f, 1.0f);
                     specColor = new Color(2.0f, 1.0f, 0.3f, 1.0f);
                     return true;
 
-                case 5:
-                    // Player 5: Electric Purple
+                case 4:
+                    // Player 4: Electric Purple
                     tintColor = new Color(2.0f, 0.4f, 2.4f, 1.0f);
                     specColor = new Color(1.5f, 0.5f, 2.0f, 1.0f);
                     return true;
 
-                case 6:
-                    // Player 6: Acid Lime
+                case 5:
+                    // Player 5: Acid Lime
                     tintColor = new Color(0.3f, 2.4f, 0.6f, 1.0f);
                     specColor = new Color(0.4f, 2.0f, 0.6f, 1.0f);
                     return true;
 
-                case 7:
-                    // Player 7: Crimson Red
+                case 6:
+                    // Player 6: Crimson Red
                     tintColor = new Color(2.5f, 0.3f, 0.3f, 1.0f);
                     specColor = new Color(2.0f, 0.4f, 0.4f, 1.0f);
                     return true;
 
-                case 8:
-                    // Player 8: Bright Yellow
+                case 7:
+                    // Player 7: Bright Yellow
                     tintColor = new Color(2.4f, 2.2f, 0.2f, 1.0f);
                     specColor = new Color(2.0f, 1.8f, 0.3f, 1.0f);
                     return true;
 
+                case 8:
+                    // Player 8: Arctic White / Silver suit with brilliant specular sheen
+                    tintColor = new Color(2.4f, 2.4f, 2.5f, 1.0f);
+                    specColor = new Color(1.8f, 1.8f, 1.8f, 1.0f);
+                    return true;
+
+                case 1:
+                    // (Host Test Color): Solar Orange
+                    tintColor = new Color(2.5f, 1.2f, 0.2f, 1.0f);
+                    specColor = new Color(2.0f, 1.0f, 0.3f, 1.0f);
+                    return true;
+
                 default:
-                    // Player 1 (Host) and unassigned players remain default
+                    // Unassigned players remain default
                     tintColor = Color.white;
                     specColor = Color.white;
                     return false;
@@ -233,14 +239,14 @@ namespace Subnautica.Client.MonoBehaviours.Player
         {
             if (Time.time > this.nextCheckTime)
             {
-                this.nextCheckTime = Time.time + 3.0f;
+                this.nextCheckTime = Time.time + 1.0f;
                 this.ApplyTint();
             }
         }
 
         public void ApplyTint()
         {
-            if (Network.IsMultiplayerActive && ZeroPlayer.CurrentPlayer != null && ZeroPlayer.CurrentPlayer.PlayerId > 1)
+            if (Network.IsMultiplayerActive && ZeroPlayer.CurrentPlayer != null && ZeroPlayer.CurrentPlayer.PlayerId > 0)
             {
                 PlayerSuitCustomizer.ApplySuitTint(this.gameObject, ZeroPlayer.CurrentPlayer.PlayerId);
             }
