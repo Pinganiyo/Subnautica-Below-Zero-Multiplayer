@@ -54,6 +54,7 @@ namespace Subnautica.Client.Synchronizations.InitialSync
             if (global::Player.main != null)
             {
                 global::Player.main.gameObject.EnsureComponent<Subnautica.Client.MonoBehaviours.Player.LocalPlayerSuitTint>();
+                global::Player.main.gameObject.EnsureComponent<Subnautica.Client.MonoBehaviours.Player.ThirdPersonCamera>();
                 if (ZeroPlayer.CurrentPlayer != null && ZeroPlayer.CurrentPlayer.PlayerId > 0)
                 {
                     Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.ApplySuitTint(global::Player.main.gameObject, ZeroPlayer.CurrentPlayer.PlayerId);

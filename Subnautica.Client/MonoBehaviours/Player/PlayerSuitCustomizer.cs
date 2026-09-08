@@ -8,10 +8,6 @@ namespace Subnautica.Client.MonoBehaviours.Player
     {
         /**
          * Suit color definition per player ID.
-         * Player 1 is default Robin suit (unmodified).
-         * Player 2 is Arctic White / Silver suit.
-         * Player 3 is Ocean Cyan suit.
-         * Player 4 is Solar Orange suit.
          * Other players have distinct identifiable colors.
          */
         public static bool TryGetSuitColor(byte playerId, out Color tintColor, out Color specColor)
@@ -21,49 +17,49 @@ namespace Subnautica.Client.MonoBehaviours.Player
                 case 2:
                     // Player 2: Ocean Cyan
                     tintColor = new Color(0.2f, 2.0f, 2.5f, 1.0f);
-                    specColor = new Color(0.3f, 1.5f, 2.0f, 1.0f);
+                    specColor = new Color(0.15f, 0.8f, 1.1f, 1.0f);
                     return true;
 
                 case 3:
                     // Player 3: Solar Orange
                     tintColor = new Color(2.5f, 1.2f, 0.2f, 1.0f);
-                    specColor = new Color(2.0f, 1.0f, 0.3f, 1.0f);
+                    specColor = new Color(1.1f, 0.55f, 0.15f, 1.0f);
                     return true;
 
                 case 4:
                     // Player 4: Electric Purple
                     tintColor = new Color(2.0f, 0.4f, 2.4f, 1.0f);
-                    specColor = new Color(1.5f, 0.5f, 2.0f, 1.0f);
+                    specColor = new Color(0.8f, 0.25f, 1.1f, 1.0f);
                     return true;
 
                 case 5:
                     // Player 5: Acid Lime
                     tintColor = new Color(0.3f, 2.4f, 0.6f, 1.0f);
-                    specColor = new Color(0.4f, 2.0f, 0.6f, 1.0f);
+                    specColor = new Color(0.2f, 1.1f, 0.3f, 1.0f);
                     return true;
 
                 case 6:
                     // Player 6: Crimson Red
                     tintColor = new Color(2.5f, 0.3f, 0.3f, 1.0f);
-                    specColor = new Color(2.0f, 0.4f, 0.4f, 1.0f);
+                    specColor = new Color(1.1f, 0.2f, 0.2f, 1.0f);
                     return true;
 
                 case 7:
                     // Player 7: Bright Yellow
                     tintColor = new Color(2.4f, 2.2f, 0.2f, 1.0f);
-                    specColor = new Color(2.0f, 1.8f, 0.3f, 1.0f);
+                    specColor = new Color(1.1f, 1.0f, 0.15f, 1.0f);
                     return true;
 
                 case 8:
-                    // Player 8: Arctic White / Silver suit with brilliant specular sheen
+                    // Player 8: Arctic White / Silver
                     tintColor = new Color(2.4f, 2.4f, 2.5f, 1.0f);
-                    specColor = new Color(1.8f, 1.8f, 1.8f, 1.0f);
+                    specColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
                     return true;
 
                 case 1:
                     // (Host Test Color): Solar Orange
                     tintColor = new Color(2.5f, 1.2f, 0.2f, 1.0f);
-                    specColor = new Color(2.0f, 1.0f, 0.3f, 1.0f);
+                    specColor = new Color(1.1f, 0.55f, 0.15f, 1.0f);
                     return true;
 
                 default:
