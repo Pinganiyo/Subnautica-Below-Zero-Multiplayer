@@ -1,4 +1,4 @@
-﻿namespace Subnautica.API.Features
+namespace Subnautica.API.Features
 {
     using System.Collections.Generic;
     using System.Text;
@@ -210,7 +210,8 @@
          */
         public static string GetWatermarkText()
         {
-            return string.Format("<size=18>Beta {0} (by BOT Benson)</size>", Tools.GetLauncherVersion(true));
+            var name = Tools.GetLoggedInName();
+            return string.Format("<size=18>{0}</size>", string.IsNullOrEmpty(name) ? "Player" : name);
         }
 
         /**
