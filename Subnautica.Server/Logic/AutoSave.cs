@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Logic
+namespace Subnautica.Server.Logic
 {
     using System.Diagnostics;
 
@@ -43,14 +43,19 @@
          */
         public void SaveAll()
         {
-            Server.Instance.Storages.Encyclopedia.SaveToDisk();
-            Server.Instance.Storages.Construction.SaveToDisk();
-            Server.Instance.Storages.PictureFrame.SaveToDisk();
-            Server.Instance.Storages.Technology.SaveToDisk();
-            Server.Instance.Storages.Scanner.SaveToDisk();
-            Server.Instance.Storages.Player.SaveToDisk();
-            Server.Instance.Storages.World.SaveToDisk();
-            Server.Instance.Storages.Story.SaveToDisk();
+            if (Server.Instance?.Storages == null)
+            {
+                return;
+            }
+
+            Server.Instance.Storages.Encyclopedia?.SaveToDisk();
+            Server.Instance.Storages.Construction?.SaveToDisk();
+            Server.Instance.Storages.PictureFrame?.SaveToDisk();
+            Server.Instance.Storages.Technology?.SaveToDisk();
+            Server.Instance.Storages.Scanner?.SaveToDisk();
+            Server.Instance.Storages.Player?.SaveToDisk();
+            Server.Instance.Storages.World?.SaveToDisk();
+            Server.Instance.Storages.Story?.SaveToDisk();
         }
     }
 }

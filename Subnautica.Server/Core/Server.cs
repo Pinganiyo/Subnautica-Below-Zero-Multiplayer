@@ -415,7 +415,13 @@ namespace Subnautica.Server.Core
          */
         public static bool DisconnectToClient(AuthorizationProfile authorization)
         {
-            return DisconnectToClient(authorization.IpPortAddress);
+            if (authorization?.NetPeer != null)
+            {
+                authorization.NetPeer.Disconnect();
+                return true;
+            }
+
+            return DisconnectToClient(authorization?.IpPortAddress);
         }
 
         /**
@@ -431,7 +437,7 @@ namespace Subnautica.Server.Core
             {
                 foreach (var peer in Server.Instance.NetworkServer.ConnectedPeerList)
                 {
-                    if (peer.ToString() == ipPort)
+                    if (peer.EndPoint.ToString() == ipPort)
                     {
                         peer.Disconnect();
                         return true;
