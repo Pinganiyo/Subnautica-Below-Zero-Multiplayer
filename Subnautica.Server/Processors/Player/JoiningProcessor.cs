@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Processors.Player
+namespace Subnautica.Server.Processors.Player
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -34,23 +34,12 @@
 
             if (packet.UserName.IsNull())
             {
-                Log.Info("EMPTY_NAME_ERROR");
-                Server.DisconnectToClient(profile);
-                return false;
-            }
-
-            if (!this.IsActive(packet.UserName))
-            {
-                Log.Info("NETWORK_IS_DOWN");
-                Server.DisconnectToClient(profile);
-                return false;
+                packet.UserName = "Player";
             }
 
             if (packet.UserId.IsNull())
             {
-                Log.Info("EMPTY_USER_ERROR");
-                Server.DisconnectToClient(profile);
-                return false;
+                packet.UserId = packet.UserName;
             }
 
             packet.UserName = packet.UserName.Trim();
@@ -186,10 +175,7 @@
          */
         private bool IsActive(string key)
         {
-            var key1 = new byte[] { 85, 110, 105, 116, 121, 80, 108, 97, 121, 101, 114 };
-            var key2 = new byte[] { 85, 110, 105, 116, 121, 69, 100, 105, 116, 111, 114, 80, 108, 97, 121, 101, 114 };
-
-            return !Encoding.ASCII.GetBytes(key).SequenceEqual(key1) && !Encoding.ASCII.GetBytes(key).SequenceEqual(key2);
+            return true;
         }
     }
 }
