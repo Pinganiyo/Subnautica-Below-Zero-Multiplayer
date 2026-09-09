@@ -64,15 +64,15 @@ namespace Subnautica.Client.MonoBehaviours.Player
         public static readonly HairColorOption[] HairPalette = new HairColorOption[]
         {
             new HairColorOption(1, "Default (Original)", Color.white, Color.white),
-            new HairColorOption(2, "Golden Blonde",      new Color(1.65f, 1.35f, 0.65f, 1.0f), new Color(0.5f, 0.4f, 0.2f, 1.0f)),
-            new HairColorOption(3, "Auburn Copper",      new Color(1.7f, 0.7f, 0.25f, 1.0f),   new Color(0.5f, 0.25f, 0.1f, 1.0f)),
-            new HairColorOption(4, "Raven Black",        new Color(0.15f, 0.15f, 0.18f, 1.0f), new Color(0.2f, 0.2f, 0.25f, 1.0f)),
-            new HairColorOption(5, "Platinum Silver",    new Color(1.6f, 1.65f, 1.75f, 1.0f),  new Color(0.6f, 0.65f, 0.75f, 1.0f)),
-            new HairColorOption(6, "Cyber Cyan",         new Color(0.2f, 1.4f, 1.7f, 1.0f),    new Color(0.15f, 0.5f, 0.7f, 1.0f)),
-            new HairColorOption(7, "Crimson Ruby",       new Color(1.7f, 0.2f, 0.25f, 1.0f),   new Color(0.5f, 0.15f, 0.18f, 1.0f)),
-            new HairColorOption(8, "Amethyst Purple",    new Color(1.35f, 0.3f, 1.55f, 1.0f),  new Color(0.45f, 0.15f, 0.55f, 1.0f)),
-            new HairColorOption(9, "Emerald Green",      new Color(0.35f, 1.5f, 0.45f, 1.0f),  new Color(0.15f, 0.5f, 0.2f, 1.0f)),
-            new HairColorOption(10, "Hot Pink",          new Color(1.75f, 0.3f, 1.15f, 1.0f),  new Color(0.55f, 0.15f, 0.4f, 1.0f)),
+            new HairColorOption(2, "Golden Blonde",      new Color(3.5f, 2.7f, 0.6f, 1.0f),  new Color(1.0f, 0.85f, 0.3f, 1.0f)),
+            new HairColorOption(3, "Auburn Copper",      new Color(3.4f, 1.2f, 0.2f, 1.0f),  new Color(1.0f, 0.45f, 0.15f, 1.0f)),
+            new HairColorOption(4, "Raven Black",        new Color(0.04f, 0.04f, 0.05f, 1.0f), new Color(0.08f, 0.08f, 0.1f, 1.0f)),
+            new HairColorOption(5, "Platinum Silver",    new Color(3.2f, 3.2f, 3.4f, 1.0f),  new Color(1.2f, 1.2f, 1.3f, 1.0f)),
+            new HairColorOption(6, "Cyber Cyan",         new Color(0.2f, 3.2f, 3.5f, 1.0f),  new Color(0.2f, 1.1f, 1.3f, 1.0f)),
+            new HairColorOption(7, "Crimson Ruby",       new Color(3.8f, 0.2f, 0.25f, 1.0f), new Color(1.2f, 0.15f, 0.2f, 1.0f)),
+            new HairColorOption(8, "Amethyst Purple",    new Color(3.0f, 0.35f, 3.2f, 1.0f), new Color(1.1f, 0.2f, 1.2f, 1.0f)),
+            new HairColorOption(9, "Emerald Green",      new Color(0.3f, 3.6f, 0.5f, 1.0f),  new Color(0.15f, 1.2f, 0.25f, 1.0f)),
+            new HairColorOption(10, "Hot Pink",          new Color(3.8f, 0.35f, 2.2f, 1.0f), new Color(1.3f, 0.25f, 0.9f, 1.0f)),
         };
 
         /**
@@ -169,7 +169,10 @@ namespace Subnautica.Client.MonoBehaviours.Player
          */
         public static byte GetEffectiveSuitColor(byte playerId)
         {
-            var player = ZeroPlayer.GetPlayerById(playerId);
+            var player = (playerId > 0 && playerId == ZeroPlayer.CurrentPlayer?.PlayerId)
+                ? ZeroPlayer.CurrentPlayer
+                : (ZeroPlayer.GetPlayerById(playerId) ?? ZeroPlayer.CurrentPlayer);
+
             if (player != null && player.SuitColor >= 1 && player.SuitColor <= Palette.Length)
             {
                 return player.SuitColor;
@@ -201,7 +204,10 @@ namespace Subnautica.Client.MonoBehaviours.Player
          */
         public static byte GetEffectiveHairColor(byte playerId)
         {
-            var player = ZeroPlayer.GetPlayerById(playerId);
+            var player = (playerId > 0 && playerId == ZeroPlayer.CurrentPlayer?.PlayerId)
+                ? ZeroPlayer.CurrentPlayer
+                : (ZeroPlayer.GetPlayerById(playerId) ?? ZeroPlayer.CurrentPlayer);
+
             if (player != null && player.HairColor >= 1 && player.HairColor <= HairPalette.Length)
             {
                 return player.HairColor;
@@ -468,6 +474,11 @@ namespace Subnautica.Client.MonoBehaviours.Player
                         var mat = materials[i];
                         if (mat != null && !IsHairMaterial(mat))
                         {
+                            if (mat.HasProperty("_Color") && mat.GetColor("_Color") == tintColor)
+                            {
+                                continue;
+                            }
+
                             ApplyMaterialTint(mat, tintColor, specColor);
                             modified = true;
                         }
@@ -524,6 +535,12 @@ namespace Subnautica.Client.MonoBehaviours.Player
 
                         if (isHairObj || IsHairMaterial(mat))
                         {
+                            if (mat.HasProperty("_Color") && mat.GetColor("_Color") == tintColor &&
+                                mat.HasProperty("_ColorStrength") && Mathf.Approximately(mat.GetFloat("_ColorStrength"), (tintColor == Color.white ? 1.0f : 4.5f)))
+                            {
+                                continue;
+                            }
+
                             ApplyHairMaterialTint(mat, tintColor, specColor);
                             modified = true;
                             Log.Info($"PlayerSuitCustomizer.ApplyHairTint: Tinted hair on '{renderer.gameObject.name}', mat: '{mat.name}', playerId: {playerId}");
@@ -609,6 +626,7 @@ namespace Subnautica.Client.MonoBehaviours.Player
 
         /**
          * Applies the tint colors specifically to Robin's hair material.
+         * Eliminates transparency and ocean blue specular glare while lifting dark albedo.
          */
         private static void ApplyHairMaterialTint(Material mat, Color tintColor, Color specColor)
         {
@@ -618,66 +636,145 @@ namespace Subnautica.Client.MonoBehaviours.Player
             }
 
             bool isDefault = (tintColor == Color.white);
+            Color solidTint = new Color(tintColor.r, tintColor.g, tintColor.b, 1.0f);
 
-            if (mat.HasProperty("_Color"))
-            {
-                mat.SetColor("_Color", tintColor);
-            }
+            // 1. ELIMINATE TRANSPARENCY & GHOSTING:
+            // Disable Marmoset additive glow and emission passes completely on hair.
+            mat.DisableKeyword("MARMO_GLOW");
+            mat.DisableKeyword("_EMISSION");
+            mat.DisableKeyword("_ALPHABLEND_ON");
+            mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            mat.EnableKeyword("_ALPHATEST_ON");
 
-            if (mat.HasProperty("_Color2"))
+            if (mat.HasProperty("_EnableGlow"))
             {
-                mat.SetColor("_Color2", tintColor);
-            }
-
-            if (mat.HasProperty("_Color3"))
-            {
-                mat.SetColor("_Color3", tintColor);
-            }
-
-            if (mat.HasProperty("_SpecColor"))
-            {
-                mat.SetColor("_SpecColor", isDefault ? Color.white : specColor);
-            }
-
-            if (mat.HasProperty("_SpecColor2"))
-            {
-                mat.SetColor("_SpecColor2", isDefault ? Color.white : specColor);
-            }
-
-            if (mat.HasProperty("_SpecColor3"))
-            {
-                mat.SetColor("_SpecColor3", isDefault ? Color.white : specColor);
-            }
-
-            if (mat.HasProperty("_Tint"))
-            {
-                mat.SetColor("_Tint", tintColor);
-            }
-
-            if (mat.HasProperty("_TintColor"))
-            {
-                mat.SetColor("_TintColor", tintColor);
-            }
-
-            if (mat.HasProperty("_ColorStrength"))
-            {
-                mat.SetFloat("_ColorStrength", isDefault ? 1.0f : 1.8f);
-            }
-
-            if (mat.HasProperty("_SpecIntensity"))
-            {
-                mat.SetFloat("_SpecIntensity", isDefault ? 1.0f : 1.4f);
+                mat.SetFloat("_EnableGlow", 0.0f);
             }
 
             if (mat.HasProperty("_GlowColor"))
             {
-                mat.SetColor("_GlowColor", isDefault ? Color.black : tintColor * 0.25f);
+                mat.SetColor("_GlowColor", Color.black);
+            }
+
+            if (mat.HasProperty("_EmissionColor"))
+            {
+                mat.SetColor("_EmissionColor", Color.black);
             }
 
             if (mat.HasProperty("_GlowStrength"))
             {
-                mat.SetFloat("_GlowStrength", isDefault ? 0.0f : 0.3f);
+                mat.SetFloat("_GlowStrength", 0.0f);
             }
+
+            if (mat.HasProperty("_GlowStrengthNight"))
+            {
+                mat.SetFloat("_GlowStrengthNight", 0.0f);
+            }
+
+            // Force solid Cutout blend mode and depth writing
+            if (mat.HasProperty("_Mode"))
+            {
+                mat.SetFloat("_Mode", 1.0f); // 1 = Cutout
+            }
+
+            if (mat.HasProperty("_SrcBlend"))
+            {
+                mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+            }
+
+            if (mat.HasProperty("_DstBlend"))
+            {
+                mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+            }
+
+            if (mat.HasProperty("_ZWrite"))
+            {
+                mat.SetInt("_ZWrite", 1);
+            }
+
+            if (mat.renderQueue >= 3000)
+            {
+                mat.renderQueue = 2450; // Cutout queue
+            }
+
+            // 2. ELIMINATE BLUISH OCEAN SPECULAR GLARE:
+            // Subnautica's Marmoset reflects the bright cyan/blue ambient water cubemap.
+            // Keeping specular intensity low (<0.3) prevents the ocean reflection from turning hair blue.
+            if (mat.HasProperty("_SpecIntensity"))
+            {
+                mat.SetFloat("_SpecIntensity", isDefault ? 1.0f : 0.25f);
+            }
+
+            if (mat.HasProperty("_SpecularScale"))
+            {
+                mat.SetFloat("_SpecularScale", isDefault ? 1.0f : 0.25f);
+            }
+
+            // Subtle dark specular tint so it does not reflect ambient cyan
+            Color subtleSpec = isDefault
+                ? Color.white
+                : new Color(Mathf.Clamp01(specColor.r * 0.25f), Mathf.Clamp01(specColor.g * 0.25f), Mathf.Clamp01(specColor.b * 0.25f), 1.0f);
+
+            if (mat.HasProperty("_SpecColor"))
+            {
+                mat.SetColor("_SpecColor", subtleSpec);
+            }
+
+            if (mat.HasProperty("_SpecColor2"))
+            {
+                mat.SetColor("_SpecColor2", subtleSpec);
+            }
+
+            if (mat.HasProperty("_SpecColor3"))
+            {
+                mat.SetColor("_SpecColor3", subtleSpec);
+            }
+
+            // 3. DIFFUSE / ALBEDO COLOR SETTINGS (Lifts dark/black hair to vivid colors):
+            mat.color = solidTint;
+
+            if (mat.HasProperty("_Color"))
+            {
+                mat.SetColor("_Color", solidTint);
+            }
+
+            if (mat.HasProperty("_Color2"))
+            {
+                mat.SetColor("_Color2", solidTint);
+            }
+
+            if (mat.HasProperty("_Color3"))
+            {
+                mat.SetColor("_Color3", solidTint);
+            }
+
+            if (mat.HasProperty("_Tint"))
+            {
+                mat.SetColor("_Tint", solidTint);
+            }
+
+            if (mat.HasProperty("_TintColor"))
+            {
+                mat.SetColor("_TintColor", solidTint);
+            }
+
+            // Boost color strength cleanly so dark base hair texture reflects the vibrant dye
+            if (mat.HasProperty("_ColorStrength"))
+            {
+                mat.SetFloat("_ColorStrength", isDefault ? 1.0f : 4.5f);
+            }
+
+            if (mat.HasProperty("_ColorStrengthAtNight"))
+            {
+                mat.SetFloat("_ColorStrengthAtNight", isDefault ? 1.0f : 4.5f);
+            }
+
+            if (mat.HasProperty("_ColorMultiplier"))
+            {
+                mat.SetFloat("_ColorMultiplier", isDefault ? 1.0f : 2.5f);
+            }
+
+            Log.Info($"PlayerSuitCustomizer.ApplyHairMaterialTint: Applied solid hair tint: {tintColor.ToString()}, isDefault: {isDefault}");
         }
     }
 
@@ -726,10 +823,8 @@ namespace Subnautica.Client.MonoBehaviours.Player
 
         public void ApplyTint()
         {
-            if (Network.IsMultiplayerActive && ZeroPlayer.CurrentPlayer != null && ZeroPlayer.CurrentPlayer.PlayerId > 0)
-            {
-                PlayerSuitCustomizer.ApplyCustomization(this.gameObject, ZeroPlayer.CurrentPlayer.PlayerId);
-            }
+            byte playerId = ZeroPlayer.CurrentPlayer?.PlayerId ?? 0;
+            PlayerSuitCustomizer.ApplyCustomization(this.gameObject, playerId);
         }
     }
 }
