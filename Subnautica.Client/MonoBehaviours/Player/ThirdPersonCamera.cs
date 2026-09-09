@@ -120,7 +120,13 @@ namespace Subnautica.Client.MonoBehaviours.Player
                 this.mainCamera.cullingMask |= 1 << LayerID.Player;
             }
 
-            // -- 3. Force-enable every renderer on the local player hierarchy --
+            // -- 3. Make head visible in game logic --
+            if (global::Player.main != null)
+            {
+                global::Player.main.SetHeadVisible(true, false);
+            }
+
+            // -- 4. Force-enable every renderer on the local player hierarchy --
             //
             // Subnautica disables specific renderers (head, face, hair ...) for
             // first-person view. We snapshot their current state then enable all
@@ -130,6 +136,7 @@ namespace Subnautica.Client.MonoBehaviours.Player
             {
                 this.rendererSnapshot[r] = r.enabled;
                 r.enabled = true;
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             }
 
             PlayerSuitCustomizer.ApplyCustomization(this.gameObject, Subnautica.API.Features.ZeroPlayer.CurrentPlayer?.PlayerId ?? 0);
@@ -147,7 +154,13 @@ namespace Subnautica.Client.MonoBehaviours.Player
                 this.mainCamera.cullingMask = this.savedCullingMask;
             }
 
-            // -- 3. Restore per-renderer enabled state --
+            // -- 3. Hide head in first-person --
+            if (global::Player.main != null)
+            {
+                global::Player.main.SetHeadVisible(false, false);
+            }
+
+            // -- 4. Restore per-renderer enabled state --
             foreach (var kvp in this.rendererSnapshot)
             {
                 if (kvp.Key != null)
@@ -161,6 +174,11 @@ namespace Subnautica.Client.MonoBehaviours.Player
 
         private void UpdateThirdPersonCamera()
         {
+            if (global::Player.main != null && global::Player.main.riggedHead != null && !global::Player.main.riggedHead.activeSelf)
+            {
+                global::Player.main.SetHeadVisible(true, false);
+            }
+
             // World-space target: behind and above the player.
             Vector3 playerPos     = this.transform.position;
             Vector3 playerForward = this.transform.forward;

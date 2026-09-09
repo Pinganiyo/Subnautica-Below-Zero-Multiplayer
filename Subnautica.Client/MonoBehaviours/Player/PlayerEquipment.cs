@@ -168,7 +168,7 @@ namespace Subnautica.Client.MonoBehaviours.Player
             this.ChangeHandModel(TechType.None);
             this.ChangeFootModel(TechType.None);
 
-            PlayerSuitCustomizer.ApplySuitTint(this.gameObject, this.Player?.PlayerId ?? 0);
+            PlayerSuitCustomizer.ApplyCustomization(this.gameObject, this.Player?.PlayerId ?? 0);
         }
 
         /**
@@ -195,7 +195,7 @@ namespace Subnautica.Client.MonoBehaviours.Player
                 }
             }
 
-            PlayerSuitCustomizer.ApplySuitTint(this.gameObject, this.Player?.PlayerId ?? 0);
+            PlayerSuitCustomizer.ApplyCustomization(this.gameObject, this.Player?.PlayerId ?? 0);
         }
 
         /**
@@ -220,6 +220,8 @@ namespace Subnautica.Client.MonoBehaviours.Player
                     renderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
                 }
             }
+
+            PlayerSuitCustomizer.ApplyCustomization(this.gameObject, this.Player?.PlayerId ?? 0);
         }
 
         /**
@@ -232,7 +234,7 @@ namespace Subnautica.Client.MonoBehaviours.Player
         public void ChangeBodyModel(TechType techType)
         {
             this.ChangeModelStatus(this.BodyModels, techType);
-            PlayerSuitCustomizer.ApplySuitTint(this.gameObject, this.Player?.PlayerId ?? 0);
+            PlayerSuitCustomizer.ApplyCustomization(this.gameObject, this.Player?.PlayerId ?? 0);
         }
 
         /**
@@ -245,7 +247,7 @@ namespace Subnautica.Client.MonoBehaviours.Player
         public void ChangeHandModel(TechType techType)
         {
             this.ChangeModelStatus(this.GlovesModel, techType);
-            PlayerSuitCustomizer.ApplySuitTint(this.gameObject, this.Player?.PlayerId ?? 0);
+            PlayerSuitCustomizer.ApplyCustomization(this.gameObject, this.Player?.PlayerId ?? 0);
         }
 
         /**

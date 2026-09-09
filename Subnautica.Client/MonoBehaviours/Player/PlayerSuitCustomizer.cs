@@ -383,6 +383,30 @@ namespace Subnautica.Client.MonoBehaviours.Player
         }
 
         /**
+         * Checks whether a material belongs to Robin's hair (e.g. Robin_Facial_Hair_mtrl).
+         */
+        public static bool IsHairMaterial(Material mat)
+        {
+            if (mat == null)
+            {
+                return false;
+            }
+
+            string name = mat.name.ToLowerInvariant();
+            if (name.Contains("hair"))
+            {
+                return true;
+            }
+
+            if (mat.mainTexture != null && mat.mainTexture.name.ToLowerInvariant().Contains("hair"))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
          * Checks whether a renderer belongs to the player's hair.
          */
         public static bool IsHairRenderer(Renderer renderer)
@@ -392,8 +416,24 @@ namespace Subnautica.Client.MonoBehaviours.Player
                 return false;
             }
 
-            string name = renderer.gameObject.name.ToLowerInvariant();
-            return name.Contains("hair");
+            if (renderer.gameObject.name.ToLowerInvariant().Contains("hair"))
+            {
+                return true;
+            }
+
+            var sharedMats = renderer.sharedMaterials;
+            if (sharedMats != null)
+            {
+                for (int i = 0; i < sharedMats.Length; i++)
+                {
+                    if (IsHairMaterial(sharedMats[i]))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /**
@@ -422,18 +462,21 @@ namespace Subnautica.Client.MonoBehaviours.Player
                         continue;
                     }
 
-                    // Check if already tinted with this color
-                    if (materials[0] != null && materials[0].HasProperty("_Color") && materials[0].GetColor("_Color") == tintColor)
-                    {
-                        continue;
-                    }
-
+                    bool modified = false;
                     for (int i = 0; i < materials.Length; i++)
                     {
-                        ApplyMaterialTint(materials[i], tintColor, specColor);
+                        var mat = materials[i];
+                        if (mat != null && !IsHairMaterial(mat))
+                        {
+                            ApplyMaterialTint(mat, tintColor, specColor);
+                            modified = true;
+                        }
                     }
 
-                    renderer.materials = materials;
+                    if (modified)
+                    {
+                        renderer.materials = materials;
+                    }
                 }
             }
             catch (Exception ex)
@@ -443,7 +486,7 @@ namespace Subnautica.Client.MonoBehaviours.Player
         }
 
         /**
-         * Applies hair tinting to all hair renderers in the hierarchy.
+         * Applies hair tinting to all hair renderers and materials in the hierarchy.
          */
         public static void ApplyHairTint(GameObject root, byte playerId)
         {
@@ -457,7 +500,7 @@ namespace Subnautica.Client.MonoBehaviours.Player
                 var renderers = root.GetComponentsInChildren<Renderer>(true);
                 foreach (var renderer in renderers)
                 {
-                    if (!IsHairRenderer(renderer))
+                    if (renderer == null || renderer.gameObject == null)
                     {
                         continue;
                     }
@@ -468,18 +511,29 @@ namespace Subnautica.Client.MonoBehaviours.Player
                         continue;
                     }
 
-                    // Check if already tinted with this color
-                    if (materials[0] != null && materials[0].HasProperty("_Color") && materials[0].GetColor("_Color") == tintColor)
-                    {
-                        continue;
-                    }
+                    bool modified = false;
+                    bool isHairObj = renderer.gameObject.name.ToLowerInvariant().Contains("hair");
 
                     for (int i = 0; i < materials.Length; i++)
                     {
-                        ApplyMaterialTint(materials[i], tintColor, specColor);
+                        var mat = materials[i];
+                        if (mat == null)
+                        {
+                            continue;
+                        }
+
+                        if (isHairObj || IsHairMaterial(mat))
+                        {
+                            ApplyHairMaterialTint(mat, tintColor, specColor);
+                            modified = true;
+                            Log.Info($"PlayerSuitCustomizer.ApplyHairTint: Tinted hair on '{renderer.gameObject.name}', mat: '{mat.name}', playerId: {playerId}");
+                        }
                     }
 
-                    renderer.materials = materials;
+                    if (modified)
+                    {
+                        renderer.materials = materials;
+                    }
                 }
             }
             catch (Exception ex)
@@ -498,7 +552,7 @@ namespace Subnautica.Client.MonoBehaviours.Player
         }
 
         /**
-         * Applies the tint colors to a material instance.
+         * Applies the tint colors to a suit material instance.
          */
         private static void ApplyMaterialTint(Material mat, Color tintColor, Color specColor)
         {
@@ -550,6 +604,79 @@ namespace Subnautica.Client.MonoBehaviours.Player
             if (mat.HasProperty("_ColorStrength"))
             {
                 mat.SetFloat("_ColorStrength", tintColor == Color.white ? 1.0f : 1.15f);
+            }
+        }
+
+        /**
+         * Applies the tint colors specifically to Robin's hair material.
+         */
+        private static void ApplyHairMaterialTint(Material mat, Color tintColor, Color specColor)
+        {
+            if (mat == null)
+            {
+                return;
+            }
+
+            bool isDefault = (tintColor == Color.white);
+
+            if (mat.HasProperty("_Color"))
+            {
+                mat.SetColor("_Color", tintColor);
+            }
+
+            if (mat.HasProperty("_Color2"))
+            {
+                mat.SetColor("_Color2", tintColor);
+            }
+
+            if (mat.HasProperty("_Color3"))
+            {
+                mat.SetColor("_Color3", tintColor);
+            }
+
+            if (mat.HasProperty("_SpecColor"))
+            {
+                mat.SetColor("_SpecColor", isDefault ? Color.white : specColor);
+            }
+
+            if (mat.HasProperty("_SpecColor2"))
+            {
+                mat.SetColor("_SpecColor2", isDefault ? Color.white : specColor);
+            }
+
+            if (mat.HasProperty("_SpecColor3"))
+            {
+                mat.SetColor("_SpecColor3", isDefault ? Color.white : specColor);
+            }
+
+            if (mat.HasProperty("_Tint"))
+            {
+                mat.SetColor("_Tint", tintColor);
+            }
+
+            if (mat.HasProperty("_TintColor"))
+            {
+                mat.SetColor("_TintColor", tintColor);
+            }
+
+            if (mat.HasProperty("_ColorStrength"))
+            {
+                mat.SetFloat("_ColorStrength", isDefault ? 1.0f : 1.8f);
+            }
+
+            if (mat.HasProperty("_SpecIntensity"))
+            {
+                mat.SetFloat("_SpecIntensity", isDefault ? 1.0f : 1.4f);
+            }
+
+            if (mat.HasProperty("_GlowColor"))
+            {
+                mat.SetColor("_GlowColor", isDefault ? Color.black : tintColor * 0.25f);
+            }
+
+            if (mat.HasProperty("_GlowStrength"))
+            {
+                mat.SetFloat("_GlowStrength", isDefault ? 0.0f : 0.3f);
             }
         }
     }

@@ -392,7 +392,7 @@ namespace Subnautica.Client
 
             if (Subnautica.API.Features.Network.IsMultiplayerActive && Subnautica.API.Features.ZeroPlayer.CurrentPlayer != null && Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId > 0 && global::Player.main != null)
             {
-                Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.ApplySuitTint(global::Player.main.gameObject, Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId);
+                Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.ApplyCustomization(global::Player.main.gameObject, Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId);
             }
         }
 
@@ -409,7 +409,7 @@ namespace Subnautica.Client
 
             if (Subnautica.API.Features.Network.IsMultiplayerActive && Subnautica.API.Features.ZeroPlayer.CurrentPlayer != null && Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId > 0 && global::Player.main != null)
             {
-                Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.ApplySuitTint(global::Player.main.gameObject, Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId);
+                Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.ApplyCustomization(global::Player.main.gameObject, Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId);
             }
         }
 
