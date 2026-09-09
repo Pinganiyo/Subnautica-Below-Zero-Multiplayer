@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Synchronizations.Processors.Player
+namespace Subnautica.Client.Synchronizations.Processors.Player
 {
     using Subnautica.API.Extensions;
     using Subnautica.API.Features;
@@ -29,11 +29,17 @@
             player.SetPlayerName(packet.PlayerName);
             player.SetSubRootId(packet.SubrootId);
             player.SetInteriorId(packet.InteriorId);
+            player.SuitColor = packet.SuitColor;
+            player.HairColor = packet.HairColor;
             
             if (!player.IsCreatedModel)
             {
                 player.CreateModel(packet.Position.ToVector3(true), packet.Rotation.ToQuaternion(true));
                 player.InitBehaviours();
+            }
+            else if (player.PlayerModel != null)
+            {
+                Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.ApplyCustomization(player.PlayerModel, player.PlayerId);
             }
 
             Discord.UpdateRichPresence(null, ZeroLanguage.GetServerPlayerCount());

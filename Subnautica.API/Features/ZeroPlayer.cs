@@ -1,4 +1,4 @@
-﻿namespace Subnautica.API.Features
+namespace Subnautica.API.Features
 {
     using System;
     using System.Collections;
@@ -1622,6 +1622,16 @@
          *
          */
         public byte PlayerId { get; set; }
+
+        /**
+         * Suit Color
+         */
+        public byte SuitColor { get; set; } = 0;
+
+        /**
+         * Hair Color
+         */
+        public byte HairColor { get; set; } = 0;
 
         /**
          *

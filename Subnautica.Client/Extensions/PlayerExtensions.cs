@@ -31,7 +31,7 @@ namespace Subnautica.Client.Extensions
                 var playerEquipment = player.GetComponent<PlayerEquipment>();
                 playerEquipment.ResetEquipments();
 
-                PlayerSuitCustomizer.ApplySuitTint(player.PlayerModel, player.PlayerId);
+                PlayerSuitCustomizer.ApplyCustomization(player.PlayerModel, player.PlayerId);
             }
         }
 

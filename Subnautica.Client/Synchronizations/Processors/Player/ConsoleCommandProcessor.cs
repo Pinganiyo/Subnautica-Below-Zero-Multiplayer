@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Synchronizations.Processors.Player
+namespace Subnautica.Client.Synchronizations.Processors.Player
 {
     using System.Collections.Generic;
 
@@ -33,6 +33,20 @@
          */
         public static void OnUsingCommand(PlayerUsingCommandEventArgs ev)
         {
+            if (ev.Command.Equals("suitcolor", System.StringComparison.OrdinalIgnoreCase) || ev.Command.Equals("color", System.StringComparison.OrdinalIgnoreCase))
+            {
+                ev.IsAllowed = false;
+                HandleSuitColorCommand(ev.FullCommand);
+                return;
+            }
+
+            if (ev.Command.Equals("haircolor", System.StringComparison.OrdinalIgnoreCase) || ev.Command.Equals("hair", System.StringComparison.OrdinalIgnoreCase))
+            {
+                ev.IsAllowed = false;
+                HandleHairColorCommand(ev.FullCommand);
+                return;
+            }
+
             if (IsDeveloperModeOn() || AllowedCommands.Contains(ev.Command))
             {
                 ServerModel.PlayerConsoleCommandArgs request = new ServerModel.PlayerConsoleCommandArgs()
@@ -47,6 +61,64 @@
                 ev.IsAllowed = false;
 
                 ErrorMessage.AddMessage("This command has been disabled.");
+            }
+        }
+
+        /**
+         *
+         * Handles the suitcolor command.
+         *
+         */
+        private static void HandleSuitColorCommand(string fullCommand)
+        {
+            var parts = fullCommand.Split(new char[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length < 2 || parts[1].Equals("list", System.StringComparison.OrdinalIgnoreCase) || parts[1].Equals("help", System.StringComparison.OrdinalIgnoreCase))
+            {
+                ErrorMessage.AddMessage("Available Suit Colors (use /suitcolor <name|number> or press F6):");
+                foreach (var item in Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.Palette)
+                {
+                    ErrorMessage.AddMessage($"{item.Index}: {item.Name}");
+                }
+                return;
+            }
+
+            string query = parts[1];
+            if (Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.TryFindColorOption(query, out var option))
+            {
+                Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.SetLocalSuitColor(option.Index);
+            }
+            else
+            {
+                ErrorMessage.AddMessage($"Unknown color: '{query}'. Type 'suitcolor list' to see all options.");
+            }
+        }
+
+        /**
+         *
+         * Handles the haircolor command.
+         *
+         */
+        private static void HandleHairColorCommand(string fullCommand)
+        {
+            var parts = fullCommand.Split(new char[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length < 2 || parts[1].Equals("list", System.StringComparison.OrdinalIgnoreCase) || parts[1].Equals("help", System.StringComparison.OrdinalIgnoreCase))
+            {
+                ErrorMessage.AddMessage("Available Hair Colors (use /haircolor <name|number> or press F7):");
+                foreach (var item in Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.HairPalette)
+                {
+                    ErrorMessage.AddMessage($"{item.Index}: {item.Name}");
+                }
+                return;
+            }
+
+            string query = parts[1];
+            if (Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.TryFindHairColorOption(query, out var option))
+            {
+                Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.SetLocalHairColor(option.Index);
+            }
+            else
+            {
+                ErrorMessage.AddMessage($"Unknown hair color: '{query}'. Type 'haircolor list' to see all options.");
             }
         }
 

@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Network.Models.Storage.Player
+namespace Subnautica.Network.Models.Storage.Player
 {
     using System.Collections.Generic;
 
@@ -78,5 +78,21 @@
          */
         [Key(6)]
         public string InteriorId { get; set; }
+
+        /**
+         *
+         * Suit Color
+         *
+         */
+        [Key(7)]
+        public byte SuitColor { get; set; } = 0;
+
+        /**
+         *
+         * Hair Color
+         *
+         */
+        [Key(8)]
+        public byte HairColor { get; set; } = 0;
     }
 }

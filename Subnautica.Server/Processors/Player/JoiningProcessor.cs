@@ -72,6 +72,20 @@ namespace Subnautica.Server.Processors.Player
                 player.IsHost = true;
             }
 
+            if (packet.SuitColor > 0)
+            {
+                player.SuitColor = packet.SuitColor;
+            }
+            else if (player.SuitColor == 0 && player.PlayerId == 2)
+            {
+                player.SuitColor = 2; // Default: Ocean Cyan (index 2) for Player 2
+            }
+
+            if (packet.HairColor > 0)
+            {
+                player.HairColor = packet.HairColor;
+            }
+
             Server.Instance.Players.Add(player.IpPortAddress, player);
 
             Log.Info(ZeroLanguage.Get("GAME_PLAYER_CONNECTED").Replace("{playername}", packet.UserName));

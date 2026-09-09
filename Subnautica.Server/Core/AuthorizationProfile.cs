@@ -398,6 +398,22 @@ namespace Subnautica.Server.Core
 
         /**
          *
+         * SuitColor değerini barındırır.
+         *
+         */
+        [Key(20)]
+        public byte SuitColor { get; set; } = 0;
+
+        /**
+         *
+         * HairColor değerini barındırır.
+         *
+         */
+        [Key(21)]
+        public byte HairColor { get; set; } = 0;
+
+        /**
+         *
          * Sınıf ayarlamalarını yapar.
          *
          * @author Ismail <ismaiil_0234@hotmail.com>

@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Network.Models.Core
+namespace Subnautica.Network.Models.Core
 {
     using System;
 
@@ -126,6 +126,7 @@
     [Union(205, typeof(ServerModel.CreatureLeviathanMeleeAttackArgs))]
     [Union(206, typeof(ServerModel.PlayerSpawnArgs))]
     [Union(207, typeof(ServerModel.CreatureMeleeAttackArgs))]
+    [Union(208, typeof(ServerModel.PlayerSuitColorArgs))]
     [MessagePackObject]
     public abstract class NetworkPacket
     {

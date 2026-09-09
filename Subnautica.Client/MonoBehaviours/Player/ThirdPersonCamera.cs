@@ -1,5 +1,7 @@
 namespace Subnautica.Client.MonoBehaviours.Player
 {
+    using System.Collections.Generic;
+
     using UnityEngine;
 
     /**
@@ -7,11 +9,13 @@ namespace Subnautica.Client.MonoBehaviours.Player
      * Press F5 to enter / exit third-person view.
      *
      * In third-person the game's main camera is repositioned behind and
-     * slightly above the player. The first-person state is restored on exit.
+     * slightly above the player. All local-player renderers (including the
+     * head) are force-enabled so you can see yourself fully.
+     * Everything is restored on exit.
      */
     public class ThirdPersonCamera : MonoBehaviour
     {
-        // ── tuneable constants ──────────────────────────────────────────────
+        // -- tuneable constants ----------------------------------------------
 
         /// <summary>Distance the camera sits behind the player (metres).</summary>
         private const float Distance = 3.5f;
@@ -25,26 +29,26 @@ namespace Subnautica.Client.MonoBehaviours.Player
         /// <summary>Key used to toggle the view.</summary>
         private const KeyCode ToggleKey = KeyCode.F5;
 
-        // ── state ───────────────────────────────────────────────────────────
+        // -- state -----------------------------------------------------------
 
         private bool isThirdPerson = false;
 
-        // The game camera's original local position and rotation are stored so
-        // we can restore them when switching back to first-person.
+        // Camera transform & component (SNCameraRoot or Camera.main).
+        private Transform cameraRootTransform;
+        private Camera    mainCamera;
+
+        // Saved camera transform for first-person restore.
         private Vector3    savedCamLocalPos;
         private Quaternion savedCamLocalRot;
 
-        // SNCameraRoot is the child GameObject that holds the main Camera in
-        // Subnautica Below Zero. We cache it to avoid repeated Find() calls.
-        private Transform cameraRootTransform;
-
-        // The actual Camera component, used to manipulate the culling mask.
-        private Camera mainCamera;
-
-        // The original culling mask so we can restore it on exit.
+        // Saved culling mask.
         private int savedCullingMask;
 
-        // ── lifecycle ───────────────────────────────────────────────────────
+        // Per-renderer enabled snapshots taken when entering 3rd person.
+        private readonly Dictionary<Renderer, bool> rendererSnapshot
+            = new Dictionary<Renderer, bool>();
+
+        // -- lifecycle -------------------------------------------------------
 
         private void Start()
         {
@@ -64,7 +68,7 @@ namespace Subnautica.Client.MonoBehaviours.Player
             }
         }
 
-        // ── private helpers ─────────────────────────────────────────────────
+        // -- private helpers -------------------------------------------------
 
         private void CacheCameraRoot()
         {
@@ -105,29 +109,54 @@ namespace Subnautica.Client.MonoBehaviours.Player
 
         private void EnterThirdPerson()
         {
-            // Save the first-person local transform so we can restore it later.
+            // -- 1. Save camera local transform --
             this.savedCamLocalPos = this.cameraRootTransform.localPosition;
             this.savedCamLocalRot = this.cameraRootTransform.localRotation;
 
-            // Make the local player's head/body visible by including the Player layer.
+            // -- 2. Include the Player layer in the culling mask --
             if (this.mainCamera != null)
             {
-                this.savedCullingMask      = this.mainCamera.cullingMask;
+                this.savedCullingMask        = this.mainCamera.cullingMask;
                 this.mainCamera.cullingMask |= 1 << LayerID.Player;
             }
+
+            // -- 3. Force-enable every renderer on the local player hierarchy --
+            //
+            // Subnautica disables specific renderers (head, face, hair ...) for
+            // first-person view. We snapshot their current state then enable all
+            // of them so the full character body is visible in 3rd person.
+            this.rendererSnapshot.Clear();
+            foreach (var r in this.GetComponentsInChildren<Renderer>(true))
+            {
+                this.rendererSnapshot[r] = r.enabled;
+                r.enabled = true;
+            }
+
+            PlayerSuitCustomizer.ApplyCustomization(this.gameObject, Subnautica.API.Features.ZeroPlayer.CurrentPlayer?.PlayerId ?? 0);
         }
 
         private void ExitThirdPerson()
         {
-            // Snap back to the stored first-person transform.
+            // -- 1. Restore camera local transform --
             this.cameraRootTransform.localPosition = this.savedCamLocalPos;
             this.cameraRootTransform.localRotation = this.savedCamLocalRot;
 
-            // Restore the original culling mask (hides local player head again).
+            // -- 2. Restore culling mask --
             if (this.mainCamera != null)
             {
                 this.mainCamera.cullingMask = this.savedCullingMask;
             }
+
+            // -- 3. Restore per-renderer enabled state --
+            foreach (var kvp in this.rendererSnapshot)
+            {
+                if (kvp.Key != null)
+                {
+                    kvp.Key.enabled = kvp.Value;
+                }
+            }
+
+            this.rendererSnapshot.Clear();
         }
 
         private void UpdateThirdPersonCamera()

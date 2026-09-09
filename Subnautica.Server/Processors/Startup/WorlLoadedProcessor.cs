@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Processors.Startup
+namespace Subnautica.Server.Processors.Startup
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -50,6 +50,8 @@
                     PlayerName = profile.PlayerName,
                     Position   = profile.Position,
                     Rotation   = profile.Rotation,
+                    SuitColor  = profile.SuitColor,
+                    HairColor  = profile.HairColor,
                 };
 
                 profile.SendPacketToOtherClients(otherRequest);
@@ -129,6 +131,8 @@
                     Rotation   = player.Value.Rotation,
                     SubrootId  = player.Value.SubrootId,
                     InteriorId = player.Value.InteriorId,
+                    SuitColor  = player.Value.SuitColor,
+                    HairColor  = player.Value.HairColor,
                 });
             }
 

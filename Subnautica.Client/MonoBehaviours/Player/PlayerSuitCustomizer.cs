@@ -1,73 +1,339 @@
 namespace Subnautica.Client.MonoBehaviours.Player
 {
     using System;
+    using System.Linq;
     using Subnautica.API.Features;
+    using Subnautica.Client.Core;
     using UnityEngine;
+    using ServerModel = Subnautica.Network.Models.Server;
 
     public static class PlayerSuitCustomizer
     {
-        /**
-         * Suit color definition per player ID.
-         * Other players have distinct identifiable colors.
-         */
-        public static bool TryGetSuitColor(byte playerId, out Color tintColor, out Color specColor)
+        public struct SuitColorOption
         {
+            public byte Index;
+            public string Name;
+            public Color TintColor;
+            public Color SpecColor;
+
+            public SuitColorOption(byte index, string name, Color tintColor, Color specColor)
+            {
+                this.Index     = index;
+                this.Name      = name;
+                this.TintColor = tintColor;
+                this.SpecColor = specColor;
+            }
+        }
+
+        public struct HairColorOption
+        {
+            public byte Index;
+            public string Name;
+            public Color TintColor;
+            public Color SpecColor;
+
+            public HairColorOption(byte index, string name, Color tintColor, Color specColor)
+            {
+                this.Index     = index;
+                this.Name      = name;
+                this.TintColor = tintColor;
+                this.SpecColor = specColor;
+            }
+        }
+
+        /**
+         * Available suit color palette.
+         */
+        public static readonly SuitColorOption[] Palette = new SuitColorOption[]
+        {
+            new SuitColorOption(1, "Default (Original)", Color.white, Color.white),
+            new SuitColorOption(2, "Ocean Cyan",         new Color(0.15f, 1.25f, 1.6f, 1.0f), new Color(0.1f, 0.45f, 0.6f, 1.0f)),
+            new SuitColorOption(3, "Solar Orange",       new Color(1.6f, 0.75f, 0.15f, 1.0f), new Color(0.5f, 0.25f, 0.08f, 1.0f)),
+            new SuitColorOption(4, "Electric Purple",    new Color(1.35f, 0.25f, 1.55f, 1.0f), new Color(0.45f, 0.15f, 0.55f, 1.0f)),
+            new SuitColorOption(5, "Acid Lime",          new Color(0.35f, 1.45f, 0.45f, 1.0f), new Color(0.15f, 0.5f, 0.2f, 1.0f)),
+            new SuitColorOption(6, "Ruby Crimson",       new Color(1.5f, 0.18f, 0.22f, 1.0f), new Color(0.45f, 0.1f, 0.12f, 1.0f)),
+            new SuitColorOption(7, "Hazard Gold",        new Color(1.55f, 1.1f, 0.12f, 1.0f), new Color(0.45f, 0.32f, 0.06f, 1.0f)),
+            new SuitColorOption(8, "Arctic Ice",         new Color(1.15f, 1.3f, 1.45f, 1.0f), new Color(0.35f, 0.45f, 0.55f, 1.0f)),
+            new SuitColorOption(9, "Cobalt Blue",        new Color(0.2f, 0.55f, 1.6f, 1.0f),  new Color(0.12f, 0.28f, 0.65f, 1.0f)),
+            new SuitColorOption(10, "Coral Rose",        new Color(1.55f, 0.25f, 0.95f, 1.0f), new Color(0.55f, 0.15f, 0.35f, 1.0f)),
+        };
+
+        /**
+         * Available hair color palette.
+         */
+        public static readonly HairColorOption[] HairPalette = new HairColorOption[]
+        {
+            new HairColorOption(1, "Default (Original)", Color.white, Color.white),
+            new HairColorOption(2, "Golden Blonde",      new Color(1.65f, 1.35f, 0.65f, 1.0f), new Color(0.5f, 0.4f, 0.2f, 1.0f)),
+            new HairColorOption(3, "Auburn Copper",      new Color(1.7f, 0.7f, 0.25f, 1.0f),   new Color(0.5f, 0.25f, 0.1f, 1.0f)),
+            new HairColorOption(4, "Raven Black",        new Color(0.15f, 0.15f, 0.18f, 1.0f), new Color(0.2f, 0.2f, 0.25f, 1.0f)),
+            new HairColorOption(5, "Platinum Silver",    new Color(1.6f, 1.65f, 1.75f, 1.0f),  new Color(0.6f, 0.65f, 0.75f, 1.0f)),
+            new HairColorOption(6, "Cyber Cyan",         new Color(0.2f, 1.4f, 1.7f, 1.0f),    new Color(0.15f, 0.5f, 0.7f, 1.0f)),
+            new HairColorOption(7, "Crimson Ruby",       new Color(1.7f, 0.2f, 0.25f, 1.0f),   new Color(0.5f, 0.15f, 0.18f, 1.0f)),
+            new HairColorOption(8, "Amethyst Purple",    new Color(1.35f, 0.3f, 1.55f, 1.0f),  new Color(0.45f, 0.15f, 0.55f, 1.0f)),
+            new HairColorOption(9, "Emerald Green",      new Color(0.35f, 1.5f, 0.45f, 1.0f),  new Color(0.15f, 0.5f, 0.2f, 1.0f)),
+            new HairColorOption(10, "Hot Pink",          new Color(1.75f, 0.3f, 1.15f, 1.0f),  new Color(0.55f, 0.15f, 0.4f, 1.0f)),
+        };
+
+        /**
+         * Resolves a suit color option by 1-based index.
+         */
+        public static SuitColorOption GetColorOption(byte index)
+        {
+            if (index >= 1 && index <= Palette.Length)
+            {
+                return Palette[index - 1];
+            }
+
+            return Palette[0];
+        }
+
+        /**
+         * Resolves a hair color option by 1-based index.
+         */
+        public static HairColorOption GetHairColorOption(byte index)
+        {
+            if (index >= 1 && index <= HairPalette.Length)
+            {
+                return HairPalette[index - 1];
+            }
+
+            return HairPalette[0];
+        }
+
+        /**
+         * Finds a suit color option by number or name query.
+         */
+        public static bool TryFindColorOption(string query, out SuitColorOption option)
+        {
+            option = Palette[0];
+            if (string.IsNullOrEmpty(query))
+            {
+                return false;
+            }
+
+            query = query.Trim().ToLowerInvariant();
+
+            if (byte.TryParse(query, out byte parsedIndex) && parsedIndex >= 1 && parsedIndex <= Palette.Length)
+            {
+                option = Palette[parsedIndex - 1];
+                return true;
+            }
+
+            foreach (var item in Palette)
+            {
+                if (item.Name.ToLowerInvariant().Contains(query))
+                {
+                    option = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Finds a hair color option by number or name query.
+         */
+        public static bool TryFindHairColorOption(string query, out HairColorOption option)
+        {
+            option = HairPalette[0];
+            if (string.IsNullOrEmpty(query))
+            {
+                return false;
+            }
+
+            query = query.Trim().ToLowerInvariant();
+
+            if (byte.TryParse(query, out byte parsedIndex) && parsedIndex >= 1 && parsedIndex <= HairPalette.Length)
+            {
+                option = HairPalette[parsedIndex - 1];
+                return true;
+            }
+
+            foreach (var item in HairPalette)
+            {
+                if (item.Name.ToLowerInvariant().Contains(query))
+                {
+                    option = item;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Gets the effective suit color index for a player.
+         * Player 2 defaults to Ocean Cyan (index 2) until changed.
+         */
+        public static byte GetEffectiveSuitColor(byte playerId)
+        {
+            var player = ZeroPlayer.GetPlayerById(playerId);
+            if (player != null && player.SuitColor >= 1 && player.SuitColor <= Palette.Length)
+            {
+                return player.SuitColor;
+            }
+
             switch (playerId)
             {
                 case 2:
-                    // Player 2: Ocean Cyan
-                    tintColor = new Color(0.2f, 2.0f, 2.5f, 1.0f);
-                    specColor = new Color(0.15f, 0.8f, 1.1f, 1.0f);
-                    return true;
-
+                    return 2; // Player 2: Ocean Cyan by default
                 case 3:
-                    // Player 3: Solar Orange
-                    tintColor = new Color(2.5f, 1.2f, 0.2f, 1.0f);
-                    specColor = new Color(1.1f, 0.55f, 0.15f, 1.0f);
-                    return true;
-
+                    return 3; // Player 3: Solar Orange by default
                 case 4:
-                    // Player 4: Electric Purple
-                    tintColor = new Color(2.0f, 0.4f, 2.4f, 1.0f);
-                    specColor = new Color(0.8f, 0.25f, 1.1f, 1.0f);
-                    return true;
-
+                    return 4; // Player 4: Electric Purple
                 case 5:
-                    // Player 5: Acid Lime
-                    tintColor = new Color(0.3f, 2.4f, 0.6f, 1.0f);
-                    specColor = new Color(0.2f, 1.1f, 0.3f, 1.0f);
-                    return true;
-
+                    return 5; // Player 5: Acid Lime
                 case 6:
-                    // Player 6: Crimson Red
-                    tintColor = new Color(2.5f, 0.3f, 0.3f, 1.0f);
-                    specColor = new Color(1.1f, 0.2f, 0.2f, 1.0f);
-                    return true;
-
+                    return 6; // Player 6: Crimson Red
                 case 7:
-                    // Player 7: Bright Yellow
-                    tintColor = new Color(2.4f, 2.2f, 0.2f, 1.0f);
-                    specColor = new Color(1.1f, 1.0f, 0.15f, 1.0f);
-                    return true;
-
+                    return 7; // Player 7: Bright Yellow
                 case 8:
-                    // Player 8: Arctic White / Silver
-                    tintColor = new Color(2.4f, 2.4f, 2.5f, 1.0f);
-                    specColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-                    return true;
-
-                case 1:
-                    // (Host Test Color): Solar Orange
-                    tintColor = new Color(2.5f, 1.2f, 0.2f, 1.0f);
-                    specColor = new Color(1.1f, 0.55f, 0.15f, 1.0f);
-                    return true;
-
+                    return 8; // Player 8: Arctic White
                 default:
-                    // Unassigned players remain default
-                    tintColor = Color.white;
-                    specColor = Color.white;
-                    return false;
+                    return 1; // Default (Original)
             }
+        }
+
+        /**
+         * Gets the effective hair color index for a player.
+         */
+        public static byte GetEffectiveHairColor(byte playerId)
+        {
+            var player = ZeroPlayer.GetPlayerById(playerId);
+            if (player != null && player.HairColor >= 1 && player.HairColor <= HairPalette.Length)
+            {
+                return player.HairColor;
+            }
+
+            return 1; // Default (Original)
+        }
+
+        /**
+         * Suit color definition per player ID.
+         */
+        public static bool TryGetSuitColor(byte playerId, out Color tintColor, out Color specColor)
+        {
+            byte colorIndex = GetEffectiveSuitColor(playerId);
+            var option = GetColorOption(colorIndex);
+            tintColor = option.TintColor;
+            specColor = option.SpecColor;
+            return true;
+        }
+
+        /**
+         * Hair color definition per player ID.
+         */
+        public static bool TryGetHairColor(byte playerId, out Color tintColor, out Color specColor)
+        {
+            byte colorIndex = GetEffectiveHairColor(playerId);
+            var option = GetHairColorOption(colorIndex);
+            tintColor = option.TintColor;
+            specColor = option.SpecColor;
+            return true;
+        }
+
+        /**
+         * Sets the local player's suit color and broadcasts to other players.
+         */
+        public static void SetLocalSuitColor(byte colorIndex)
+        {
+            if (colorIndex < 1 || colorIndex > Palette.Length)
+            {
+                colorIndex = 1;
+            }
+
+            var option = GetColorOption(colorIndex);
+
+            if (ZeroPlayer.CurrentPlayer != null)
+            {
+                ZeroPlayer.CurrentPlayer.SuitColor = colorIndex;
+            }
+
+            if (global::Player.main != null)
+            {
+                ApplySuitTint(global::Player.main.gameObject, ZeroPlayer.CurrentPlayer?.PlayerId ?? 0);
+            }
+
+            Settings.ModConfig.SaveSuitColor(colorIndex);
+
+            if (Network.IsMultiplayerActive)
+            {
+                NetworkClient.SendPacket(new ServerModel.PlayerSuitColorArgs()
+                {
+                    SuitColor = colorIndex,
+                    HairColor = ZeroPlayer.CurrentPlayer?.HairColor ?? 1,
+                });
+            }
+
+            ErrorMessage.AddMessage($"Suit Color: {option.Name}");
+        }
+
+        /**
+         * Sets the local player's hair color and broadcasts to other players.
+         */
+        public static void SetLocalHairColor(byte colorIndex)
+        {
+            if (colorIndex < 1 || colorIndex > HairPalette.Length)
+            {
+                colorIndex = 1;
+            }
+
+            var option = GetHairColorOption(colorIndex);
+
+            if (ZeroPlayer.CurrentPlayer != null)
+            {
+                ZeroPlayer.CurrentPlayer.HairColor = colorIndex;
+            }
+
+            if (global::Player.main != null)
+            {
+                ApplyHairTint(global::Player.main.gameObject, ZeroPlayer.CurrentPlayer?.PlayerId ?? 0);
+            }
+
+            Settings.ModConfig.SaveHairColor(colorIndex);
+
+            if (Network.IsMultiplayerActive)
+            {
+                NetworkClient.SendPacket(new ServerModel.PlayerSuitColorArgs()
+                {
+                    SuitColor = ZeroPlayer.CurrentPlayer?.SuitColor ?? 1,
+                    HairColor = colorIndex,
+                });
+            }
+
+            ErrorMessage.AddMessage($"Hair Color: {option.Name}");
+        }
+
+        /**
+         * Cycles to the next available suit color.
+         */
+        public static void CycleNextSuitColor()
+        {
+            byte currentColor = GetEffectiveSuitColor(ZeroPlayer.CurrentPlayer?.PlayerId ?? 0);
+            byte nextColor = (byte)(currentColor + 1);
+            if (nextColor > Palette.Length)
+            {
+                nextColor = 1;
+            }
+
+            SetLocalSuitColor(nextColor);
+        }
+
+        /**
+         * Cycles to the next available hair color.
+         */
+        public static void CycleNextHairColor()
+        {
+            byte currentColor = GetEffectiveHairColor(ZeroPlayer.CurrentPlayer?.PlayerId ?? 0);
+            byte nextColor = (byte)(currentColor + 1);
+            if (nextColor > HairPalette.Length)
+            {
+                nextColor = 1;
+            }
+
+            SetLocalHairColor(nextColor);
         }
 
         /**
@@ -117,6 +383,20 @@ namespace Subnautica.Client.MonoBehaviours.Player
         }
 
         /**
+         * Checks whether a renderer belongs to the player's hair.
+         */
+        public static bool IsHairRenderer(Renderer renderer)
+        {
+            if (renderer == null || renderer.gameObject == null)
+            {
+                return false;
+            }
+
+            string name = renderer.gameObject.name.ToLowerInvariant();
+            return name.Contains("hair");
+        }
+
+        /**
          * Applies suit tinting to all suit renderers in the hierarchy.
          */
         public static void ApplySuitTint(GameObject root, byte playerId)
@@ -160,6 +440,61 @@ namespace Subnautica.Client.MonoBehaviours.Player
             {
                 Log.Error($"PlayerSuitCustomizer.ApplySuitTint: root: {root.name}, error: {ex}");
             }
+        }
+
+        /**
+         * Applies hair tinting to all hair renderers in the hierarchy.
+         */
+        public static void ApplyHairTint(GameObject root, byte playerId)
+        {
+            if (root == null || !TryGetHairColor(playerId, out Color tintColor, out Color specColor))
+            {
+                return;
+            }
+
+            try
+            {
+                var renderers = root.GetComponentsInChildren<Renderer>(true);
+                foreach (var renderer in renderers)
+                {
+                    if (!IsHairRenderer(renderer))
+                    {
+                        continue;
+                    }
+
+                    var materials = renderer.materials;
+                    if (materials == null || materials.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    // Check if already tinted with this color
+                    if (materials[0] != null && materials[0].HasProperty("_Color") && materials[0].GetColor("_Color") == tintColor)
+                    {
+                        continue;
+                    }
+
+                    for (int i = 0; i < materials.Length; i++)
+                    {
+                        ApplyMaterialTint(materials[i], tintColor, specColor);
+                    }
+
+                    renderer.materials = materials;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"PlayerSuitCustomizer.ApplyHairTint: root: {root.name}, error: {ex}");
+            }
+        }
+
+        /**
+         * Applies both suit and hair customization to the target object hierarchy.
+         */
+        public static void ApplyCustomization(GameObject root, byte playerId)
+        {
+            ApplySuitTint(root, playerId);
+            ApplyHairTint(root, playerId);
         }
 
         /**
@@ -214,13 +549,13 @@ namespace Subnautica.Client.MonoBehaviours.Player
 
             if (mat.HasProperty("_ColorStrength"))
             {
-                mat.SetFloat("_ColorStrength", 1.5f);
+                mat.SetFloat("_ColorStrength", tintColor == Color.white ? 1.0f : 1.15f);
             }
         }
     }
 
     /**
-     * Helper component attached to the local player to maintain suit tint in first-person view.
+     * Helper component attached to the local player to maintain suit & hair tint and handle F6/F7 cycling.
      */
     public class LocalPlayerSuitTint : MonoBehaviour
     {
@@ -228,11 +563,33 @@ namespace Subnautica.Client.MonoBehaviours.Player
 
         public void Start()
         {
+            var savedSuit = (byte)Settings.ModConfig.SuitColor.GetInt();
+            if (savedSuit >= 1 && savedSuit <= PlayerSuitCustomizer.Palette.Length && ZeroPlayer.CurrentPlayer != null)
+            {
+                ZeroPlayer.CurrentPlayer.SuitColor = savedSuit;
+            }
+
+            var savedHair = (byte)Settings.ModConfig.HairColor.GetInt();
+            if (savedHair >= 1 && savedHair <= PlayerSuitCustomizer.HairPalette.Length && ZeroPlayer.CurrentPlayer != null)
+            {
+                ZeroPlayer.CurrentPlayer.HairColor = savedHair;
+            }
+
             this.ApplyTint();
         }
 
         public void Update()
         {
+            if (GameInput.GetKeyDown(KeyCode.F6))
+            {
+                PlayerSuitCustomizer.CycleNextSuitColor();
+            }
+
+            if (GameInput.GetKeyDown(KeyCode.F7))
+            {
+                PlayerSuitCustomizer.CycleNextHairColor();
+            }
+
             if (Time.time > this.nextCheckTime)
             {
                 this.nextCheckTime = Time.time + 1.0f;
@@ -244,7 +601,7 @@ namespace Subnautica.Client.MonoBehaviours.Player
         {
             if (Network.IsMultiplayerActive && ZeroPlayer.CurrentPlayer != null && ZeroPlayer.CurrentPlayer.PlayerId > 0)
             {
-                PlayerSuitCustomizer.ApplySuitTint(this.gameObject, ZeroPlayer.CurrentPlayer.PlayerId);
+                PlayerSuitCustomizer.ApplyCustomization(this.gameObject, ZeroPlayer.CurrentPlayer.PlayerId);
             }
         }
     }

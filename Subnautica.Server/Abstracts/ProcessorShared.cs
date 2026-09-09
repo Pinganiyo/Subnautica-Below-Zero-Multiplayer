@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Abstracts
+namespace Subnautica.Server.Abstracts
 {
     using System.Collections.Generic;
 
@@ -53,6 +53,7 @@
             { ProcessType.PlayerSpawn                   , new Player.SpawnProcessor()},
             { ProcessType.PlayerToolEnergy              , new Player.ToolEnergyProcessor()},
             { ProcessType.PlayerConsoleCommand          , new Player.ConsoleCommandProcessor()},
+            { ProcessType.PlayerSuitColor               , new Player.PlayerSuitColorProcessor()},
             { ProcessType.PlayerRespawnPointChanged     , new Player.RespawnPointProcessor()},
             { ProcessType.PlayerInitialEquipment        , new Player.FirstInitialEquipmentProcessor()},
             { ProcessType.Ping                          , new Player.PingProcessor()},

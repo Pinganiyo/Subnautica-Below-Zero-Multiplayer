@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Network.Models.Server
+namespace Subnautica.Network.Models.Server
 {
     using MessagePack;
     
@@ -57,5 +57,21 @@
          */
         [Key(7)]
         public bool IsReconnect { get; set; } = false;
+
+        /**
+         *
+         * Suit Color
+         *
+         */
+        [Key(8)]
+        public byte SuitColor { get; set; } = 0;
+
+        /**
+         *
+         * Hair Color
+         *
+         */
+        [Key(9)]
+        public byte HairColor { get; set; } = 0;
     }
 }

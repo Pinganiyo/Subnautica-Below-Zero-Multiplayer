@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Core
+namespace Subnautica.Client.Core
 {
     using System;
     using System.Collections;
@@ -309,8 +309,10 @@
 
                 JoiningServerArgs packet = new JoiningServerArgs()
                 {
-                    UserName = username,
-                    UserId   = userId
+                    UserName  = username,
+                    UserId    = userId,
+                    SuitColor = (byte)Settings.ModConfig.SuitColor.GetInt(),
+                    HairColor = (byte)Settings.ModConfig.HairColor.GetInt(),
                 };
 
                 NetworkClient.SendPacket(packet);

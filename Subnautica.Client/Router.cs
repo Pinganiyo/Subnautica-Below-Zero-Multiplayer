@@ -390,7 +390,7 @@ namespace Subnautica.Client
         {
             Inventory.EquipmentProcessor.OnProcessEquipment();
 
-            if (Subnautica.API.Features.Network.IsMultiplayerActive && Subnautica.API.Features.ZeroPlayer.CurrentPlayer != null && Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId > 1 && global::Player.main != null)
+            if (Subnautica.API.Features.Network.IsMultiplayerActive && Subnautica.API.Features.ZeroPlayer.CurrentPlayer != null && Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId > 0 && global::Player.main != null)
             {
                 Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.ApplySuitTint(global::Player.main.gameObject, Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId);
             }
@@ -407,7 +407,7 @@ namespace Subnautica.Client
         {
             Inventory.EquipmentProcessor.OnProcessEquipment();
 
-            if (Subnautica.API.Features.Network.IsMultiplayerActive && Subnautica.API.Features.ZeroPlayer.CurrentPlayer != null && Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId > 1 && global::Player.main != null)
+            if (Subnautica.API.Features.Network.IsMultiplayerActive && Subnautica.API.Features.ZeroPlayer.CurrentPlayer != null && Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId > 0 && global::Player.main != null)
             {
                 Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.ApplySuitTint(global::Player.main.gameObject, Subnautica.API.Features.ZeroPlayer.CurrentPlayer.PlayerId);
             }

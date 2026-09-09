@@ -104,6 +104,10 @@ namespace Subnautica.Events.Patches.Fixes.Game
 
                 DevConsole.RegisterConsoleCommand(__instance, "collect");
                 DevConsole.RegisterConsoleCommand(__instance, "endsession");
+                DevConsole.RegisterConsoleCommand(__instance, "suitcolor");
+                DevConsole.RegisterConsoleCommand(__instance, "color");
+                DevConsole.RegisterConsoleCommand(__instance, "haircolor");
+                DevConsole.RegisterConsoleCommand(__instance, "hair");
 
                 // VR AKTİF İSE TETİKLENİR.
                 // VRUtil.OnRecenter += __instance.ResetOrientation;

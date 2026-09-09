@@ -57,7 +57,7 @@ namespace Subnautica.Client.Synchronizations.InitialSync
                 global::Player.main.gameObject.EnsureComponent<Subnautica.Client.MonoBehaviours.Player.ThirdPersonCamera>();
                 if (ZeroPlayer.CurrentPlayer != null && ZeroPlayer.CurrentPlayer.PlayerId > 0)
                 {
-                    Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.ApplySuitTint(global::Player.main.gameObject, ZeroPlayer.CurrentPlayer.PlayerId);
+                    Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.ApplyCustomization(global::Player.main.gameObject, ZeroPlayer.CurrentPlayer.PlayerId);
                 }
             }
         }
@@ -217,11 +217,17 @@ namespace Subnautica.Client.Synchronizations.InitialSync
                     player.SetPlayerName(packet.PlayerName);
                     player.SetSubRootId(packet.SubrootId);
                     player.SetInteriorId(packet.InteriorId);
+                    player.SuitColor = packet.SuitColor;
+                    player.HairColor = packet.HairColor;
 
                     if (!player.IsCreatedModel)
                     {
                         player.CreateModel(packet.Position.ToVector3(true), packet.Rotation.ToQuaternion(true));
                         player.InitBehaviours();
+                    }
+                    else if (player.PlayerModel != null)
+                    {
+                        Subnautica.Client.MonoBehaviours.Player.PlayerSuitCustomizer.ApplyCustomization(player.PlayerModel, player.PlayerId);
                     }
                 }
             }

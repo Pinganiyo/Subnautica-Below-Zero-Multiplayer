@@ -1,4 +1,4 @@
-﻿namespace Subnautica.API.Enums
+namespace Subnautica.API.Enums
 {
     /**
      *
@@ -125,6 +125,7 @@
         CreatureLeviathanMeleeAttack,
         PlayerSpawn,
         CreatureMeleeAttack,
+        PlayerSuitColor,
     }
 
     /**

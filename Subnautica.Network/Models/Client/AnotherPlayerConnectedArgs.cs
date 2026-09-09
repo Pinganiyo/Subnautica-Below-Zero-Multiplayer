@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Network.Models.Client
+namespace Subnautica.Network.Models.Client
 {
     using System.Collections.Generic;
 
@@ -90,5 +90,21 @@
          */
         [Key(11)]
         public ZeroQuaternion Rotation { get; set; }
+
+        /**
+         *
+         * Suit Color
+         *
+         */
+        [Key(12)]
+        public byte SuitColor { get; set; } = 0;
+
+        /**
+         *
+         * Hair Color
+         *
+         */
+        [Key(13)]
+        public byte HairColor { get; set; } = 0;
     }
 }
