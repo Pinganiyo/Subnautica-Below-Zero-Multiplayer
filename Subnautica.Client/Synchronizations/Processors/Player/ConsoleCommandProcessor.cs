@@ -47,6 +47,20 @@ namespace Subnautica.Client.Synchronizations.Processors.Player
                 return;
             }
 
+            if (ev.Command.Equals("zoom", System.StringComparison.OrdinalIgnoreCase) || ev.Command.Equals("camdist", System.StringComparison.OrdinalIgnoreCase))
+            {
+                ev.IsAllowed = false;
+                HandleZoomCommand(ev.FullCommand);
+                return;
+            }
+
+            if (ev.Command.Equals("camheight", System.StringComparison.OrdinalIgnoreCase) || ev.Command.Equals("height", System.StringComparison.OrdinalIgnoreCase))
+            {
+                ev.IsAllowed = false;
+                HandleHeightCommand(ev.FullCommand);
+                return;
+            }
+
             if (IsDeveloperModeOn() || AllowedCommands.Contains(ev.Command))
             {
                 ServerModel.PlayerConsoleCommandArgs request = new ServerModel.PlayerConsoleCommandArgs()
@@ -120,6 +134,38 @@ namespace Subnautica.Client.Synchronizations.Processors.Player
             {
                 ErrorMessage.AddMessage($"Unknown hair color: '{query}'. Type 'haircolor list' to see all options.");
             }
+        }
+
+        /**
+         * Handles the zoom / camdist command.
+         */
+        private static void HandleZoomCommand(string fullCommand)
+        {
+            var parts = fullCommand.Split(new char[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length < 2 || !float.TryParse(parts[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float dist))
+            {
+                ErrorMessage.AddMessage($"Usage: /zoom <distance> (range: {Subnautica.Client.MonoBehaviours.Player.ThirdPersonCamera.MinDistance:0.0}m - {Subnautica.Client.MonoBehaviours.Player.ThirdPersonCamera.MaxDistance:0.0}m). Current: {Subnautica.Client.MonoBehaviours.Player.ThirdPersonCamera.CurrentDistance:0.1}m");
+                return;
+            }
+
+            Subnautica.Client.MonoBehaviours.Player.ThirdPersonCamera.SetDistance(dist);
+            ErrorMessage.AddMessage($"Camera Distance: {Subnautica.Client.MonoBehaviours.Player.ThirdPersonCamera.CurrentDistance:0.1}m");
+        }
+
+        /**
+         * Handles the camheight / height command.
+         */
+        private static void HandleHeightCommand(string fullCommand)
+        {
+            var parts = fullCommand.Split(new char[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length < 2 || !float.TryParse(parts[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float height))
+            {
+                ErrorMessage.AddMessage($"Usage: /camheight <offset> (range: -1.5m to +1.5m, Up/Down Arrow to adjust). Current offset: {Subnautica.Client.MonoBehaviours.Player.ThirdPersonCamera.UserHeightOffset:+0.00;-0.00;0.00}m");
+                return;
+            }
+
+            Subnautica.Client.MonoBehaviours.Player.ThirdPersonCamera.UserHeightOffset = height;
+            ErrorMessage.AddMessage($"Camera Height Offset: {Subnautica.Client.MonoBehaviours.Player.ThirdPersonCamera.UserHeightOffset:+0.00;-0.00;0.00}m");
         }
 
         /**
