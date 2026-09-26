@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.MonoBehaviours.Player
+namespace Subnautica.Client.MonoBehaviours.Player
 {
     using Subnautica.API.Features;
     using Subnautica.Network.Structures;
@@ -112,7 +112,11 @@
             this.FootstepSounds_Player.soundsEnabled  = false;
             this.FootstepSounds_Exosuit.soundsEnabled = false;
 
-            this.RefreshPlayerSettings();
+            try
+            {
+                this.RefreshPlayerSettings();
+            }
+            catch {}
 
             this.InvokeRepeating("TriggerMultiplayerSounds", 0f, 0.05f);
         }
@@ -172,14 +176,24 @@
 
             if (this.Player.VehicleType == TechType.None)
             {
-                if (this.Player.CurrentSurfaceType == VFXSurfaceTypes.none)
-                {
-                    return false;
-                }
-
                 if (!this.FootstepSounds_Player.soundsEnabled)
                 {
-                    return false;
+                    if (!this.RefreshPlayerSettings())
+                    {
+                        return false;
+                    }
+                }
+
+                if (this.Player.CurrentSurfaceType == VFXSurfaceTypes.none)
+                {
+                    if (Physics.Raycast(this.transform.position + Vector3.up * 0.5f, Vector3.down, out var hit, 2.5f, ~(1 << 31), QueryTriggerInteraction.Ignore))
+                    {
+                        this.Player.CurrentSurfaceType = this.FootstepSounds_Player.GetSurfaceType(hit.point, hit.normal);
+                    }
+                    if (this.Player.CurrentSurfaceType == VFXSurfaceTypes.none)
+                    {
+                        this.Player.CurrentSurfaceType = VFXSurfaceTypes.fallback;
+                    }
                 }
 
                 if (this.Player.IsUnderwater)
@@ -247,8 +261,13 @@
          */
         private bool RefreshPlayerSettings()
         {
+            if (global::Player.main == null || global::Player.main.footStepSounds == null || global::Player.main.footStepSounds.footStepSound == null)
+            {
+                return false;
+            }
+
             this.FootstepSounds_Player = this.CopyFootstepSettings(global::Player.main.footStepSounds, this.FootstepSounds_Player);
-            return true;
+            return this.FootstepSounds_Player != null && this.FootstepSounds_Player.soundsEnabled;
         }
 
         /**

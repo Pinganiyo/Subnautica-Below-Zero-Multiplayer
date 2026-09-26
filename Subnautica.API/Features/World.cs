@@ -1,4 +1,4 @@
-﻿namespace Subnautica.API.Features
+namespace Subnautica.API.Features
 {
     using System;
 
@@ -67,6 +67,10 @@
         public static void SetLoaded(bool isLoaded)
         {
             IsLoaded = isLoaded;
+            if (isLoaded)
+            {
+                MainMenuMusic.Stop();
+            }
         }
 
         /**

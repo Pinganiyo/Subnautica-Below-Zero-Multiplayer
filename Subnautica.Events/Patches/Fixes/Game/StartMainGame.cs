@@ -116,6 +116,10 @@ namespace Subnautica.Events.Patches.Fixes.Game
 
                 yield return IntroCheckingEvent();
 
+                MainMenuMusic.Stop();
+                __instance.OnIntroDone();
+                VRLoadingOverlay.Hide();
+
                 World.SetLoaded(true);
             }
             else

@@ -296,6 +296,7 @@ namespace Subnautica.API.Features.NetworkUtility
 
                 cinematic.timeUsingStarted = Time.time;
                 cinematic.cinematicController.director?.Stop();
+                cinematic.cinematicController.informGameObject = cinematic.gameObject;
                 cinematic.cinematicController.StartCinematicMode(global::Player.main);
                 cinematic.OnStartCinematicMode();
 
@@ -312,8 +313,6 @@ namespace Subnautica.API.Features.NetworkUtility
                         player = global::Player.main
                     });
                 }
-                
-                cinematic.cinematicController.informGameObject = cinematic.gameObject;
             }
             catch (Exception ex)
             {

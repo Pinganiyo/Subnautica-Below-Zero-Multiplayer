@@ -21,17 +21,24 @@ namespace Subnautica.Client.Extensions
         {
             if (player?.PlayerModel != null)
             {
-                player.EnsureComponent<PlayerLighting>().Player          = player;
-                player.EnsureComponent<PlayerAnimation>().Player         = player;
-                player.EnsureComponent<PlayerEquipment>().Player         = player;
-                player.EnsureComponent<PlayerHandItemManager>().Player   = player;
-                player.EnsureComponent<PlayerVehicleManagement>().Player = player;
-                player.EnsureComponent<PlayerFootstepSounds>().Player    = player;
+                try
+                {
+                    player.EnsureComponent<PlayerLighting>().Player          = player;
+                    player.EnsureComponent<PlayerAnimation>().Player         = player;
+                    player.EnsureComponent<PlayerEquipment>().Player         = player;
+                    player.EnsureComponent<PlayerHandItemManager>().Player   = player;
+                    player.EnsureComponent<PlayerVehicleManagement>().Player = player;
+                    player.EnsureComponent<PlayerFootstepSounds>().Player    = player;
 
-                var playerEquipment = player.GetComponent<PlayerEquipment>();
-                playerEquipment.ResetEquipments();
+                    var playerEquipment = player.GetComponent<PlayerEquipment>();
+                    playerEquipment?.ResetEquipments();
 
-                PlayerSuitCustomizer.ApplyCustomization(player.PlayerModel, player.PlayerId);
+                    PlayerSuitCustomizer.ApplyCustomization(player.PlayerModel, player.PlayerId);
+                }
+                catch (System.Exception ex)
+                {
+                    Log.Error($"PlayerExtensions.InitBehaviours Exception: {ex}");
+                }
             }
         }
 

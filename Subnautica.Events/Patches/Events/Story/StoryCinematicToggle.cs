@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.Story
+namespace Subnautica.Events.Patches.Events.Story
 {
     using HarmonyLib;
 
@@ -44,6 +44,25 @@
                 catch (Exception e)
                 {
                     Log.Error($"StoryCinematicToggle.OnPlayerCinematicModeEnd: {e}\n{e.StackTrace}");
+                }
+            }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(global::PlayerCinematicController), nameof(global::PlayerCinematicController.EndCinematicMode))]
+        private static void EndCinematicMode(global::PlayerCinematicController __instance)
+        {
+            if (Network.IsMultiplayerActive)
+            {
+                try
+                {
+                    StoryCinematicCompletedEventArgs args = new StoryCinematicCompletedEventArgs(__instance.name);
+
+                    Handlers.Story.OnStoryCinematicCompleted(args);
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"StoryCinematicToggle.EndCinematicMode: {e}\n{e.StackTrace}");
                 }
             }
         }

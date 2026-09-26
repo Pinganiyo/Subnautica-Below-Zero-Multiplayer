@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Fixes.Vehicle
+namespace Subnautica.Events.Patches.Fixes.Vehicle
 {
     using HarmonyLib;
 
@@ -46,12 +46,12 @@
         {
             if (isHide)
             {
-                PlayerCinematicController.cinematicModeCount++;
+                PlayerCinematicController.cinematicModeCount = System.Math.Max(0, PlayerCinematicController.cinematicModeCount + 1);
                 HandReticle.main.RequestCrosshairHide();
             }
             else
             {
-                PlayerCinematicController.cinematicModeCount--;
+                PlayerCinematicController.cinematicModeCount = System.Math.Max(0, PlayerCinematicController.cinematicModeCount - 1);
                 HandReticle.main.UnrequestCrosshairHide();
             }
         }

@@ -1,4 +1,4 @@
-﻿namespace Subnautica.API.Features
+namespace Subnautica.API.Features
 {
     using FMOD.Studio;
     using FMODUnity;
@@ -80,6 +80,12 @@
             if (attachedTransform && asset)
             {
                 var eventInstance = FMODUWE.GetEvent(asset);
+                if (eventInstance.hasHandle())
+                {
+                    eventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(attachedTransform));
+                }
+
+                eventInstance.setVolume(this.GetVolume(attachedTransform, maxDistance));
                 startAction?.Invoke(eventInstance);
 
                 eventInstance.start();
@@ -92,6 +98,10 @@
                         break;
                     }
 
+                    if (eventInstance.hasHandle())
+                    {
+                        eventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(attachedTransform));
+                    }
                     eventInstance.setVolume(this.GetVolume(attachedTransform, maxDistance));
 
                     yield return CoroutineUtils.waitForNextFrame;

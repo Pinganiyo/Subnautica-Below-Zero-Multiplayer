@@ -65,6 +65,9 @@ namespace Subnautica.Client.Synchronizations.Processors.General
             }
             else
             {
+                MainMenuMusic.Stop();
+                VRLoadingOverlay.Hide();
+
                 if (!Network.Session.Current.SupplyDrops.Any(q => q.Key == API.Constants.SupplyDrop.Lifepod))
                 {
                     IntroProcessor.SendPacketToServer(true);
@@ -175,6 +178,9 @@ namespace Subnautica.Client.Synchronizations.Processors.General
             yield return introManager.Play(global::Player.main, gui);
 
             IntroVignette.isIntroActive = false;
+
+            gui.Stop(false);
+            MainMenuMusic.Stop();
 
             gui.ResumeGameTime();
             gui.coroutine = null;

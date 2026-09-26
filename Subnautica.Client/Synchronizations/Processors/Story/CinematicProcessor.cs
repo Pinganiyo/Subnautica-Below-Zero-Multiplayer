@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Synchronizations.Processors.Story
+namespace Subnautica.Client.Synchronizations.Processors.Story
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -50,12 +50,16 @@
         {
             if (this.CinematicQueue.Count > 0)
             {
+                if (global::Player.main != null && !global::Player.main.cinematicModeActive && PlayerCinematicController.cinematicModeCount > 0)
+                {
+                    PlayerCinematicController.cinematicModeCount = 0;
+                }
+
                 if (PlayerCinematicController.cinematicModeCount <= 0)
                 {
                     foreach (var packet in this.CinematicQueue.ToList())
                     {
-                        Log.Error("Cinematic -> T1: " + Network.Session.GetWorldTime() + ", T2: " + packet.StartTime);
-                        if (Network.Session.GetWorldTime() < packet.StartTime)
+                        if (Network.Session.GetWorldTime() < packet.StartTime && packet.StartTime - Network.Session.GetWorldTime() <= 5.0)
                         {
                             continue;
                         }

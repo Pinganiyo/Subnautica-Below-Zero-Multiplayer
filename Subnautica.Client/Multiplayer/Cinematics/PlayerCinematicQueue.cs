@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Multiplayer.Cinematics
+namespace Subnautica.Client.Multiplayer.Cinematics
 {
     using System;
     using System.Collections;
@@ -11,6 +11,7 @@
     using Subnautica.Client.Extensions;
     using Subnautica.Client.MonoBehaviours.Player;
 
+    using UnityEngine;
     using UWE;
 
     public class PlayerCinematicQueue
@@ -108,9 +109,14 @@
                     var item = queues.Dequeue();
                     if (item.CinematicController)
                     {
+                        float waitStart = Time.time;
                         while (IsUsingTarget(item.UniqueId, playerId))
                         {
-                            Log.Info("BUSY. REPORT! I AM WAITING... => " + playerId + ", IT: " + item.UniqueId);
+                            if (Time.time - waitStart > 10f)
+                            {
+                                Log.Warn($"PlayerCinematicQueue: Timeout waiting for target {item.UniqueId} by player {playerId}. Forcing unlock.");
+                                break;
+                            }
                             yield return CoroutineUtils.waitForFixedUpdate;
                         }
 

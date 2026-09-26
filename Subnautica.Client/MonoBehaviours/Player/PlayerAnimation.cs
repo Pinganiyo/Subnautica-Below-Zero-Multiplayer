@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.MonoBehaviours.Player
+namespace Subnautica.Client.MonoBehaviours.Player
 {
     using RootMotion.FinalIK;
 
@@ -23,7 +23,7 @@
         {
             this.Animator  = this.gameObject.GetComponent<Animator>();
             this.RigidBody = this.gameObject.GetComponent<Rigidbody>();
-            this.RigidBody.mass      = global::Player.main.rigidBody.mass;
+            this.RigidBody.mass       = (global::Player.main != null && global::Player.main.rigidBody != null) ? global::Player.main.rigidBody.mass : 70f;
             this.RigidBody.useGravity = false;
             this.RigidBody.SetInterpolation(RigidbodyInterpolation.None);
             this.RigidBody.SetKinematic();
