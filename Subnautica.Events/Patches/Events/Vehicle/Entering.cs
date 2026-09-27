@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.Vehicle
+namespace Subnautica.Events.Patches.Events.Vehicle
 {
     using HarmonyLib;
 
@@ -76,7 +76,13 @@
 
             try
             {
-                VehicleEnteringEventArgs args = new VehicleEnteringEventArgs(__instance.gameObject.GetIdentityId(), TechType.Exosuit);
+                var uniqueId = __instance.gameObject.GetIdentityId(true);
+                if (string.IsNullOrEmpty(uniqueId))
+                {
+                    return true;
+                }
+
+                VehicleEnteringEventArgs args = new VehicleEnteringEventArgs(uniqueId, TechType.Exosuit);
 
                 Handlers.Vehicle.OnEntering(args);
 
@@ -85,9 +91,8 @@
             catch (Exception e)
             {
                 Log.Error($"Vehicle.OnHandClick: {e}\n{e.StackTrace}");
+                return true;
             }
-
-            return true;
         }
 
         /**

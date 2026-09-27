@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Synchronizations.Processors.Vehicle
+namespace Subnautica.Client.Synchronizations.Processors.Vehicle
 {
     using Subnautica.API.Enums;
     using Subnautica.API.Extensions;
@@ -9,6 +9,7 @@
     using Subnautica.Events.EventArgs;
     using Subnautica.Network.Models.Core;
 
+    using System.Linq;
     using ServerModel = Subnautica.Network.Models.Server;
 
     public class EnterProcessor : NormalProcessor
@@ -42,7 +43,15 @@
             var entity = Network.DynamicEntity.GetEntity(packet.UniqueId);
             if (entity == null)
             {
-                return false;
+                if (packet.Vehicle != null)
+                {
+                    entity = packet.Vehicle;
+                    Network.DynamicEntity.AddEntity(entity);
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             API.Features.Log.Info("EnterProcessor 1 ==> " + packet.Vehicle?.UniqueId + ", pos: " + packet.Vehicle?.Position);
@@ -57,6 +66,18 @@
             if (packet.TechType == TechType.Hoverbike)
             {
                 var vehicle = Network.Identifier.GetComponentByGameObject<global::Hoverbike>(packet.UniqueId);
+                if (vehicle == null && player.IsMine)
+                {
+                    vehicle = UnityEngine.Object.FindObjectsOfType<global::Hoverbike>()
+                        .OrderBy(e => UnityEngine.Vector3.Distance(e.transform.position, global::Player.main.transform.position))
+                        .FirstOrDefault();
+
+                    if (vehicle != null)
+                    {
+                        Network.Identifier.SetIdentityId(vehicle.gameObject, packet.UniqueId);
+                    }
+                }
+
                 if (vehicle == null)
                 {
                     return false;
@@ -72,6 +93,18 @@
             else if (packet.TechType == TechType.Exosuit)
             {
                 var vehicle = Network.Identifier.GetComponentByGameObject<global::Exosuit>(packet.UniqueId);
+                if (vehicle == null && player.IsMine)
+                {
+                    vehicle = UnityEngine.Object.FindObjectsOfType<global::Exosuit>()
+                        .OrderBy(e => UnityEngine.Vector3.Distance(e.transform.position, global::Player.main.transform.position))
+                        .FirstOrDefault();
+
+                    if (vehicle != null)
+                    {
+                        Network.Identifier.SetIdentityId(vehicle.gameObject, packet.UniqueId);
+                    }
+                }
+
                 if (vehicle == null)
                 {
                     return false;

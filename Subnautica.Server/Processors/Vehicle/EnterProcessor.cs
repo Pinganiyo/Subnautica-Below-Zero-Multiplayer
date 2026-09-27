@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Processors.Vehicle
+namespace Subnautica.Server.Processors.Vehicle
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -12,8 +12,9 @@
     using Subnautica.Server.Abstracts.Processors;
     using Subnautica.Server.Extensions;
 
-    using MetadataModel = Subnautica.Network.Models.Metadata;
-    using ServerModel   = Subnautica.Network.Models.Server;
+    using MetadataModel    = Subnautica.Network.Models.Metadata;
+    using ServerModel      = Subnautica.Network.Models.Server;
+    using WorldEntityModel = Subnautica.Network.Models.WorldEntity.DynamicEntityComponents;
 
     public class EnterProcessor : NormalProcessor
     {
@@ -61,7 +62,36 @@
             var entity = this.GetVehicle(packet.UniqueId);
             if (entity == null)
             {
-                return false;
+                if (packet.TechType == TechType.Exosuit || packet.TechType == TechType.Hoverbike || packet.TechType.IsSeaTruckModule(true))
+                {
+                    entity = new WorldDynamicEntity()
+                    {
+                        UniqueId = packet.UniqueId,
+                        TechType = packet.TechType,
+                        Position = profile.Position,
+                        Rotation = profile.Rotation,
+                    };
+
+                    if (packet.TechType == TechType.Exosuit)
+                    {
+                        entity.Component = new WorldEntityModel.Exosuit();
+                    }
+                    else if (packet.TechType == TechType.Hoverbike)
+                    {
+                        entity.Component = new WorldEntityModel.Hoverbike();
+                    }
+                    else if (packet.TechType.IsSeaTruckModule(true))
+                    {
+                        entity.Component = new WorldEntityModel.SeaTruck();
+                    }
+
+                    Server.Instance.Storages.World.AddWorldDynamicEntity(entity);
+                    packet.Vehicle = entity;
+                }
+                else
+                {
+                    return false;
+                }
             }
             
             if (packet.TechType == TechType.MapRoomCamera)
