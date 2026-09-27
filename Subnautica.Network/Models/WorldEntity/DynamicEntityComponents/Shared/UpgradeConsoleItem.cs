@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Network.Models.WorldEntity.DynamicEntityComponents.Shared
+namespace Subnautica.Network.Models.WorldEntity.DynamicEntityComponents.Shared
 {
     using MessagePack;
 
@@ -24,5 +24,13 @@
          */
         [Key(1)]
         public TechType ModuleType { get; set; }
+
+        /**
+         *
+         * SlotId Değerini barındırır.
+         *
+         */
+        [Key(2)]
+        public string SlotId { get; set; }
     }
 }

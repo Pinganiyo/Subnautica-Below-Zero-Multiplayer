@@ -1,0 +1,611 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ModdedArmsHelperBZ</name>
+    </assembly>
+    <members>
+        <member name="T:ModdedArmsHelperBZ.API.ArmHandlers.ArmHandler">
+            <summary>
+            The abstract component to inherit for handling the arm.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.ArmHandler.Awake">
+            <summary>
+            Implement this method in your arm handler.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.ArmHandler.Start">
+            <summary>
+            Implement this method in your arm handler.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ArmHandler.vehicle">
+            <summary>
+            This property is returning the <see cref="T:Vehicle"/> component.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ArmHandler.seatruck">
+            <summary>
+            This property is returning the <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/> component. If exists.
+            </summary> 
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ArmHandler.exosuit">
+            <summary>
+            This property is returning the <see cref="T:Exosuit"/> component. If exists.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ArmHandler.animator">
+            <summary>
+            This property is returning the <see cref="T:UnityEngine.Animator"/> component. If exists in the arm gameobject.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ArmHandler.energyInterface">
+            <summary>
+            This property is returning the <see cref="T:EnergyInterface"/> component. If exists in the arm parent gameobject.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ArmHandler.armTag">
+            <summary>
+            This property is returning the <see cref="T:ModdedArmsHelperBZ.API.ArmTag"/> component.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ArmHandler.lowerArm">
+            <summary>
+            This property is returning the lower arm gameobject container. Pivot point is the upper arm elbow.
+            </summary>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler">
+            <summary>
+            The abstract class to inherit for handling the claw arm base mechanics.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.fxControl">
+            <summary>
+            This property is returning the <see cref="T:VFXController"/> component.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.hitTerrainSound">
+            <summary>
+            This property is returning the 'hitTerrainSound'. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.hitFishSound">
+            <summary>
+            This property is returning the 'hitFishSound'. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.pickupSound">
+            <summary>
+            This property is returning the 'pickupSound'. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.front">
+            <summary>
+            This property is returning the claw arm front. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.vfxEventType">
+            <summary>
+            This property can be set. See also <see cref="T:VFXEventTypes"/> enum.
+            </summary>
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.kGrabDistance">
+            <summary>
+            This field can be set. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.cooldownPunch">
+            <summary>
+            This field can be set. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.cooldownPickup">
+            <summary>
+            This field can be set. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.attackDist">
+            <summary>
+            This field can be set. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.damage">
+            <summary>
+            This field can be set. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.damageType">
+            <summary>
+            This field can be set. See also <see cref="T:DamageType"/> enum.
+            </summary>
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.timeUsed">
+            <summary>
+            This field can be set. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.cooldownTime">
+            <summary>
+            This field can be set. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.shownNoRoomNotification">
+            <summary>
+            This field can be set. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.energyCost">
+            <summary>
+            This field can be set. See also <see cref="T:ExosuitClawArm"/> class.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.Awake">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Awake()'
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.ClawArmHandler.Start">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Start()'
+            </summary>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.ArmHandlers.DrillArmHandler">
+            <summary>
+            The abstract class to inherit for handling the drill arm base mechanics.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.DrillArmHandler.Awake">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Awake()'
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.DrillArmHandler.Start">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Start()'
+            </summary>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.ArmHandlers.ExosuitGrapplingArmHandler">
+            <summary>
+            The abstract class to inherit for handling the Exosuit grappling arm base mechanics.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.ExosuitGrapplingArmHandler.Awake">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Awake()'
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.ExosuitGrapplingArmHandler.Start">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Start()'
+            </summary>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.ArmHandlers.PropulsionArmHandler">
+            <summary>
+            The abstract class to inherit for handling the Propulsion arm base mechanics.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.PropulsionArmHandler.Awake">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Awake()'
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.PropulsionArmHandler.Start">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Start()'
+            </summary>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.ArmHandlers.SeatruckGrapplingArmHandler">
+            <summary>
+            The abstract class to inherit for handling the Seatruck grappling arm base mechanics.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.SeatruckGrapplingArmHandler.Awake">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Awake()'
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.SeatruckGrapplingArmHandler.Start">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Start()'
+            </summary>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.ArmHandlers.TorpedoArmHandler">
+            <summary>
+            The abstract class to inherit for handling the Torpedo arm base mechanics.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.TorpedoArmHandler.Awake">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Awake()'
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.TorpedoArmHandler.Start">
+            <summary>
+            If you implement this method in your modded arm handler, the first line should be 'base.Start()'
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmHandlers.TorpedoArmHandler.GetTorpedoTypes">
+            <summary>
+            This method examines which torpedo types can be used of this torpedo arm.
+            </summary>
+            <returns>
+            Returns a <see cref="T:TechType"/>.<br/> array. 
+            </returns>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.ArmServices">
+            <summary>
+            The defining helper class for all new modded arms. This class is a Singleton.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmServices.main">
+            <summary>
+            A property that can be used to access this class.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmServices.HasRoomForItem(ModdedArmsHelperBZ.API.Seatruck,Pickupable)">
+            <summary>
+            This method examines whether there is enough space for the <see cref="T:Pickupable"/> item in the <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/> storage modules.
+            </summary>
+            <returns>
+            <c>true</c> if any of <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/> storage module have an enough space for the <see cref="T:Pickupable"/> item.<br/>Otherwise, returns <c>false</c>. 
+            </returns>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmServices.GetRoomForItem(ModdedArmsHelperBZ.API.Seatruck,Pickupable)">
+            <summary>
+            This method is examine if any of the <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/> storage module that can fits the <see cref="T:Pickupable"/> item.
+            </summary>
+            <returns>
+            an <see cref="T:ItemsContainer"/> if any of <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/> storage module have an enough space for the <see cref="T:Pickupable"/> item.<br/>Otherwise, returns <c>null</c>. 
+            </returns>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmServices.GetLeftArmType(ModdedArmsHelperBZ.API.Seatruck)">
+            <summary>
+            This method is examine of the the current mounted left arm <see cref="T:TechType"/> of the <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/>.
+            </summary>
+            <returns>
+            If any arm mounted in the left arm socket, returns the arm <see cref="T:TechType"/>.<br/>Otherwise, returns <see cref="F:TechType.None"/>. 
+            </returns>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmServices.GetRightArmType(ModdedArmsHelperBZ.API.Seatruck)">
+            <summary>
+            This method is examine of the current mounted right arm <see cref="T:TechType"/> of the <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/>.
+            </summary>
+            <returns>
+            If any arm mounted in the right arm socket, returns the arm <see cref="T:TechType"/>.<br/>Otherwise, returns <see cref="F:TechType.None"/>. 
+            </returns>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmServices.GetLeftArmSlotID(ModdedArmsHelperBZ.API.Seatruck)">
+            <summary>
+            This method is examine of the <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/> left arm slot.
+            </summary>
+            <returns>
+            If any arm mounted in the left arm slot, returns the arm slot ID.<br/>Otherwise, returns <c>-1</c>. 
+            </returns>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmServices.GetRightArmSlotID(ModdedArmsHelperBZ.API.Seatruck)">
+            <summary>
+            This method is examine of this <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/> right arm slot.
+            </summary>
+            <returns>
+            If any arm mounted in the right arm slot, returns the arm slot ID.<br/>Otherwise, returns <c>-1</c>. 
+            </returns>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmServices.IsArmSlotSelected(ModdedArmsHelperBZ.API.Seatruck)">
+            <summary>
+            This method is examine if any arm selected in this <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/> quickslot bar.
+            </summary>
+            <returns>
+            If any arm selected in the quickslot bar, returns <c>true</c>.<br/>Otherwise, returns <c>false</c>. 
+            </returns>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmServices.IsAnyArmAttached(ModdedArmsHelperBZ.API.Seatruck)">
+            <summary>
+            This method is examine if any arm attached to any of this <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/> arm slots.
+            </summary>
+            <returns>
+            If any arm attached to any of this <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/> arm slots, returns <c>true</c>.<br/>Otherwise, returns <c>false</c>. 
+            </returns>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmServices.GetSelectedArmTechType(ModdedArmsHelperBZ.API.Seatruck)">
+            <summary>
+            This method is examine for the selected arm <see cref="T:TechType"/> on this <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/>.
+            </summary>
+            <returns>
+            If any arm selected in the quickslot bar, returns the arm <see cref="T:TechType"/>.<br/>Otherwise, returns <see cref="F:TechType.None"/>. 
+            </returns>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.ArmServices.GetActiveTarget(ModdedArmsHelperBZ.API.Seatruck)">
+            <summary>
+            This method is examine of the current active target on crosshair on this <see cref="T:ModdedArmsHelperBZ.API.Seatruck"/>.
+            </summary>
+            <returns>
+            If current active target not null, returns the target <see cref="T:UnityEngine.GameObject"/>.<br/>Otherwise, returns <c>null</c>. 
+            </returns>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.ArmTag">
+            <summary>
+            The basic elements of the modded arm.<br/>Initialized internally.
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmTag.armType">
+            <summary>
+            The <see cref="T:ModdedArmsHelperBZ.API.ArmType"/> of the modded arm.
+            </summary>        
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmTag.armTemplate">
+            <summary>
+            The <see cref="T:ModdedArmsHelperBZ.API.ArmTemplate"/> of the modded arm.
+            </summary>        
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.ArmTag.techType">
+            <summary>
+            The <see cref="T:TechType"/> of the modded arm.
+            </summary>        
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.CraftableModdedArm">
+            <summary>
+            The abstract class to inherit when you want to add new Exosuit and/or Seatruck arm into the game.    
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.CraftableModdedArm.PrefabClone">
+            <summary>
+            The cloned arm gameobject.<br/>Initialized internally.        
+            </summary>
+        </member>
+        <member name="P:ModdedArmsHelperBZ.API.CraftableModdedArm.ArmTemplate">
+            <summary>
+            The arm clone template.<br/>Initialized internally.       
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.CraftableModdedArm.#ctor(System.String,System.String,System.String,ModdedArmsHelperBZ.API.ArmType,ModdedArmsHelperBZ.API.ArmTemplate,TechType,ModdedArmsHelperBZ.API.SpawnableArmFragment)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ModdedArmsHelperBZ.API.CraftableModdedArm"/> class, the basic class for any arm that can be crafted at a Vehicle Upgrade Console.        
+            </summary>        
+            <param name="techTypeName">The main internal identifier for this item. Your item's <see cref="T:TechType"/> will be created using this name.</param>
+            <param name="friendlyName">The name displayed in-game for this item whether in the open world or in the inventory.</param>
+            <param name="description">The description for this item; Typically seen in the PDA, inventory, or crafting screens.</param>
+            <param name="armType">The <see cref="F:ModdedArmsHelperBZ.API.CraftableModdedArm.ArmType"/> parameter (Exosuit or Seatruck).</param>
+            <param name="armTemplate">The base <see cref="P:ModdedArmsHelperBZ.API.CraftableModdedArm.ArmTemplate"/> for cloning.</param>
+            <param name="requiredForUnlock">The required <see cref="T:TechType"/> that must first be scanned or picked up to unlock the blueprint for this item. If you use fragment set this one to TechType.None</param>
+            <param name="fragment">The <see cref="T:ModdedArmsHelperBZ.API.SpawnableArmFragment"/> parameter. If you not used fragment set this one to null.</param>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.CraftableModdedArm.Patch">
+            <summary>
+            Call this from the MOD main class to execute the patch.        
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.CraftableModdedArm.GetGameObjectAsync(IOut{UnityEngine.GameObject})">
+            <summary>
+            Initializes the cloned arm for the inventory item.
+            </summary>
+            <remarks>
+            If you want to set the visual appearance of the arm in the open world or in the inventory,<br/>then you can implement it in this <see cref="M:ModdedArmsHelperBZ.API.CraftableModdedArm.ModifyGameObjectAsync(IOut{System.Boolean})"/> method.
+            </remarks>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.CraftableModdedArm.GetRecipe">
+            <summary>
+            This provides the <see cref="T:TechData"/> instance used to designate how this arm is crafted.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.CraftableModdedArm.GetEncyclopediaData">
+            <summary>
+            If you want to set up an encyclopedia data, you can do it here.<br/>If not, simply return null.<br/>See also <see cref="T:BZHelper.NautilusHelpers.EncyData"/> class.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.CraftableModdedArm.RegisterArm">
+            <summary>
+            In this method, you must set up and return the <see cref="T:ModdedArmsHelperBZ.API.RegisterArmRequest"/> <see cref="T:ModdedArmsHelperBZ.API.CraftableModdedArm"/> and the <see cref="T:ModdedArmsHelperBZ.API.Interfaces.IArmModdingRequest"/> interface.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.CraftableModdedArm.SetCustomLanguageText">
+            <summary>
+            Use this if You want to add custom language lines.<br/>See also <see cref="T:Nautilus.Handlers.LanguageHandler"/>.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.CraftableModdedArm.ModifyGameObjectAsync(IOut{System.Boolean})">
+            <summary>
+            Use this if You want modify the visual appearance of the arm in the open world.<br/>Use the <see cref="P:ModdedArmsHelperBZ.API.CraftableModdedArm.PrefabClone"/> parameter to access the cloned arm.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.CraftableModdedArm.GetItemSprite">
+            <summary>
+            Use this to set up the sprite of the arm.
+            </summary>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.ArmType">
+            <summary>
+            The ArmType enumerator.
+            </summary>
+            <remarks>
+            This determines which vehicles can use the arm.
+            </remarks>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.ArmTemplate">
+            <summary>
+            The ArmTemplate enumerator.
+            </summary>
+            <remarks>
+            This determines which vanilla arm should be cloned.
+            </remarks>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.ArmBaseAbility">
+            <summary>
+            The ArmBaseAbility enumerator.
+            </summary>
+            <remarks>
+            Not currently in use.
+            </remarks>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.SeatruckArm">
+            <summary>
+            The SeatruckArm enumerator.
+            </summary>
+            <remarks>
+            Used to query the Seatruck arm.
+            </remarks>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.TargetObjectType">
+            <summary>
+            The TargetObjectType enumerator.
+            </summary>
+            <remarks>
+            Used to query the active target.
+            </remarks>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.Interfaces.IArmModdingRequest">
+            <summary>
+            The modded arm can be handled via this interface. 
+            </summary>
+            <remarks>
+            Must be specified in the <see cref="M:ModdedArmsHelperBZ.API.CraftableModdedArm.RegisterArm"/> method.
+            </remarks>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.IArmModdingRequest.GetExosuitArmHandler(UnityEngine.GameObject)">
+            <summary>
+            Implement this method and return interface when your modded arm is <see cref="T:Exosuit"/> arm. If not, return null.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.IArmModdingRequest.GetSeatruckArmHandler(UnityEngine.GameObject)">
+            <summary>
+            Implement this method and return interface when your modded arm is <see cref="T:SeaMoth"/> arm. If not, return null.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.IArmModdingRequest.SetUpArmAsync(UnityEngine.GameObject,ModdedArmsHelperBZ.API.LowerArmHelper,IOut{System.Boolean})">
+            <summary>
+            Implement this async method for the set up your equipped modded arm model. (Not the open world or in the inventory!).
+            </summary>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.Interfaces.IExosuitModdedArm">
+            <summary>
+            The modded Exosuit arm can be controlled via this and base interface. 
+            </summary>    
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.IExosuitModdedArm.GetEnergyCost">
+            <summary>
+             The arm manager calls this method to query the arm power consumption.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.IExosuitModdedArm.GetCustomUseText(System.String@)">
+            <summary>
+             The arm manager calls this method for change the ui text.
+            </summary>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm">
+            <summary>
+            The modded Seatruck arm can be controlled via this interface. 
+            </summary>    
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.GetGameObject">
+            <summary>
+            Simply return the gameObject property.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.GetInteractableRoot(UnityEngine.GameObject)">
+            <summary>
+            Use this if the modded arm can grab or hold objects like claw and propulsion arm. Otherwise return null.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.HasClaw">
+            <summary>
+            If your arm has claw capabilities returns true. Otherwise returns false.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.HasDrill">
+            <summary>
+            If your arm has drill capabilities returns true. Otherwise returns false.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.HasPropCannon">
+            <summary>
+            If your arm has propulsion capabilities returns true. Otherwise returns false.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.SetSide(ModdedArmsHelperBZ.API.SeatruckArm)">
+            <summary>
+            The arm manager calls this method when you attached arm to any side.
+            In this method you can set up arm position, rotation, etc... in normal state for side left or right.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.SetRotation(ModdedArmsHelperBZ.API.SeatruckArm,System.Boolean)">
+            <summary>
+            The arm manager calls this method when Struck docked in dock or moonpool.
+            In this method you can set up arm position, rotation, etc... in docked state for side left or right.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.OnUseDown(System.Single@)">
+            <summary>
+            The arm manager calls this method when the left mouse button has pressed down. 
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.OnUseHeld(System.Single@)">
+            <summary>
+            The arm manager calls this method when the left mouse button has held. 
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.OnUseUp(System.Single@)">
+            <summary>
+            The arm manager calls this method when the left mouse button has released. 
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.OnAltDown">
+            <summary>
+            The arm manager calls this method when the alternate key button has pressed. 
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.Update(UnityEngine.Quaternion@)">
+            <summary>
+            The arm manager calls this once per frame. 
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.ResetArm">
+            <summary>
+            The arm manager calls this once per frame. 
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.GetEnergyCost">
+            <summary>
+             The arm manager calls this method to query the arm power consumption.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.Interfaces.ISeatruckArm.GetCustomUseText(System.String@)">
+            <summary>
+             The arm manager calls this method for change the ui text.
+            </summary>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.LowerArmHelper">
+            <summary>
+            The helper class to setting up the modded arm.<br/>The <see cref="T:ModdedArmsHelperBZ.API.Interfaces.IArmModdingRequest"/> interface called this when creating the new arm prefab.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.LowerArmHelper.DisableLowerArmMesh">
+            <summary>
+            This method hide the vanilla arm lower arm mesh in the SkinnedMeshRenderer.
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.LowerArmHelper.AttachNewLowerArm(UnityEngine.GameObject,System.Boolean)">
+            <summary>
+            Call this method to insert a new lower arm gameobject.<br/>The gameobject is inserted into ../elbow/ModdedLowerArmContainer
+            </summary>
+        </member>
+        <member name="T:ModdedArmsHelperBZ.API.RegisterArmRequest">
+            <summary>
+            The required class to register the new modded arm.   
+            </summary>
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.RegisterArmRequest.craftableModdedArm">
+            <summary>
+            The base instance of the <see cref="T:ModdedArmsHelperBZ.API.CraftableModdedArm"/> class.       
+            </summary>     
+        </member>
+        <member name="F:ModdedArmsHelperBZ.API.RegisterArmRequest.armModdingRequest">
+            <summary>
+            The modded arm setting interface. 
+            </summary>
+        </member>
+        <member name="M:ModdedArmsHelperBZ.API.RegisterArmRequest.#ctor(ModdedArmsHelperBZ.API.CraftableModdedArm,ModdedArmsHelperBZ.API.Interfaces.IArmModdingRequest)">
+            <summary>
+            The basic constructor of this class. 
+            </summary>
+        </member>
+    </members>
+</doc>

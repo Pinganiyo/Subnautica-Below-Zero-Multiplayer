@@ -1,0 +1,7 @@
+CustomCraftingTabs:
+(
+    TabID: ModdedWorkbench;
+    DisplayName: "Modded Modules";
+    SpriteItemID: SeaTruckUpgradeEnergyEfficiency;
+    ParentTabPath: Workbench;
+);

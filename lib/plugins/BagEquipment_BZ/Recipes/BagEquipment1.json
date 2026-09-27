@@ -1,0 +1,16 @@
+{
+    "craftAmount": 1,
+    "Ingredients": [
+      {
+        "techType": "Silicone",
+        "amount": 1
+      },
+      {
+        "techType": "FiberMesh",
+        "amount": 1
+      }
+    ],
+    "LinkedItems": [
+        
+    ]
+}

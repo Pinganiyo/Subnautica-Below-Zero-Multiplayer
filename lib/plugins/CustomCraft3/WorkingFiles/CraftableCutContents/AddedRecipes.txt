@@ -1,0 +1,77 @@
+AddedRecipes:
+(
+    ItemID: ultraglidefins;
+    AmountCrafted: 1;
+    Ingredients: 
+    (
+        ItemID: fins;
+        Required: 1;
+    ),
+    (
+        ItemID: silicone;
+        Required: 2;
+    ),
+    (
+        ItemID: titanium;
+        Required: 1;
+    ),
+    (
+        ItemID: lithium;
+        Required: 1;
+    );
+    ForceUnlockAtStart: NO;
+    Path: Fabricator/CraftableCutContents;
+),
+(
+    ItemID: plasteeltank;
+    AmountCrafted: 1;
+    Ingredients: 
+    (
+        ItemID: doubletank;
+        Required: 1;
+    ),
+    (
+        ItemID: plasteelingot;
+        Required: 1;
+    );
+    ForceUnlockAtStart: NO;
+    Path: Fabricator/CraftableCutContents;
+),
+(
+    ItemID: seatruckupgradeenergyefficiency;
+    AmountCrafted: 1;
+    Ingredients: 
+    (
+        ItemID: computerchip;
+        Required: 1;
+    ),
+    (
+        ItemID: diamond;
+        Required: 2;
+    ),
+    (
+        ItemID: benzene;
+        Required: 1;
+    );
+    ForceUnlockAtStart: NO;
+    Path: Fabricator/CraftableCutContents;
+),
+(
+    ItemID: vehiclearmorplating;
+    AmountCrafted: 1;
+    Ingredients: 
+    (
+        ItemID: titanium;
+        Required: 3;
+    ),
+    (
+        ItemID: lithium;
+        Required: 1;
+    ),
+    (
+        ItemID: diamond;
+        Required: 4;
+    );
+    ForceUnlockAtStart: NO;
+    Path: Fabricator/CraftableCutContents;
+),

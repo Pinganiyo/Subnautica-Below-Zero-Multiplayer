@@ -1,0 +1,124 @@
+AliasRecipes:
+(
+    ItemID: CustomVehiclePowerUpgradeModule;
+    DisplayName: "Engine Efficiency Module";
+	Tooltip: "Increases maximum battery life by recycling engine thermal waste and decreases total power consumption by 15%. Effect stacks with multiple modules.";
+    LinkedItemIDs: vehiclepowerupgrademodule;
+    AmountCrafted: 0;
+    Ingredients: 
+    (
+        ItemID: computerchip;
+        Required: 1;
+    ),
+    (
+        ItemID: polyaniline;
+        Required: 1;
+    );
+    ForceUnlockAtStart: NO;
+    Path: Fabricator/CraftableCutContents;
+);
+(
+    ItemID: CustomFireExtinguisher;
+    DisplayName: "Fire Extinguisher";
+	Tooltip: "Keeps fires in check. It can also be used to push the player in the opposite direction if used underwater.";
+    LinkedItemIDs: fireextinguisher;
+    AmountCrafted: 0;
+    Ingredients: 
+    (
+        ItemID: titanium;
+        Required: 3;
+    );
+    Path: Fabricator/CraftableCutContents;
+),
+(
+    ItemID: CustomStasisRifle;
+    DisplayName: "Stasis Rifle";
+	Tooltip: "Freezes physical objects in place.";
+    LinkedItemIDs: stasisrifle;
+    AmountCrafted: 0;
+    Ingredients: 
+    (
+        ItemID: computerchip;
+        Required: 1;
+    ),
+    (
+        ItemID: battery;
+        Required: 1;
+    ),
+    (
+        ItemID: titanium;
+        Required: 1;
+    ),
+    (
+        ItemID: magnetite;
+        Required: 2;
+    );
+    ForceUnlockAtStart: NO;
+    Path: Fabricator/CraftableCutContents;
+),
+(
+    ItemID: CustomRepulsionCannon;
+    DisplayName: "Repulsion Cannon";
+	Tooltip: "Applies percussive force to entities in range.";
+    LinkedItemIDs: repulsioncannon;
+    AmountCrafted: 0;
+    Ingredients: 
+    (
+        ItemID: propulsioncannon;
+        Required: 1;
+    ),
+    (
+        ItemID: computerchip;
+        Required: 1;
+    ),
+    (
+        ItemID: magnetite;
+        Required: 2;
+    );
+    ForceUnlockAtStart: NO;
+    Path: Fabricator/CraftableCutContents;
+),
+(
+    ItemID: CustomBonesharkEgg;
+    DisplayName: "Boneshark Egg";
+	Tooltip: "Bonesharks hatch from these.";
+    LinkedItemIDs: bonesharkegg;
+    AmountCrafted: 0;
+    Ingredients: 
+    (
+        ItemID: benzene;
+        Required: 1;
+    ),
+    (
+        ItemID: symbiote;
+        Required: 1;
+    ),
+    (
+        ItemID: uraninitecrystal;
+        Required: 1;
+    );
+    ForceUnlockAtStart: NO;
+    Path: Fabricator/CraftableCutContents;
+);
+(
+    ItemID: CustomShuttlebugEgg;
+    DisplayName: "Shuttlebug Egg";
+	Tooltip: "Shuttlebugs hatch from these.";
+    LinkedItemIDs: jumperegg;
+    AmountCrafted: 0;
+    Ingredients: 
+    (
+        ItemID: benzene;
+        Required: 1;
+    ),
+    (
+        ItemID: spinnerfish;
+        Required: 1;
+    ),
+    (
+        ItemID: uraninitecrystal;
+        Required: 1;
+    );
+    ForceUnlockAtStart: NO;
+    Path: Fabricator/CraftableCutContents;
+),

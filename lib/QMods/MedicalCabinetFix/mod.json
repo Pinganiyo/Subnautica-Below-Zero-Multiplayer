@@ -1,0 +1,18 @@
+﻿{
+  "Id": "MedicalCabinetFix",
+  "DisplayName": "Medical Cabinet Fix",
+  "Author": "BluesKutya",
+  "Version": "1.0.2",
+  "Enable": true,
+  "AssemblyName": "MedicalCabinetFix.dll",
+  "Dependencies": [ "SMLHelper" ],
+  "VersionDependencies": {
+  },
+  "Game": "BelowZero",
+  "VersionChecker": {
+      "LatestVersionURL": "https://github.com/BluesKutya/SubnauticaMods/raw/main/MedicalCabinetFix/mod.json"
+  },
+  "NexusId": {
+    "BelowZero": "288"
+  }
+}

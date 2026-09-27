@@ -1,0 +1,37 @@
+ModifiedRecipes: 
+(
+    ItemID: suitboostertank;
+    Unlocks: CustomStasisRifle;
+);
+(
+    ItemID: propulsioncannon;
+    Unlocks: CustomRepulsionCannon;
+);
+(
+    ItemID: swimchargefins;
+    Unlocks: ultraglidefins;
+);
+(
+    ItemID: doubletank;
+    Unlocks: plasteeltank;
+);
+(
+    ItemID: benzene;
+    Unlocks: seatruckupgradeenergyefficiency;
+);
+(
+    ItemID: polyaniline;
+    Unlocks: CustomVehiclePowerUpgradeModule;
+);
+(
+    ItemID: CustomVehiclePowerUpgradeModule;
+    Unlocks: vehiclearmorplating;
+);
+(
+    ItemID: symbiote;
+    Unlocks: CustomBonesharkEgg;
+);
+(
+    ItemID: spinnerfish;
+    Unlocks: CustomShuttlebugEgg;
+);

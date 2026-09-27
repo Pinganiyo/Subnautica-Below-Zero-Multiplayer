@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Processors.Vehicle
+namespace Subnautica.Server.Processors.Vehicle
 {
     using System;
     using System.Collections.Generic;
@@ -62,11 +62,11 @@
                         var hoverbikeComp = entity.Component.GetComponent<WorldEntityModel.Hoverbike>();
                         if (packet.IsAdding)
                         {
-                            isSendPacket = this.AddModule(hoverbikeComp.Modules, slotId, packet.ModuleType, packet.ItemId);
+                            isSendPacket = this.AddModule(hoverbikeComp.Modules, slotId, packet.ModuleType, packet.ItemId, packet.SlotId);
                         }
                         else
                         {
-                            isSendPacket = this.RemoveModule(hoverbikeComp.Modules, slotId);
+                            isSendPacket = this.RemoveModule(hoverbikeComp.Modules, slotId, packet.SlotId);
                         }
 
                         break;
@@ -75,11 +75,11 @@
                         var exosuitComp = entity.Component.GetComponent<WorldEntityModel.Exosuit>();
                         if (packet.IsAdding)
                         {
-                            isSendPacket = this.AddModule(exosuitComp.Modules, slotId, packet.ModuleType, packet.ItemId);
+                            isSendPacket = this.AddModule(exosuitComp.Modules, slotId, packet.ModuleType, packet.ItemId, packet.SlotId);
                         }
                         else
                         {
-                            isSendPacket = this.RemoveModule(exosuitComp.Modules, slotId);
+                            isSendPacket = this.RemoveModule(exosuitComp.Modules, slotId, packet.SlotId);
                         }
 
                         break;
@@ -88,11 +88,11 @@
                         var seaTruckComp = entity.Component.GetComponent<WorldEntityModel.SeaTruck>();
                         if (packet.IsAdding)
                         {
-                            isSendPacket = this.AddModule(seaTruckComp.Modules, slotId, packet.ModuleType, packet.ItemId);
+                            isSendPacket = this.AddModule(seaTruckComp.Modules, slotId, packet.ModuleType, packet.ItemId, packet.SlotId);
                         }
                         else
                         {
-                            isSendPacket = this.RemoveModule(seaTruckComp.Modules, slotId);
+                            isSendPacket = this.RemoveModule(seaTruckComp.Modules, slotId, packet.SlotId);
                         }
 
                         break;
@@ -115,17 +115,41 @@
          * @author Ismail <ismaiil_0234@hotmail.com>
          *
          */
-        private bool AddModule(List<UpgradeConsoleItem> modules, int slotId, TechType moduleType, string itemId)
+        private bool AddModule(List<UpgradeConsoleItem> modules, int slotId, TechType moduleType, string itemId, string slotName = null)
         {
-            if (modules[slotId].ModuleType == TechType.None)
+            if (!string.IsNullOrEmpty(slotName))
             {
+                var existing = modules.Find(m => m.SlotId == slotName);
+                if (existing != null)
+                {
+                    existing.ModuleType = moduleType;
+                    existing.ItemId     = itemId;
+                    return true;
+                }
+            }
+
+            if (slotId < 0)
+            {
+                modules.Add(new UpgradeConsoleItem() { SlotId = slotName, ModuleType = moduleType, ItemId = itemId });
+                return true;
+            }
+
+            while (modules.Count <= slotId)
+            {
+                modules.Add(new UpgradeConsoleItem());
+            }
+
+            if (modules[slotId].ModuleType == TechType.None || modules[slotId].SlotId == slotName)
+            {
+                modules[slotId].SlotId     = slotName;
                 modules[slotId].ModuleType = moduleType;
                 modules[slotId].ItemId     = itemId;
                 
                 return true;
             }
 
-            return false;
+            modules.Add(new UpgradeConsoleItem() { SlotId = slotName, ModuleType = moduleType, ItemId = itemId });
+            return true;
         }
         
         /**
@@ -135,14 +159,28 @@
          * @author Ismail <ismaiil_0234@hotmail.com>
          *
          */
-        private bool RemoveModule(List<UpgradeConsoleItem> modules, int slotId)
+        private bool RemoveModule(List<UpgradeConsoleItem> modules, int slotId, string slotName = null)
         {
-            if (modules[slotId].ModuleType != TechType.None)
+            if (!string.IsNullOrEmpty(slotName))
             {
-                modules[slotId].ModuleType = TechType.None;
-                modules[slotId].ItemId     = null;
-                
-                return true;
+                var existing = modules.Find(m => m.SlotId == slotName);
+                if (existing != null)
+                {
+                    existing.ModuleType = TechType.None;
+                    existing.ItemId     = null;
+                    return true;
+                }
+            }
+
+            if (slotId >= 0 && slotId < modules.Count)
+            {
+                if (modules[slotId].ModuleType != TechType.None)
+                {
+                    modules[slotId].ModuleType = TechType.None;
+                    modules[slotId].ItemId     = null;
+                    
+                    return true;
+                }
             }
 
             return false;
@@ -157,6 +195,11 @@
          */
         private int GetSlotNumber(string slotId)
         {
+            if (string.IsNullOrEmpty(slotId))
+            {
+                return -1;
+            }
+
             if (slotId == "ExosuitArmLeft")
             {
                 return 4;
@@ -167,7 +210,23 @@
                 return 5;
             }
 
-            return Convert.ToInt32(slotId.Replace("ExosuitModule", "").Replace("HoverbikeModule", "").Replace("SeaTruckModule", "")) - 1;
+            if (slotId == "SeaTruckArmLeft")
+            {
+                return 12;
+            }
+
+            if (slotId == "SeaTruckArmRight")
+            {
+                return 13;
+            }
+
+            var cleaned = slotId.Replace("ExosuitModule", "").Replace("HoverbikeModule", "").Replace("SeaTruckModule", "");
+            if (int.TryParse(cleaned, out var num))
+            {
+                return num - 1;
+            }
+
+            return -1;
         }
     }
 }

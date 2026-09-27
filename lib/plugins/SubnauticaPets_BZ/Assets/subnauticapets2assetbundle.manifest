@@ -1,0 +1,568 @@
+ManifestFileVersion: 0
+CRC: 4240107159
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: c0372e7f31c6b1afd4256ec9085f62b8
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 167d9915d5548a190912c73730f1efea
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 54
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 815910612, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 1686227448, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 42d9521187784c14d861e79719f4d607, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2e416421f0c3bdb4c8f2179cbf2ba4f9, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 913ce371cbe5ba8419a7653df0411d97, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 60df75718c9736b48a9a37da8bb47590, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e82c4cd1d6e34144c9a4e0984253904f, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 83e51852458485140a090c0867214c4f, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 753907d2b92f5bb4e9a896a0aac3bc6a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 154754342b407924e823308bbb5d4074, type: 3}
+- Class: 114
+  Script: {fileID: -1716777110, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 1110246221, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 1087470236, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 222739546, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 1340759750, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1404415928, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 1902823953, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -819889153, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -2104641076, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1323966722, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 269069032, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1722927725, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -2015573868, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -291015757, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -572366155, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -133377629, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 1736786355, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -717502810, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 315524305, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 548206027, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 860462017, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -967605466, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1740302935, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -569767570, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 1089284742, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1338211838, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1661335509, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -998919875, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -862246228, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -891811895, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -218247803, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 20796975, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 90461902, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1775010447, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -366133205, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -641351659, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -969273517, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 567585905, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 1430124188, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1536540201, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1584575287, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 852249218, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 1595277610, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1076299746, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -414347712, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 853886407, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1909222809, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -824916445, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -1889483022, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -845963337, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -961005054, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 56bda7f572a82b74f8e2163d01fe170c, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4d961556b76c6544797a7e4ba0979bff, type: 3}
+- Class: 114
+  Script: {fileID: 1744800889, guid: ad08d65794d72842eed24787c8010ed4, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2755b52a24aad1a45ba9ee74c3c1e5ce, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 8fdd703b774cf314cabedd17b2da6617, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d2ba5ccbb68fd3d4e86082893b259e83, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+- Class: 114
+  Script: {fileID: 1892026953, guid: a6a460bc9cda68a8c89553f1ec5be757, type: 3}
+- Class: 114
+  Script: {fileID: -1300030820, guid: a6a460bc9cda68a8c89553f1ec5be757, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1e05eb1d6cbc5864989727685a755833, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 23f93f9eb52cea04c9857d105fee9c6e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 38552a5f6d9d31e4f9a8b428cb7dc527, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 92116d5f6e9a7d94098a19e82e88ff88, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 657fad5fe5902fa46b4874031ca0326d, type: 3}
+- Class: 114
+  Script: {fileID: 1413667307, guid: 9ad05b5b6a42de043bc6b2e5a11e3506, type: 3}
+- Class: 114
+  Script: {fileID: 1730975643, guid: 9ad05b5b6a42de043bc6b2e5a11e3506, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 134
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 143
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 205
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 223
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+- Class: 225
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/SubnauticaRefAssets/Models/Creatures/Rock_Puncher_Larva/Rock_Puncher_LarvaAvatar.asset
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Fabriactor/Mesh Texture/submarine_Workbench_normal.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Fabriactor/Databank Textures/PetFabricatorDataBankMainImageTexture.png
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_cursious_knock_left.anim
+- Assets/SubnauticaRefAssets/Textures/vfx/smoke_loop_01_sheet.png
+- Assets/Mods/SubnauticaPets_BZ/Models/Materials/Label.mat
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/SnowstalkerBabyIcon_Small.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetWalrus/Walrus_Animations.fbx
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/PengwingAdultIcon_Small.png
+- Assets/Mods/SubnauticaPets_BZ/Materials/Pet Fabricator Damaged/PetFabricatorDamaged.mat
+- Assets/SubnauticaRefAssets/Models/vfx/frag_rock_03.asset
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_walk_fast.anim
+- Assets/Mods/SubnauticaPets_BZ/Models/DNA.fbx
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/RabbitListTemplate.prefab
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_LookOut.anim
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Custom Pets/PetFox.prefab
+- Assets/SubnauticaRefAssets/MonoBehaviour/death_short.asset
+- Assets/SubnauticaRefAssets/Models/biomes/arctic_surface/lake/ice_lake_01_normal.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Databank Textures/PetDnaDataBankPopupImageTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Console/Mesh Texture/PetConsoleTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Data/PetCat_LiveMixinData.asset
+- Assets/SubnauticaRefAssets/MonoBehaviour/RockPuncher_WaterParkCreatureData.asset
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/Walrus_LOD0.fbx
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Cat_LOD2.fbx
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/CatIcon_Small.png
+- Assets/SubnauticaRefAssets/VFX/Creatures/xJumperJump.prefab
+- Assets/SubnauticaRefAssets/Models/Creatures/Rock_Puncher_Larva/Rock_Puncher_Larva_spec.png
+- Assets/SubnauticaRefAssets/AnimatorController/rock_puncher_controller.controller
+- Assets/Mods/SubnauticaPets_BZ/Audio/PetDeath.wav
+- Assets/SubnauticaRefAssets/Textures/vfx/voronoi_tile_01.png
+- Assets/SubnauticaRefAssets/MonoBehaviour/flinch_small.asset
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/RockPuncherIcon_Small.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/BlueTrivalveListTemplate.prefab
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Cat_LOD3.fbx
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_jump_peak.anim
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/ArcticFox_LOD2.fbx
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Squint.anim
+- Assets/Mods/SubnauticaPets_BZ/Audio/ConsoleAlert.wav
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Cat_LOD0.fbx
+- Assets/Mods/SubnauticaPets_BZ/Materials/DNA/Specular/TransparentGlass.mat
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Mesh Textures/Ends_Emission.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/PetConsoleDamaged.prefab
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Rabbit_LOD1.fbx
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_cursious_turn_right.anim
+- Assets/SubnauticaRefAssets/Models/Creatures/Rock_Puncher_Larva/Materials/Rock_Puncher_Larva.mat
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/Walrus_LOD2.fbx
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_cursious_walk.anim
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Icon/TrivalveYellowDnaStrandTexture.png
+- Assets/SubnauticaRefAssets/Models/biomes/arctic_surface/lake/ice_lake_01_diffuse.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Shrink.anim
+- Assets/SubnauticaRefAssets/VFX/DamageFX/xElectrocuted.prefab
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_cursious_turn_left.anim
+- Assets/SubnauticaRefAssets/Shaders/Particles/UBERparticles.shader
+- Assets/SubnauticaRefAssets/Models/Creatures/Rock_Puncher_Larva/Rock_Puncher_Larva.asset
+- Assets/SubnauticaRefAssets/Materials/vfx/ink_02_alpha_bloodLit.mat
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Data/PetSeal_LiveMixinData.asset
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Fabriactor/Mesh Texture/Submersible_SeaMoth_damage_spec.png
+- Assets/SubnauticaRefAssets/Models/doodads/Coral_reef/Coral_reef_Stone_07_normal.png
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Textures/T_ArcticFox.png
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_turninplace_left.anim
+- Assets/SubnauticaRefAssets/VFX/DamageFX/xLimestoneHit.prefab
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Sleep.anim
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/PetConsoleUI.prefab
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetRabbit/Rabbit_Animations.fbx
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_LookIn.anim
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_strafe_right.anim
+- Assets/SubnauticaRefAssets/Textures/vfx/noise_tile_06.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Annoyed.anim
+- Assets/Mods/SubnauticaPets_BZ/Textures/UI/SyncArrow.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/Teardrop_L.anim
+- Assets/SubnauticaRefAssets/Materials/vfx/ink_sheet_01_alphaLit.mat
+- Assets/SubnauticaRefAssets/Materials/vfx/smoke_loop_01_sheet_alpha_ClipCloseLit.mat
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_jump_start.anim
+- Assets/SubnauticaRefAssets/Models/Creatures/Rock_Puncher_Larva/Rock_Puncher_Larva_normal.png
+- Assets/SubnauticaRefAssets/Materials/vfx/dots_cloud_03_alpha_Lit.mat
+- Assets/SubnauticaRefAssets/MonoBehaviour/land.asset
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Dog_LOD2.fbx
+- Assets/SubnauticaRefAssets/Materials/vfx/Overlay/IceOverlayBoomerang.mat
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Rabbit_LOD2.fbx
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetFabricator/PetFabricatorFragmentSPAWNTEST.prefab
+- Assets/SubnauticaRefAssets/Models/vfx/Materials/x_ElecPlane_01.mat
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_walk_slow.anim
+- Assets/Mods/SubnauticaPets_BZ/Materials/DNA/Specular/DNA.mat
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Materials/M_SeaLion.mat
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/PinnacaridIcon_Small.png
+- Assets/SubnauticaRefAssets/Textures/vfx/smoke_01.png
+- Assets/SubnauticaRefAssets/AnimatorController/rock_larva_cin_controller.controller
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/PinnacaridListTemplate.prefab
+- Assets/SubnauticaRefAssets/Textures/vfx/elecTile_01.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Mesh Textures/rusted-steel_albedo.png
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/ArcticFox_LOD3.fbx
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Fabriactor/Databank Textures/PetFabricatorDataBankPopupImageTexture.png
+- Assets/SubnauticaRefAssets/Models/vfx/frag_rock_01.asset
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/FoxIcon_Small.png
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_strafe_rightfast.anim
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_idle.anim
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/PetConsoleFragmentSPAWNTEST.prefab
+- Assets/ThirdPartyAssets/TextMesh Pro/Fonts/LiberationSans.ttf
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_LookDown.anim
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Mesh Textures/DNA_AlbedoTransparency.png
+- Assets/SubnauticaRefAssets/Mesh/Coral_reef_Stone_07.asset
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/DogIcon_Small.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Console/Databank Textures/PetConsoleDataBankPopupImageTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/Sweat_L.anim
+- Assets/SubnauticaRefAssets/MonoBehaviour/attack_0.asset
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Data/PetFox_LiveMixinData.asset
+- Assets/SubnauticaRefAssets/Models/vfx/Materials/frag_limestone.mat
+- Assets/SubnauticaRefAssets/AnimationClip/Take 001_2.anim
+- Assets/SubnauticaRefAssets/Materials/vfx/ink_sheet_01_alpha_bloodLit.mat
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/UI/AboutCanvas.prefab
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetDog/Dog_Animations.fbx
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_turninplace_right.anim
+- Assets/SubnauticaRefAssets/Textures/vfx/noise_tile_03.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/TrivalveYellowIcon_Small.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/SealListTemplate.prefab
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/ScrollView.prefab
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/CatIcon.png
+- Assets/Mods/SubnauticaPets_BZ/Materials/Pet Console Damaged/PetConsoleDamaged.mat
+- Assets/SubnauticaRefAssets/Textures/vfx/noise_tile_01.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Blink.anim
+- Assets/SubnauticaRefAssets/AnimationClip/Take 001_1.anim
+- Assets/SubnauticaRefAssets/FMODAssets/loot/break_breakable.asset
+- Assets/Mods/SubnauticaPets_BZ/Materials/DNA/Transparent Liquid.mat
+- Assets/Mods/SubnauticaPets_BZ/Audio/CatMeow.wav
+- Assets/SubnauticaRefAssets/Materials/vfx/ahes_01_sheet_alphaVertexLit.mat
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_attack.anim
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/AdultPengwingListTemplate.prefab
+- Assets/SubnauticaRefAssets/VFX/Generic/xBloodHit.prefab
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Console/Mesh Texture/submarine_Picture_Frame_normal.png
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Textures/T_SeaLion.png
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/SeaLion_LOD2.fbx
+- Assets/SubnauticaRefAssets/Materials/vfx/smoke_01_alpha_Lit.mat
+- Assets/SubnauticaRefAssets/Textures/vfx/smoke_impact_01.png
+- Assets/SubnauticaRefAssets/Materials/vfx/dots_cloud_03_alpha_ClipCloseLit.mat
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetFabricator/PetFabricatorDamaged.prefab
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Icon/PinnacaridDnaStrandTexture.png
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_cursious_found_grub.anim
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_death_long.anim
+- Assets/SubnauticaRefAssets/Models/doodads/Coral_reef/Coral_reef_Stone_07.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetFox/ArcticFox_Animations.fbx
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Textures/T_Cat.png
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/ArcticFox_LOD0.fbx
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetDog/Pet Dog Animator.controller
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetCat/Pet Cat Animator.controller
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Icon/RockPuncherDnaStrandTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Audio/WalrusSound.wav
+- Assets/SubnauticaRefAssets/Models/Creatures/Rock_Puncher_Larva/Rock_Puncher_Larva_illum.png
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_jump_land.anim
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Custom Pets/PetWalrus.prefab
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_flinch_big.anim
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Fabriactor/Mesh Texture/Submersible_SeaMoth_damage.png
+- Assets/SubnauticaRefAssets/Textures/vfx/ink_sheet_01.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Fabriactor/Icon/PetFabricatorIconTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetRabbit/Pet Rabbit Animator.controller
+- Assets/Mods/SubnauticaPets_BZ/Models/Materials/DNA.mat
+- Assets/SubnauticaRefAssets/Materials/vfx/bubble_01_sheet_premul_underwaterCameraVertexLit.mat
+- Assets/SubnauticaRefAssets/VFX/DamageFX/xLimestoneBreak.prefab
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Mesh Textures/Label_AlbedoTransparency.png
+- Assets/SubnauticaRefAssets/AnimationClip/Take 001_3.anim
+- Assets/SubnauticaRefAssets/Materials/vfx/waterBlob_06_sheet_premulVertexLit.mat
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Spin.anim
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Rabbit_LOD3.fbx
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Icon/PenglingBabyDnaStrandTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Data/PetWalrus_LiveMixinData.asset
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetWalrus/Pet Walrus Animator.controller
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_strafe_leftfast.anim
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Dog_LOD0.fbx
+- Assets/Mods/SubnauticaPets_BZ/Textures/UI/AlterraLogo.png
+- Assets/SubnauticaRefAssets/Models/vfx/x_BuiltSphere.asset
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/DNASampleTube.prefab
+- Assets/SubnauticaRefAssets/VFX/Generic/GenericCreatureHit.prefab
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Mesh Textures/DNA_Normal.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/SealIcon_Small.png
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/SeaLion_LOD1.fbx
+- Assets/Mods/SubnauticaPets_BZ/Audio/SealBark.wav
+- Assets/Mods/SubnauticaPets_BZ/Textures/UI/ButtonBackgroundTexture.png
+- Assets/SubnauticaRefAssets/Textures/vfx/ink_02.png
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_turninplace_rightfast.anim
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Cat_LOD1.fbx
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_turninplace_leftfast.anim
+- Packages/com.unity.textmeshpro/Editor Resources/Gizmos/TMP - Font Asset Icon.psd
+- Assets/Mods/SubnauticaPets_BZ/Models/Materials/Colba_part.mat
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Fabriactor/Mesh Texture/PetFabricatorTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Console/Icon/PetConsoleIconTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/WalrusListTemplate.prefab
+- Assets/ThirdPartyAssets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans
+  SDF.asset
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Data/PetDog_LiveMixinData.asset
+- Assets/SubnauticaRefAssets/Materials/vfx/flare_04_add.mat
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Materials/M_Dog.mat
+- Assets/SubnauticaRefAssets/Materials/vfx/smoke_loop_01_sheet_alpha_Lit.mat
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Custom Pets/PetDog.prefab
+- Assets/SubnauticaRefAssets/Models/doodads/Coral_reef/Materials/Coral_reef_Stone_07.mat
+- Assets/SubnauticaRefAssets/Textures/Coral_Reef_Terrain/sand_05.png
+- Assets/Mods/SubnauticaPets_BZ/Materials/DNA/Specular/CylinderEnds.mat
+- Assets/SubnauticaRefAssets/Textures/vfx/flares_04.png
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Dog_LOD1.fbx
+- Assets/SubnauticaRefAssets/Textures/vfx/ashes_01_sheet.png
+- Assets/SubnauticaRefAssets/FMODAssets/loot/hit_breakable.asset
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Fabriactor/Mesh Texture/submarine_Workbench_illum.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Trauma.anim
+- Assets/SubnauticaRefAssets/MonoBehaviour/RockPuncher_LiveMixinData.asset
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Console/Mesh Texture/PetConsoleDamagedTexture.png
+- Assets/SubnauticaRefAssets/Textures/vfx/bubble_01_sheet.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/Sweat_R.anim
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Fabriactor/Mesh Texture/Submersible_SeaMoth_damage_illum.png
+- Assets/SubnauticaRefAssets/Textures/vfx/splash_02_4x4.png
+- Assets/SubnauticaRefAssets/Textures/Coral_Reef_Terrain/rock_01_normal.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Custom Pets/PetSeal.prefab
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Materials/M_Rabbit.mat
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/WalrusIcon_Small.png
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Dog_LOD3.fbx
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Icon/TrivalveBlueDnaStrandTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/RabbitIcon_Small.png
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_flinch_small.anim
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Dead.anim
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetFox/Pet Fox Animator.controller
+- Assets/SubnauticaRefAssets/AddressableResources/WorldEntities/Creatures/CreatureRespawner.prefab
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Fabriactor/Mesh Texture/Submersible_SeaMoth_damage_normal.png
+- Assets/SubnauticaRefAssets/Shaders/FX/FX-WBOIT-fireball-Triplanar.shader
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Vanilla Pets/PetRockPuncher.prefab
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_jump_loopDown.anim
+- Assets/Mods/SubnauticaPets_BZ/Audio/FoxSound.wav
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_cursious_idle.anim
+- Assets/SubnauticaRefAssets/Textures/vfx/voronoi_tile_01_bump.png
+- Assets/SubnauticaRefAssets/MonoBehaviour/jump.asset
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/ArcticFox_LOD1.fbx
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetSeal/SeaLion_Animations.fbx
+- Assets/SubnauticaRefAssets/Materials/vfx/smoke_loop_01_sheet_alpha_bloodLit.mat
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetSeal/Pet Seal Animator.controller
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/_Shader/SoftSurface.shader
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Databank Textures/PetDnaDataBankMainImageTexture.png
+- Assets/SubnauticaRefAssets/Models/Creatures/Rock_Puncher_Larva/Rock_Puncher_Larva.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Mesh Textures/Ends_Normal.png
+- Assets/Mods/SubnauticaPets_BZ/Audio/RabbitSqueak.wav
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/Walrus_LOD1.fbx
+- Assets/Mods/SubnauticaPets_BZ/Animations/Teardrop_R.anim
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Icon/PengwingAdultDnaStrandTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Mesh Textures/Glass_AlbedoTransparency.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Custom Pets/PetCat.prefab
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_jump_loopUp.anim
+- Assets/SubnauticaRefAssets/Models/vfx/frag_rock_04.asset
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Materials/M_Walrus.mat
+- Assets/Mods/SubnauticaPets_BZ/Materials/DNA/Specular/Label.mat
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Models/Rabbit_LOD0.fbx
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Forest Vol.1/Materials/M_Fox.mat
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Console/Icon/PetConsoleRotatingIconTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/RockPuncherListTemplate.prefab
+- Assets/Mods/SubnauticaPets_BZ/Audio/DogBark.wav
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_LookUp.anim
+- Assets/ThirdPartyAssets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans
+  SDF - Fallback.asset
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/DogListTemplate.prefab
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Happy.anim
+- Assets/SubnauticaRefAssets/Materials/vfx/smoke_impact_01_alphaLit.mat
+- Assets/Mods/SubnauticaPets_BZ/Textures/UI/CustomButtonTexture.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Cry.anim
+- Assets/SubnauticaRefAssets/Textures/vfx/waterBlob_06_sheet.png
+- Assets/Mods/SubnauticaPets_BZ/Models/PetConsoleDamaged.fbx
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/YellowTrivalveListTemplate.prefab
+- Assets/Mods/SubnauticaPets_BZ/Animations/PetCat/Cat_Animations.fbx
+- Assets/SubnauticaRefAssets/MonoBehaviour/flinch_big.asset
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Fabriactor/Mesh Texture/PetFabricatorDamagedTexture.png
+- Assets/SubnauticaRefAssets/Materials/vfx/smoke_01_alpha_bloodLit.mat
+- Assets/SubnauticaRefAssets/Textures/vfx/noise_tile_10.png
+- Assets/SubnauticaRefAssets/MonoBehaviour/movement_squish_loop.asset
+- Assets/SubnauticaRefAssets/MonoBehaviour/death_long.asset
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Forest Vol.1/Textures/T_Fox.png
+- Assets/SubnauticaRefAssets/Avatar/rock_puncher_01Avatar.asset
+- Assets/SubnauticaRefAssets/Models/biomes/arctic_surface/lake/ice_lake_01_spec.png
+- Assets/SubnauticaRefAssets/Textures/vfx/elecEnd_01.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Custom Pets/PetRabbit.prefab
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/Data/PetRabbit_LiveMixinData.asset
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/BabyPenglingListTemplate.prefab
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Mesh Textures/Label_Normal.png
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/SeaLion_LOD0.fbx
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Materials/M_Cat.mat
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Console/Databank Textures/PetConsoleDataBankMainImageTexture.png
+- Assets/SubnauticaRefAssets/NoFriction.physicMaterial
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/PenglingBabyIcon_Small.png
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Forest Vol.1/Animations/Fox_Animations.fbx
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Textures/T_Walrus.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/BabySnowStalkerListTemplate.prefab
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/FoxListTemplate.prefab
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Excited.anim
+- Assets/Mods/SubnauticaPets_BZ/Audio/ConsoleRename.wav
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet DNA/Icon/SnowstalkerBabyDnaStrandTexture.png
+- Assets/SubnauticaRefAssets/Models/vfx/frag_rock_02.asset
+- Assets/Mods/SubnauticaPets_BZ/Materials/Pet Fabricator Damaged/SeamothDamageCutoutAlpha.mat
+- Assets/SubnauticaRefAssets/Materials/vfx/splash_02_4x4_premul_bloodLit.mat
+- Assets/ThirdPartyAssets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader
+- Assets/Mods/SubnauticaPets_BZ/Models/PetFabricatorDamaged.fbx
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_cursious_knock_right.anim
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/SeaLion_LOD3.fbx
+- Assets/SubnauticaRefAssets/GameObject/RockPuncherRock.prefab
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/Pets/BasePet.prefab
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Materials/M_ArcticFox.mat
+- Packages/com.unity.textmeshpro/Editor Resources/Gizmos/TMP - Text Component Icon.psd
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Rabid.anim
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Textures/T_Dog.png
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_strafe_left.anim
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/CatListTemplate.prefab
+- Assets/Mods/SubnauticaPets_BZ/Textures/Pet Sprites/TrivalveBlueIcon_Small.png
+- Assets/Mods/SubnauticaPets_BZ/Prefabs/BaseParts/PetConsole/PetListTemplate.prefab
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Arctic Vol.1/Models/Walrus_LOD3.fbx
+- Assets/SubnauticaRefAssets/AnimationClip/rock_puncher_death_short.anim
+- Assets/SubnauticaRefAssets/Marmoset/Shader/Uber/MarmosetUBER.shader
+- Assets/SubnauticaRefAssets/Textures/vfx/dots_cloud_03.png
+- Assets/Mods/SubnauticaPets_BZ/Animations/Eyes_Sad.anim
+- Assets/Mods/SubnauticaPets_BZ/Models/Materials/Colba.mat
+- Assets/SubnauticaRefAssets/Marmoset/Shader/Special/MarmosetIceOverlay.shader
+- Assets/ThirdPartyAssets/Quirky Series Ultimate/Quirky Series Vol.1/Pets Vol.1/Textures/T_Rabbit.png
+- Assets/SubnauticaRefAssets/Models/vfx/x_ElecPlane_01.asset
+- Assets/SubnauticaRefAssets/Models/vfx/Materials/x_ElectrocutedSphere.mat
+Dependencies: []

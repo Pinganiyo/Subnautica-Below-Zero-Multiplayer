@@ -121,6 +121,7 @@ namespace Subnautica.Events.Patches.Fixes.Game
                 VRLoadingOverlay.Hide();
 
                 World.SetLoaded(true);
+                KnownTechRetroactiveUnlock.CheckPendingAnalysisTech();
             }
             else
             {

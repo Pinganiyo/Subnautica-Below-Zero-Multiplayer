@@ -1,0 +1,13 @@
+{
+  "Id": "AnisotropicFix",
+  "DisplayName": "Anisotropic Fix",
+  "Author": "WhoTnT",
+  "Version": "1.0.2",
+  "Game": "BelowZero",
+    "NexusId": {
+    "BelowZero": "164"
+  },
+  "Enable": true,
+  "AssemblyName": "AnisotropicFix.dll",
+  "EntryMethod": "AnisotropicFix.MainPatcher.Patch",
+}

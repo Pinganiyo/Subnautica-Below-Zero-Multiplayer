@@ -1,0 +1,8 @@
+﻿GravTrapImproved.ids_objectsType:Objects type: 
+GravTrapImproved.ids_switchObjectsType:switch objects type
+GravTrapImproved.ids_All:All
+GravTrapMK2:Grav trap MK2
+Tooltip_GravTrapMK2:More powerful and durable model with increased range and ability to attract more objects simultaneously.
+GravTrapImproved.Creatures:Creatures
+GravTrapImproved.Resources:Resources
+GravTrapImproved.Eggs:Eggs

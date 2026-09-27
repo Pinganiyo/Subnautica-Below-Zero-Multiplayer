@@ -1,0 +1,12 @@
+﻿{
+	"name": "Topographic",
+	"mapId": "default_world",
+	"filepath": "base.dds",
+	"filepath_palette": "palette.dds",
+	"coloringOffset": 0.01,
+	
+	"fogmapId": "world",
+	"filepath_depth": "depth.dds",
+	"depth": 800,
+	"height": 200
+}

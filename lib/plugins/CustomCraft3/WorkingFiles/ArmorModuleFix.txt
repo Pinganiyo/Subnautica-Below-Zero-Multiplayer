@@ -1,0 +1,13 @@
+MovedRecipes:
+(
+    ItemID: SeaTruckArmorMK2;
+    OldPath: Workbench;
+    NewPath: Workbench;
+    Copied: YES;
+),
+(
+    ItemID: SeaTruckArmorMK3;
+    OldPath: Workbench;
+    NewPath: Workbench;
+    Copied: YES;
+);

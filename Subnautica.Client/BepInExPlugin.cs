@@ -5,6 +5,7 @@ namespace Subnautica.Client
     using UnityEngine;
 
     [BepInPlugin("com.subnautica.multiplayer", "Subnautica Below Zero Multiplayer", "1.0.0")]
+    [BepInDependency("com.snmodding.nautilus", BepInDependency.DependencyFlags.SoftDependency)]
     public class BepInExPlugin : BaseUnityPlugin
     {
         private Subnautica.Events.Main eventsPlugin;
@@ -14,6 +15,8 @@ namespace Subnautica.Client
         {
             try
             {
+                RegisterModdedWorkbenchTab();
+
                 Debug.Log("[SubnauticaMultiplayer] Initializing Events...");
                 this.eventsPlugin = new Subnautica.Events.Main();
                 this.eventsPlugin.OnEnabled();
@@ -27,6 +30,29 @@ namespace Subnautica.Client
             catch (Exception ex)
             {
                 Debug.LogError($"[SubnauticaMultiplayer] Failed to initialize mod: {ex}");
+            }
+        }
+
+        private static void RegisterModdedWorkbenchTab()
+        {
+            try
+            {
+                var craftTreeHandler = System.Type.GetType("Nautilus.Handlers.CraftTreeHandler, Nautilus");
+                if (craftTreeHandler != null)
+                {
+                    var addTabMethod = craftTreeHandler.GetMethod("AddTabNode", new Type[] {
+                        typeof(CraftTree.Type), typeof(string), typeof(string), typeof(Sprite)
+                    });
+                    if (addTabMethod != null)
+                    {
+                        addTabMethod.Invoke(null, new object[] { CraftTree.Type.Workbench, "ModdedWorkbench", "Modded Modules", null });
+                        Debug.Log("[SubnauticaMultiplayer] Registered 'ModdedWorkbench' tab for Nautilus Workbench.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[SubnauticaMultiplayer] Could not register ModdedWorkbench tab: {ex.Message}");
             }
         }
 

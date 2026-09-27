@@ -1,4 +1,4 @@
-﻿namespace Subnautica.API.Features
+namespace Subnautica.API.Features
 {
     using System;
     using System.Collections;
@@ -323,7 +323,7 @@
                 var item = modules.ElementAt(i);
                 if (item.ModuleType != TechType.None)
                 {
-                    var slotId = GetModuleSlotId(i, techType);
+                    var slotId = !string.IsNullOrEmpty(item.SlotId) ? item.SlotId : GetModuleSlotId(i, techType);
                     if (!string.IsNullOrEmpty(slotId))
                     {
                         Entity.SpawnToQueue(slotId, item.ModuleType, item.ItemId, equipment);
@@ -542,6 +542,16 @@
             }
             else if (techType == TechType.SeaTruck)
             {
+                if (slotId == 12)
+                {
+                    return "SeaTruckArmLeft";
+                }
+
+                if (slotId == 13)
+                {
+                    return "SeaTruckArmRight";
+                }
+
                 return string.Format("SeaTruckModule{0}", slotId + 1);
             }
 

@@ -1,0 +1,16 @@
+{
+    "craftAmount": 1,
+    "Ingredients": [
+      {
+        "techType": "BagEquipment2",
+        "amount": 1
+      },
+      {
+        "techType": "AramidFibers",
+        "amount": 1
+      }
+    ],
+    "LinkedItems": [
+        
+    ]
+}

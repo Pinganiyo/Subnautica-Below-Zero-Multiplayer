@@ -1,4 +1,4 @@
-﻿namespace Subnautica.API.Extensions
+namespace Subnautica.API.Extensions
 {
     using System.Collections.Generic;
     using System.IO;
@@ -222,7 +222,7 @@
 
             for (int i = 0; i < slotIds.Length; i++)
             {
-                modules.Add(new UpgradeConsoleItem());
+                modules.Add(new UpgradeConsoleItem() { SlotId = slotIds[i] });
 
                 var module = equipment.GetItemInSlot(slotIds[i]);
                 if (module?.item != null)

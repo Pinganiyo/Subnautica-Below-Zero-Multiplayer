@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.PDA
+namespace Subnautica.Events.Patches.Events.PDA
 {
     using HarmonyLib;
 
@@ -12,6 +12,8 @@
     {
         private static void Postfix(TechType techType, bool verbose)
         {
+            Fixes.Game.KnownTechRetroactiveUnlock.CheckPendingAnalysisTech();
+
             if (Network.IsMultiplayerActive)
             {
                 try

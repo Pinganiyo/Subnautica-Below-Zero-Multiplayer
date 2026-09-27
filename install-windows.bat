@@ -89,6 +89,7 @@ if errorlevel 1 (
 echo.
 echo [3/4] Deploying multiplayer mod assemblies...
 set "PLUGIN_DIR=%GAME_DIR%\BepInEx\plugins\SubnauticaMultiplayer"
+if exist "%PLUGIN_DIR%" if not exist "%PLUGIN_DIR%\*" del /F /Q "%PLUGIN_DIR%"
 if not exist "%PLUGIN_DIR%" mkdir "%PLUGIN_DIR%"
 
 if not defined BUILD_DIR (
@@ -98,13 +99,39 @@ if not defined BUILD_DIR (
     echo Deploying from "!BUILD_DIR!" ...
     copy /Y "!BUILD_DIR!\*.dll" "%PLUGIN_DIR%\"
     if exist "!BUILD_DIR!\*.pdb" copy /Y "!BUILD_DIR!\*.pdb" "%PLUGIN_DIR%\" >nul
-    REM Remove System.Reflection.Emit dummy stubs to allow Unity/Mono native Reflection.Emit
+    REM Remove build-time and dummy stubs to allow Unity/Mono native Reflection.Emit
+    del /Q /F "%PLUGIN_DIR%\AsmResolver*.dll" >nul 2>&1
+    del /Q /F "%PLUGIN_DIR%\BepInEx.AssemblyPublicizer*.dll" >nul 2>&1
+    del /Q /F "%PLUGIN_DIR%\Microsoft.NET.StringTools*.dll" >nul 2>&1
     del /Q /F "%PLUGIN_DIR%\System.Reflection.Emit*.dll" >nul 2>&1
 )
 
 if exist "%~dp0Data\SpawnPoints.bin" (
     if not exist "%PLUGIN_DIR%\Data" mkdir "%PLUGIN_DIR%\Data"
     xcopy /E /I /Y "%~dp0Data\*" "%PLUGIN_DIR%\Data\"
+)
+
+if exist "%GAME_DIR%\BepInEx\plugins\RadialTabs" (
+    echo Removing disabled RadialTabs...
+    rmdir /S /Q "%GAME_DIR%\BepInEx\plugins\RadialTabs" >nul 2>&1
+)
+
+if exist "%GAME_DIR%\BepInEx\plugins\CurtainsandBlinds" (
+    echo Removing disabled CurtainsandBlinds...
+    rmdir /S /Q "%GAME_DIR%\BepInEx\plugins\CurtainsandBlinds" >nul 2>&1
+)
+
+if exist "%~dp0lib\plugins" (
+    echo.
+    echo Deploying bundled mod collection to BepInEx\plugins...
+    xcopy /E /I /Y "%~dp0lib\plugins\*" "%GAME_DIR%\BepInEx\plugins\"
+)
+
+if exist "%~dp0lib\QMods" (
+    echo.
+    echo Deploying QMods to game folder...
+    if not exist "%GAME_DIR%\QMods" mkdir "%GAME_DIR%\QMods"
+    xcopy /E /I /Y "%~dp0lib\QMods\*" "%GAME_DIR%\QMods\"
 )
 
 echo.

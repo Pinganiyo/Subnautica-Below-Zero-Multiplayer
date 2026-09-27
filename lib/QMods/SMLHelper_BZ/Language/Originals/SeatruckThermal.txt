@@ -1,0 +1,2 @@
+﻿SeatruckThermalReactor:Seatruck Thermal Reactor
+Tooltip_SeatruckThermalReactor:Recharges power cells in hot areas (doesn't stack).

@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.Inventory
+namespace Subnautica.Events.Patches.Events.Inventory
 {
     using HarmonyLib;
 
@@ -28,7 +28,7 @@
 
                 try
                 {
-                    if (slot.Contains("HoverbikeModule") || slot.Contains("Exosuit") || slot.Contains("SeaTruckModule"))
+                    if (slot.Contains("HoverbikeModule") || slot.Contains("Exosuit") || slot.Contains("SeaTruck"))
                     {
                         var lwe = __instance.tr.GetComponentInParent<LargeWorldEntity>();
                         if (lwe)

@@ -179,6 +179,31 @@ if [ -d "$SCRIPT_DIR/Data" ]; then
     echo "Copied Data/ assets to plugin directory."
 fi
 
+# Remove disabled mods if present
+if [ -d "$GAME_DIR/BepInEx/plugins/RadialTabs" ]; then
+    echo "Removing disabled RadialTabs..."
+    rm -rf "$GAME_DIR/BepInEx/plugins/RadialTabs"
+fi
+
+if [ -d "$GAME_DIR/BepInEx/plugins/CurtainsandBlinds" ]; then
+    echo "Removing disabled CurtainsandBlinds..."
+    rm -rf "$GAME_DIR/BepInEx/plugins/CurtainsandBlinds"
+fi
+
+# Deploy bundled mod collection to BepInEx/plugins
+if [ -d "$SCRIPT_DIR/lib/plugins" ]; then
+    echo "Deploying bundled mod collection to $GAME_DIR/BepInEx/plugins/ ..."
+    mkdir -p "$GAME_DIR/BepInEx/plugins"
+    cp -rn "$SCRIPT_DIR/lib/plugins/." "$GAME_DIR/BepInEx/plugins/" 2>/dev/null || cp -r "$SCRIPT_DIR/lib/plugins/." "$GAME_DIR/BepInEx/plugins/"
+fi
+
+# Deploy QMods to game folder
+if [ -d "$SCRIPT_DIR/lib/QMods" ]; then
+    echo "Deploying QMods to $GAME_DIR/QMods/ ..."
+    mkdir -p "$GAME_DIR/QMods"
+    cp -rn "$SCRIPT_DIR/lib/QMods/." "$GAME_DIR/QMods/" 2>/dev/null || cp -r "$SCRIPT_DIR/lib/QMods/." "$GAME_DIR/QMods/"
+fi
+
 # ---------------------------------------------------------------- 4. AppData
 echo ""
 echo "[4/4] Setting up AppData directories..."

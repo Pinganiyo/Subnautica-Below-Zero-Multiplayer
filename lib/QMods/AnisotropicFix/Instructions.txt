@@ -1,0 +1,17 @@
+Mod Name: Anisotropic Fix
+Mod Version: 1.0.2
+Mod Author: WhoTnT  (https://www.nexusmods.com/users/3565096)
+Mod Description: Fixes the blurry distant textures by enabling Anisotropic filtering. This results in much better image quality and comes at no cost to performance.
+
+1. Download and install QMods https://www.nexusmods.com/subnautica/mods/16
+2. Extract the AnisotropicFix folder from this zip file into the QMods folder in your SubnauticaZero installation folder.
+3. Run the game and check if the blurred textures are gone.
+
+To remove the mod, just delete the AnisotropicFix folder from your QMods folder in your SubnauticaZero installation.
+
+Note: You may need to reinstall QMods if the game is ever updated to reenable all installed mods.
+
+My other mods:
+VR Enhancements - https://www.nexusmods.com/subnautica/mods/173
+Better Sprinting - https://www.nexusmods.com/subnautica/mods/182
+

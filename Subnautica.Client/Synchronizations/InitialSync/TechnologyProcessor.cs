@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Synchronizations.InitialSync
+namespace Subnautica.Client.Synchronizations.InitialSync
 {
     using System.Linq;
     using Oculus.Platform;
@@ -36,6 +36,8 @@
                     }
                 }
             }
+
+            Events.Patches.Fixes.Game.KnownTechRetroactiveUnlock.CheckPendingAnalysisTech();
         }
 
         /**

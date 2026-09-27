@@ -1,0 +1,6 @@
+﻿{
+	"name": "Biomes",
+	"mapId": "default_biome",
+	"fogmapId": "world",
+	"filepath": "biome.dds"
+}

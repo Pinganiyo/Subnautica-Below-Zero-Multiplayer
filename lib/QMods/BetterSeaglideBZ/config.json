@@ -1,0 +1,15 @@
+{
+    "BoostKey": "LeftShift",
+    "ToggleSeaglideLightOptions": false,
+    "ToggleLightColor": false,
+    "ToggleSeaglideColor": false,
+    "LightBrightness": "1.999",
+    "LightRange": "100",
+    "LightConeSize": "120",
+    "SeaglideLightRed": "1",
+    "SeaglideLightGreen": "0.001",
+    "SeaglideLightBlue": "0.001",
+    "SeaglideRed": "0.001",
+    "SeaglideGreen": "0.001",
+    "SeaglideBlue": "0.001"
+}

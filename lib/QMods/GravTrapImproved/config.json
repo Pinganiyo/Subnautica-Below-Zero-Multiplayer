@@ -1,0 +1,19 @@
+{
+  "useWheelClick": false,
+  "keyNext": "None",
+  "keyPrev": "None",
+  "mk2": {
+    "enabled": true,
+    "dmgMod": 0.5,
+    "heatDmgMod": 0.2,
+    "acidDmgMod": 0.5,
+    "fragmentCountToUnlock": 4
+  },
+  "mk2MaxObjects": 20,
+  "mk2MaxForce": 20.0,
+  "mk2Range": 30.0,
+  "mk2MaxMassStable": 150.0,
+  "raysVisible": true,
+  "extraGUIText": true,
+  "_changeTrapCellLevel": "Near"
+}

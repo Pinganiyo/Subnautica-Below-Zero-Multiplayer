@@ -1,0 +1,2 @@
+﻿SeatruckSolarCharger:Seatruck Solar Charger
+Tooltip_SeatruckSolarCharger:Recharges the Seatruck's power cells while in sunlight.

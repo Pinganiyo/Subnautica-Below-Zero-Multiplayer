@@ -1,0 +1,16 @@
+{
+    "craftAmount": 1,
+    "Ingredients": [
+      {
+        "techType": "BagEquipment1",
+        "amount": 1
+      },
+      {
+        "techType": "Aerogel",
+        "amount": 1
+      }
+    ],
+    "LinkedItems": [
+        
+    ]
+}
