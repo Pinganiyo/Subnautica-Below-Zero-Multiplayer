@@ -47,6 +47,7 @@ namespace Subnautica.Events
             {
                 var harmony = new Harmony("Subnautica.Events.Main");
                 harmony.PatchAll();
+                Patches.Fixes.Interact.EasyCraftWarnings.Apply(harmony);
             }
             catch (Exception e)
             {

@@ -13,6 +13,19 @@ namespace Subnautica.Events.Patches.Fixes.Game
         private static PropertyInfo extraItemInfoOptionProp;
         private static MethodInfo writeTechTypeMethod;
 
+        [HarmonyPrepare]
+        public static bool Prepare()
+        {
+            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (asm.GetType("Nautilus.Patchers.TooltipPatcher") != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static MethodBase TargetMethod()
         {
             try
@@ -105,6 +118,19 @@ namespace Subnautica.Events.Patches.Fixes.Game
         private static MethodInfo isVanillaTechTypeMethod;
         private static PropertyInfo extraItemInfoOptionProp;
         private static MethodInfo writeTechTypeMethod;
+
+        [HarmonyPrepare]
+        public static bool Prepare()
+        {
+            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (asm.GetType("SMLHelper.V2.Patchers.TooltipPatcher") != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public static MethodBase TargetMethod()
         {
