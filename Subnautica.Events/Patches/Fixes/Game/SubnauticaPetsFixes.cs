@@ -10,6 +10,14 @@ namespace Subnautica.Events.Patches.Fixes.Game
     [HarmonyPatch]
     public static class SubnauticaPetsConsoleFix
     {
+        [HarmonyPrepare]
+        public static bool Prepare()
+        {
+            var asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "SubnauticaPets_BZ");
+            var type = asm?.GetType("DaftAppleGames.SubnauticaPets.BaseParts.PetConsole");
+            return type?.GetMethod("Start", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) != null;
+        }
+
         public static MethodBase TargetMethod()
         {
             var asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "SubnauticaPets_BZ");
@@ -47,6 +55,14 @@ namespace Subnautica.Events.Patches.Fixes.Game
     [HarmonyPatch]
     public static class SubnauticaPetsConsoleUpdateFix
     {
+        [HarmonyPrepare]
+        public static bool Prepare()
+        {
+            var asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "SubnauticaPets_BZ");
+            var type = asm?.GetType("DaftAppleGames.SubnauticaPets.BaseParts.PetConsole");
+            return type?.GetMethod("Update", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) != null;
+        }
+
         public static MethodBase TargetMethod()
         {
             var asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "SubnauticaPets_BZ");
@@ -81,6 +97,14 @@ namespace Subnautica.Events.Patches.Fixes.Game
     [HarmonyPatch]
     public static class SubnauticaPetsFabricatorFix
     {
+        [HarmonyPrepare]
+        public static bool Prepare()
+        {
+            var asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "SubnauticaPets_BZ");
+            var type = asm?.GetType("DaftAppleGames.SubnauticaPets.BaseParts.PetFabricator");
+            return type?.GetMethod("Start", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) != null;
+        }
+
         public static MethodBase TargetMethod()
         {
             var asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "SubnauticaPets_BZ");

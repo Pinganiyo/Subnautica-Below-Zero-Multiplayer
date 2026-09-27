@@ -47,19 +47,19 @@ namespace Subnautica.Events.Patches.Fixes.Interact
          */
         [HarmonyPrefix]
         [HarmonyPatch(typeof(global::ErrorMessage), nameof(global::ErrorMessage.AddMessage))]
-        private static bool AddMessagePrefix(string messageText)
+        private static bool AddMessagePrefix(string message)
         {
             if (!Network.IsMultiplayerActive)
             {
                 return true;
             }
 
-            if (string.IsNullOrEmpty(messageText))
+            if (string.IsNullOrEmpty(message))
             {
                 return true;
             }
 
-            if (IsCraftingWarning(messageText))
+            if (IsCraftingWarning(message))
             {
                 return false;
             }
@@ -104,10 +104,25 @@ namespace Subnautica.Events.Patches.Fixes.Interact
             return false;
         }
 
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(global::CrafterLogic), nameof(global::CrafterLogic.ConsumeEnergy))]
+        private static bool CrafterLogicConsumeEnergyPrefix(ref bool __result)
+        {
+            if (!Network.IsMultiplayerActive)
+            {
+                return true;
+            }
+
+            // Power is managed and validated by the Server in multiplayer.
+            // Client-side ConsumeEnergy must succeed so crafting does not abort.
+            __result = true;
+            return false;
+        }
+
         /**
          * Called from the main patch initializer after all class-based Harmony
-         * patches have been applied. Finds EasyCraft.Main.ShowMessage at runtime
-         * and patches it only when EasyCraft is actually loaded.
+         * patches have been applied. Finds EasyCraft methods at runtime
+         * and patches them only when EasyCraft is actually loaded.
          */
         public static void Apply(Harmony harmony)
         {
@@ -148,20 +163,31 @@ namespace Subnautica.Events.Patches.Fixes.Interact
                     new[] { typeof(string) },
                     null);
 
-                if (showMessage == null)
+                if (showMessage != null)
                 {
-                    Log.Warn("EasyCraftWarnings: EasyCraft.Main.ShowMessage not found.");
-                    return;
+                    var prefix = typeof(EasyCraftWarnings).GetMethod(
+                        nameof(ShowMessagePrefix),
+                        BindingFlags.NonPublic | BindingFlags.Static);
+
+                    harmony.Patch(showMessage, prefix: new HarmonyMethod(prefix));
+                    Log.Info("EasyCraftWarnings: ShowMessage suppression patched successfully.");
                 }
 
-                var prefix = typeof(EasyCraftWarnings).GetMethod(
-                    nameof(ShowMessagePrefix),
-                    BindingFlags.NonPublic | BindingFlags.Static);
+                var consumeEnergy = easyCraftMain.GetMethod(
+                    "ConsumeEnergy",
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 
-                harmony.Patch(showMessage, prefix: new HarmonyMethod(prefix));
+                if (consumeEnergy != null)
+                {
+                    var energyPrefix = typeof(EasyCraftWarnings).GetMethod(
+                        nameof(EasyCraftConsumeEnergyPrefix),
+                        BindingFlags.NonPublic | BindingFlags.Static);
+
+                    harmony.Patch(consumeEnergy, prefix: new HarmonyMethod(energyPrefix));
+                    Log.Info("EasyCraftWarnings: EasyCraft.Main.ConsumeEnergy patched successfully.");
+                }
+
                 _applied = true;
-
-                Log.Info("EasyCraftWarnings: ShowMessage suppression patched successfully.");
             }
             catch (Exception ex)
             {
@@ -181,6 +207,21 @@ namespace Subnautica.Events.Patches.Fixes.Interact
             }
 
             __result = false;
+            return false;
+        }
+
+        /**
+         * Prefix for EasyCraft.Main.ConsumeEnergy.
+         * Always returns true in multiplayer so EasyCraft energy check passes.
+         */
+        private static bool EasyCraftConsumeEnergyPrefix(ref bool __result)
+        {
+            if (!Network.IsMultiplayerActive)
+            {
+                return true;
+            }
+
+            __result = true;
             return false;
         }
     }

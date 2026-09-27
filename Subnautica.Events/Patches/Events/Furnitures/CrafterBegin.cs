@@ -26,23 +26,6 @@ namespace Subnautica.Events.Patches.Events.Furnitures
 
             GhostCrafter.EnsureCrafterPower(__instance);
 
-            // Only gate on power when needsPower is true AND power is genuinely missing.
-            // EasyCraft's own prefix also checks power but it may run after ours; the
-            // key is that by the time EasyCraft reads crafter.powerRelay / crafter.baseComp
-            // those fields are set correctly by EnsureCrafterPower above.
-            if (__instance.needsPower && GameModeManager.GetOption<bool>(GameOption.TechnologyRequiresPower))
-            {
-                if (__instance.powerRelay == null || __instance.powerRelay.GetPower() < 5f)
-                {
-                    return false;
-                }
-
-                if (__instance.baseComp && !__instance.baseComp.IsPowered(__instance.transform.position))
-                {
-                    return false;
-                }
-            }
-
             var uniqueId  = GhostCrafter.GetUniqueId(__instance.gameObject);
             var _techType = GhostCrafter.GetTechType(__instance.gameObject);
             if (uniqueId.IsNull() || !Subnautica.Client.Abstracts.ProcessorShared.MetadataProcessors.ContainsKey(_techType))
