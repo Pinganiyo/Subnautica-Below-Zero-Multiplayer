@@ -138,6 +138,7 @@ namespace Subnautica.Server.Processors.Vehicle
 
             var currentTime = Server.Instance.Logices.World.GetServerTime();
 
+            // Search BaseMapRoom docks (MapRoomCamera expansion docks).
             foreach (var item in Server.Instance.Storages.Construction.Storage.Constructions.Where(q => q.Value.TechType == TechType.BaseMapRoom))
             {
                 var component = item.Value.Component.GetComponent<MetadataModel.BaseMapRoom>();
@@ -165,6 +166,30 @@ namespace Subnautica.Server.Processors.Vehicle
                     {
                         vehicle.RenewId();
 
+                        Server.Instance.Storages.World.AddWorldDynamicEntity(vehicle);
+                        return vehicle;
+                    }
+
+                    return null;
+                }
+            }
+
+            // Search BaseMoonpool docks (Exosuit / Prawn Suit docked in moonpool).
+            // The Exosuit entity lives inside the moonpool's metadata, not in WorldDynamicEntities.
+            foreach (var item in Server.Instance.Storages.Construction.Storage.Constructions
+                         .Where(q => q.Value.TechType == TechType.BaseMoonpool || q.Value.TechType == TechType.BaseMoonpoolExpansion))
+            {
+                var component = item.Value.Component.GetComponent<MetadataModel.BaseMoonpool>();
+                if (component == null || !component.IsDocked || component.Vehicle == null)
+                {
+                    continue;
+                }
+
+                if (component.Vehicle.UniqueId == vehicleId)
+                {
+                    if (component.Undock(out var vehicle))
+                    {
+                        // The undocked vehicle becomes a free dynamic entity again.
                         Server.Instance.Storages.World.AddWorldDynamicEntity(vehicle);
                         return vehicle;
                     }

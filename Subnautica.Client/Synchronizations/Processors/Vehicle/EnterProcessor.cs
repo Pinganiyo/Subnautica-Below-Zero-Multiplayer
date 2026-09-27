@@ -115,6 +115,21 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                 if (player.IsMine)
                 {
                     vehicle.useRigidbody.SetNonKinematic(true);
+
+                    // If the Exosuit is still docked in a moonpool bay, physically undock it
+                    // before entering, otherwise the cinematic hasn't run and the bay still
+                    // holds the vehicle.
+                    var dockable = vehicle.GetComponent<global::Dockable>();
+                    if (dockable != null && dockable.bay != null)
+                    {
+                        var bay = dockable.bay as global::VehicleDockingBay;
+                        if (bay != null)
+                        {
+                            bay.OnUndockingStart();
+                            bay.OnUndockingComplete(global::Player.main);
+                        }
+                    }
+
                     vehicle.EnterVehicle(global::Player.main, true);
                 }
                 else

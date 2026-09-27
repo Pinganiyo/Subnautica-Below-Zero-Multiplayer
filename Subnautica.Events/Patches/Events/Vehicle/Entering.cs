@@ -227,5 +227,65 @@ namespace Subnautica.Events.Patches.Events.Vehicle
       
             return true;
         }
+
+        /**
+         *
+         * Patches DockedVehicleHandTarget.OnHandClick — fires when the player clicks a
+         * vehicle (Exosuit / Prawn Suit) that is docked inside a moonpool. The vanilla flow
+         * goes through a cinematic (not Vehicle.OnHandClick), so we intercept here.
+         *
+         */
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(global::DockedVehicleHandTarget), nameof(global::DockedVehicleHandTarget.OnHandClick))]
+        private static bool DockedVehicleHandTargetOnHandClick(global::DockedVehicleHandTarget __instance)
+        {
+            if (!Network.IsMultiplayerActive)
+            {
+                return true;
+            }
+
+            var dockedObject = __instance.dockingBay?.GetDockedObject();
+            if (dockedObject == null)
+            {
+                return true;
+            }
+
+            var vehicle = dockedObject.GetComponent<global::Vehicle>();
+            if (vehicle == null)
+            {
+                return true;
+            }
+
+            // Only intercept Exosuit (Prawn Suit). Other docked vehicles handled elsewhere.
+            if (!vehicle.TryGetComponent<global::Exosuit>(out _))
+            {
+                return true;
+            }
+
+            if (vehicle.GetPilotingMode() || !vehicle.GetEnabled())
+            {
+                return false;
+            }
+
+            try
+            {
+                var uniqueId = vehicle.gameObject.GetIdentityId(true);
+                if (string.IsNullOrEmpty(uniqueId))
+                {
+                    return true;
+                }
+
+                VehicleEnteringEventArgs args = new VehicleEnteringEventArgs(uniqueId, TechType.Exosuit);
+
+                Handlers.Vehicle.OnEntering(args);
+
+                return args.IsAllowed;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"DockedVehicleHandTarget.OnHandClick (Exosuit): {e}\n{e.StackTrace}");
+                return true;
+            }
+        }
     }
-}
+}

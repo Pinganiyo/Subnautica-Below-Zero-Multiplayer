@@ -56,31 +56,41 @@ namespace Subnautica.Events.Patches.Fixes.Interact
                 return;
             }
 
-            var baseComp = crafter.baseComp ?? crafter.GetComponentInParent<global::Base>();
-            if (baseComp == null)
+            // Only use GetComponentInParent — the crafter MUST be in the Base hierarchy for
+            // Base.IsPowered(position) to work correctly. Distance-based fallback would assign
+            // a Base whose grid doesn't contain the crafter's world position → IsPowered returns
+            // false (cell index -1) → EasyCraft shows "No Power!" even when base is powered.
+            if (crafter.baseComp == null)
             {
-                float closestDist = 20f;
-                foreach (var b in UnityEngine.Object.FindObjectsOfType<global::Base>())
+                var foundBase = crafter.GetComponentInParent<global::Base>();
+                if (foundBase != null)
                 {
-                    float dist = Vector3.Distance(crafter.transform.position, b.transform.position);
-                    if (dist < closestDist)
-                    {
-                        closestDist = dist;
-                        baseComp = b;
-                    }
+                    crafter.baseComp = foundBase;
                 }
-            }
-            if (crafter.baseComp == null && baseComp != null)
-            {
-                crafter.baseComp = baseComp;
+                // Do NOT fall back to distance-based Base search — it breaks EasyCraft's IsPowered check.
             }
 
             if (crafter.powerRelay == null)
             {
+                // Walk hierarchy first (vanilla path — BasePowerRelay is on the Base GO and
+                // BasePowerRelay extends PowerRelay, so GetComponentInParent will find it).
                 var powerRelay = crafter.GetComponentInParent<PowerRelay>() ?? crafter.GetComponent<PowerRelay>();
-                if (powerRelay == null && baseComp != null)
+
+                // If hierarchy walk failed (modded crafter not under Base GO), try the base component directly.
+                if (powerRelay == null && crafter.baseComp != null)
                 {
-                    powerRelay = baseComp.GetComponent<PowerRelay>();
+                    powerRelay = crafter.baseComp.GetComponent<BasePowerRelay>() as PowerRelay
+                                 ?? crafter.baseComp.GetComponent<PowerRelay>();
+                }
+
+                // Try SubRoot as a final fallback (e.g. Cyclops-hosted crafters).
+                if (powerRelay == null)
+                {
+                    var subRoot = crafter.GetComponentInParent<SubRoot>();
+                    if (subRoot != null)
+                    {
+                        powerRelay = subRoot.powerRelay;
+                    }
                 }
 
                 if (powerRelay != null)
@@ -89,6 +99,7 @@ namespace Subnautica.Events.Patches.Fixes.Interact
                 }
                 else if (crafter.needsPower)
                 {
+                    // Last resort: disable power requirement so crafting isn't blocked entirely.
                     crafter.needsPower = false;
                 }
             }
@@ -97,18 +108,18 @@ namespace Subnautica.Events.Patches.Fixes.Interact
             try
             {
                 var petFab = crafter.GetComponent("PetFabricator");
-                if (petFab != null && baseComp != null)
+                if (petFab != null && crafter.baseComp != null)
                 {
                     var baseProp = petFab.GetType().GetProperty("Base");
                     if (baseProp != null && baseProp.GetValue(petFab, null) == null)
                     {
-                        baseProp.SetValue(petFab, baseComp, null);
+                        baseProp.SetValue(petFab, crafter.baseComp, null);
                     }
 
                     var baseParentField = petFab.GetType().GetField("_baseParentGameObject", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                     if (baseParentField != null && baseParentField.GetValue(petFab) == null)
                     {
-                        baseParentField.SetValue(petFab, baseComp.gameObject);
+                        baseParentField.SetValue(petFab, crafter.baseComp.gameObject);
                     }
 
                     var spawnPointField = petFab.GetType().GetField("_spawnPoint", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);

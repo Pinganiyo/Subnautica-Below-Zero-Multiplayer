@@ -15,6 +15,7 @@ namespace Subnautica.Events.Patches.Events.Furnitures
     public static class CrafterBegin
     {
         [HarmonyPrefix]
+        [HarmonyPriority(Priority.High)]
         [HarmonyPatch(typeof(global::GhostCrafter), nameof(global::GhostCrafter.Craft))]
         private static bool GhostCrafter_Craft(global::GhostCrafter __instance, TechType techType, float duration)
         {
@@ -25,19 +26,18 @@ namespace Subnautica.Events.Patches.Events.Furnitures
 
             GhostCrafter.EnsureCrafterPower(__instance);
 
-            if (__instance.baseComp && !__instance.baseComp.IsPowered(__instance.transform.position))
+            // Only gate on power when needsPower is true AND power is genuinely missing.
+            // EasyCraft's own prefix also checks power but it may run after ours; the
+            // key is that by the time EasyCraft reads crafter.powerRelay / crafter.baseComp
+            // those fields are set correctly by EnsureCrafterPower above.
+            if (__instance.needsPower && GameModeManager.GetOption<bool>(GameOption.TechnologyRequiresPower))
             {
-                return false;
-            }
-
-            if (__instance.needsPower)
-            {
-                if (!CrafterLogic.IsCraftRecipeFulfilled(techType))
+                if (__instance.powerRelay == null || __instance.powerRelay.GetPower() < 5f)
                 {
                     return false;
                 }
 
-                if (GameModeManager.GetOption<bool>(GameOption.TechnologyRequiresPower) && (__instance.powerRelay == null || __instance.powerRelay.GetPower() < 5f))
+                if (__instance.baseComp && !__instance.baseComp.IsPowered(__instance.transform.position))
                 {
                     return false;
                 }
