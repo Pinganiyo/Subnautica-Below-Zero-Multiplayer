@@ -79,12 +79,20 @@
          */
         private void StartDocking(string uniqueId, string vehicleId)
         {
+            var bayFound = Network.Identifier.GetGameObject(uniqueId, true) != null;
+            var vehicleFound = Network.Identifier.GetGameObject(vehicleId, true) != null;
+            Log.Info($"SeaTruckDockingModule.StartDocking: bay={uniqueId} found={bayFound}, vehicle={vehicleId} found={vehicleFound}");
+
             Network.DynamicEntity.RemoveEntity(vehicleId);
 
             var dockingBay = Network.Identifier.GetComponentByGameObject<MultiplayerSeaTruckDockingBay>(uniqueId);
             if (dockingBay)
             {
                 dockingBay.StartDocking(vehicleId);
+            }
+            else
+            {
+                Log.Info($"SeaTruckDockingModule.StartDocking: MultiplayerSeaTruckDockingBay not found for {uniqueId}");
             }
         }
 
@@ -119,6 +127,7 @@
             {
                 ev.IsAllowed = false;
 
+                Log.Info($"SeaTruckDockingModule.OnVehicleDocking: sending dock. bay={ev.UniqueId}, vehicle={ev.VehicleId}");
                 SeaTruckDockingModuleProcessor.SendPacketToServer(ev.UniqueId, ev.VehicleId, isDocking: true);
             }
         }
