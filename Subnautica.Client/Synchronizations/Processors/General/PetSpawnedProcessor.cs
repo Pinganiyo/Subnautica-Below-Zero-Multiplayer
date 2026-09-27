@@ -5,6 +5,7 @@ namespace Subnautica.Client.Synchronizations.Processors.General
     using Subnautica.Client.Abstracts;
     using Subnautica.Client.Core;
     using Subnautica.Events.EventArgs;
+    using Subnautica.Events.Patches.Events.Game;
     using Subnautica.Network.Models.Core;
 
     using UnityEngine;
@@ -56,7 +57,15 @@ namespace Subnautica.Client.Synchronizations.Processors.General
                 var callbackHolder = new RemoteSpawnCallback(packet.PetId, packet.PetName);
                 var callback = new System.Action<GameObject>(callbackHolder.OnSpawned);
 
-                spawnMethod.Invoke(fabricatorComponent, new object[] { packet.TechType, callback });
+                PetFabricatorSpawnPatch.SuppressBroadcast = true;
+                try
+                {
+                    spawnMethod.Invoke(fabricatorComponent, new object[] { packet.TechType, callback });
+                }
+                finally
+                {
+                    PetFabricatorSpawnPatch.SuppressBroadcast = false;
+                }
             }
             catch (System.Exception ex)
             {

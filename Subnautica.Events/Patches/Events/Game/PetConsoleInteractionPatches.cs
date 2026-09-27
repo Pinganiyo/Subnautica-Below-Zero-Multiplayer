@@ -81,6 +81,14 @@ namespace Subnautica.Events.Patches.Events.Game
     [HarmonyPatch]
     public static class PetKillPatch
     {
+        /**
+         *
+         * Uzak istemcide uygulanan ölümler için yayın engelleme anahtarı.
+         * Alınan ölüm paketi yerelde uygulanırken true yapılır.
+         *
+         */
+        public static bool SuppressBroadcast { get; set; }
+
         [HarmonyPrepare]
         public static bool Prepare()
         {
@@ -100,7 +108,7 @@ namespace Subnautica.Events.Patches.Events.Game
         {
             try
             {
-                if (!Network.IsMultiplayerActive)
+                if (!Network.IsMultiplayerActive || PetKillPatch.SuppressBroadcast)
                 {
                     return;
                 }
@@ -150,6 +158,15 @@ namespace Subnautica.Events.Patches.Events.Game
     [HarmonyPatch]
     public static class PetFabricatorSpawnPatch
     {
+        /**
+         *
+         * Uzak istemcide uygulanan üretimler için yayın engelleme anahtarı.
+         * Alınan üretim paketi yerelde uygulanırken true yapılır, böylece
+         * alıcının üretimi yeniden yayınlanmaz ve yankı döngüsü oluşmaz.
+         *
+         */
+        public static bool SuppressBroadcast { get; set; }
+
         [HarmonyPrepare]
         public static bool Prepare()
         {
@@ -169,7 +186,7 @@ namespace Subnautica.Events.Patches.Events.Game
         {
             try
             {
-                if (!Network.IsMultiplayerActive)
+                if (!Network.IsMultiplayerActive || PetFabricatorSpawnPatch.SuppressBroadcast)
                 {
                     return;
                 }
@@ -191,7 +208,16 @@ namespace Subnautica.Events.Patches.Events.Game
                 {
                     try
                     {
-                        if (Network.IsMultiplayerActive && spawnedPet != null)
+                        originalCallback?.Invoke(spawnedPet);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"Game.PetFabricatorSpawnPatch.OriginalCallback: {ex}");
+                    }
+
+                    try
+                    {
+                        if (Network.IsMultiplayerActive && !PetFabricatorSpawnPatch.SuppressBroadcast && spawnedPet != null)
                         {
                             var petId = spawnedPet.GetIdentityId();
                             if (!petId.IsNull())
@@ -218,17 +244,6 @@ namespace Subnautica.Events.Patches.Events.Game
                     catch (Exception ex)
                     {
                         Log.Error($"Game.PetFabricatorSpawnPatch.Callback: {ex}");
-                    }
-                    finally
-                    {
-                        try
-                        {
-                            originalCallback?.Invoke(spawnedPet);
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error($"Game.PetFabricatorSpawnPatch.OriginalCallback: {ex}");
-                        }
                     }
                 };
             }
