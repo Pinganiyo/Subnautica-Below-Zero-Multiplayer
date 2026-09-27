@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Fixes.Interact
+namespace Subnautica.Events.Patches.Fixes.Interact
 {
     using HarmonyLib;
 
@@ -29,10 +29,12 @@
                 return false;
             }
 
+            GhostCrafter.EnsureCrafterPower(__instance);
+
             var uniqueId = GhostCrafter.GetUniqueId(__instance.gameObject);
             if (uniqueId.IsNull())
             {
-                return false;
+                return true;
             }
 
             if (Interact.IsBlocked(uniqueId))
@@ -42,6 +44,88 @@
             }
 
             return true;
+        }
+
+        /**
+         * Ensures power relay, base reference, and mod dependencies are connected.
+         */
+        public static void EnsureCrafterPower(global::GhostCrafter crafter)
+        {
+            if (crafter == null)
+            {
+                return;
+            }
+
+            var baseComp = crafter.baseComp ?? crafter.GetComponentInParent<global::Base>();
+            if (baseComp == null)
+            {
+                float closestDist = 20f;
+                foreach (var b in UnityEngine.Object.FindObjectsOfType<global::Base>())
+                {
+                    float dist = Vector3.Distance(crafter.transform.position, b.transform.position);
+                    if (dist < closestDist)
+                    {
+                        closestDist = dist;
+                        baseComp = b;
+                    }
+                }
+            }
+            if (crafter.baseComp == null && baseComp != null)
+            {
+                crafter.baseComp = baseComp;
+            }
+
+            if (crafter.powerRelay == null)
+            {
+                var powerRelay = crafter.GetComponentInParent<PowerRelay>() ?? crafter.GetComponent<PowerRelay>();
+                if (powerRelay == null && baseComp != null)
+                {
+                    powerRelay = baseComp.GetComponent<PowerRelay>();
+                }
+
+                if (powerRelay != null)
+                {
+                    crafter.powerRelay = powerRelay;
+                }
+                else if (crafter.needsPower)
+                {
+                    crafter.needsPower = false;
+                }
+            }
+
+            // SubnauticaPets compatibility: ensure PetFabricator has Base, _baseParentGameObject, and _spawnPoint set
+            try
+            {
+                var petFab = crafter.GetComponent("PetFabricator");
+                if (petFab != null && baseComp != null)
+                {
+                    var baseProp = petFab.GetType().GetProperty("Base");
+                    if (baseProp != null && baseProp.GetValue(petFab, null) == null)
+                    {
+                        baseProp.SetValue(petFab, baseComp, null);
+                    }
+
+                    var baseParentField = petFab.GetType().GetField("_baseParentGameObject", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    if (baseParentField != null && baseParentField.GetValue(petFab) == null)
+                    {
+                        baseParentField.SetValue(petFab, baseComp.gameObject);
+                    }
+
+                    var spawnPointField = petFab.GetType().GetField("_spawnPoint", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    if (spawnPointField != null && (Vector3)spawnPointField.GetValue(petFab) == Vector3.zero)
+                    {
+                        var ghostModel = crafter.GetComponent<CrafterGhostModel>();
+                        Vector3 spawnPos = (ghostModel != null && ghostModel.itemSpawnPoint != null)
+                            ? ghostModel.itemSpawnPoint.position
+                            : crafter.transform.position + crafter.transform.forward * 0.5f;
+                        spawnPointField.SetValue(petFab, spawnPos);
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Log.Error($"GhostCrafter.EnsureCrafterPower SubnauticaPets error: {ex}");
+            }
         }
 
         /**

@@ -197,6 +197,13 @@ if [ -d "$SCRIPT_DIR/lib/plugins" ]; then
     cp -rn "$SCRIPT_DIR/lib/plugins/." "$GAME_DIR/BepInEx/plugins/" 2>/dev/null || cp -r "$SCRIPT_DIR/lib/plugins/." "$GAME_DIR/BepInEx/plugins/"
 fi
 
+# Deploy mod configurations to BepInEx/config
+if [ -d "$SCRIPT_DIR/lib/config" ]; then
+    echo "Deploying mod configurations to $GAME_DIR/BepInEx/config/ ..."
+    mkdir -p "$GAME_DIR/BepInEx/config"
+    cp -rn "$SCRIPT_DIR/lib/config/." "$GAME_DIR/BepInEx/config/" 2>/dev/null || cp -r "$SCRIPT_DIR/lib/config/." "$GAME_DIR/BepInEx/config/"
+fi
+
 # Deploy QMods to game folder
 if [ -d "$SCRIPT_DIR/lib/QMods" ]; then
     echo "Deploying QMods to $GAME_DIR/QMods/ ..."

@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.Furnitures
+namespace Subnautica.Events.Patches.Events.Furnitures
 {
     using System;
 
@@ -30,10 +30,22 @@
                 return false;
             }
 
+            GhostCrafter.EnsureCrafterPower(__instance);
+
             var uniqueId = GhostCrafter.GetUniqueId(__instance.gameObject);
             var techType = GhostCrafter.GetTechType(__instance.gameObject);
-            if (string.IsNullOrEmpty(uniqueId))
+
+            if (string.IsNullOrEmpty(uniqueId) || !Subnautica.Client.Abstracts.ProcessorShared.MetadataProcessors.ContainsKey(techType))
             {
+                if (__instance.HasCraftedItem())
+                {
+                    __instance.logic.TryPickup();
+                }
+                else if (__instance.HasEnoughPower() && __instance.isValidHandTarget)
+                {
+                    __instance.opened = true;
+                    uGUI.main.craftingMenu.Open(__instance.craftTree, __instance);
+                }
                 return false;
             }
 

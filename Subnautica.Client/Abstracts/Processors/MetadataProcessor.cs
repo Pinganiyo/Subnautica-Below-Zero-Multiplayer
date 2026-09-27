@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Abstracts.Processors
+namespace Subnautica.Client.Abstracts.Processors
 {
     using Subnautica.API.Features;
     using Subnautica.Network.Core.Components;
@@ -31,6 +31,12 @@
             }
             else
             {
+                if (ProcessorShared.MetadataProcessors.TryGetValue(TechType.Fabricator, out MetadataProcessor crafterProcessor))
+                {
+                    crafterProcessor.OnDataReceived(uniqueId, techType, packet, isSilence);
+                    return true;
+                }
+
                 Log.Error(string.Format("Metadata Processor Not Found: {0}, UniqueId: {1}", techType, uniqueId));
                 return false;
             }

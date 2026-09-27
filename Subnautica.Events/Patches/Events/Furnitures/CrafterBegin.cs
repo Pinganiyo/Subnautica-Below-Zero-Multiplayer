@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.Furnitures
+namespace Subnautica.Events.Patches.Events.Furnitures
 {
     using System;
 
@@ -23,6 +23,8 @@
                 return true;
             }
 
+            GhostCrafter.EnsureCrafterPower(__instance);
+
             if (__instance.baseComp && !__instance.baseComp.IsPowered(__instance.transform.position))
             {
                 return false;
@@ -35,7 +37,7 @@
                     return false;
                 }
 
-                if (GameModeManager.GetOption<bool>(GameOption.TechnologyRequiresPower) && __instance.powerRelay.GetPower() < 5f)
+                if (GameModeManager.GetOption<bool>(GameOption.TechnologyRequiresPower) && (__instance.powerRelay == null || __instance.powerRelay.GetPower() < 5f))
                 {
                     return false;
                 }
@@ -43,9 +45,9 @@
 
             var uniqueId  = GhostCrafter.GetUniqueId(__instance.gameObject);
             var _techType = GhostCrafter.GetTechType(__instance.gameObject);
-            if (uniqueId.IsNull())
+            if (uniqueId.IsNull() || !Subnautica.Client.Abstracts.ProcessorShared.MetadataProcessors.ContainsKey(_techType))
             {
-                return false;
+                return true;
             }
 
             if (EventBlocker.IsEventBlocked(_techType))
@@ -86,9 +88,9 @@
 
             var uniqueId = GhostCrafter.GetUniqueId(__instance.gameObject);
             var techType = GhostCrafter.GetTechType(__instance.gameObject);
-            if (uniqueId.IsNull())
+            if (uniqueId.IsNull() || !Subnautica.Client.Abstracts.ProcessorShared.MetadataProcessors.ContainsKey(techType))
             {
-                return false;
+                return true;
             }
 
             try

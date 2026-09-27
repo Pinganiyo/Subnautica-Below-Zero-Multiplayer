@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Logic.Furnitures
+namespace Subnautica.Server.Logic.Furnitures
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -66,7 +66,7 @@
 
                     if (ghostCrafter.needsPower)
                     {
-                        if (Core.Server.Instance.Logices.PowerConsumer.IsTechnologyRequiresPower() && ghostCrafter.powerRelay.GetPower() < this.EnergyAmount)
+                        if (Core.Server.Instance.Logices.PowerConsumer.IsTechnologyRequiresPower() && (ghostCrafter.powerRelay == null || ghostCrafter.powerRelay.GetPower() < this.EnergyAmount))
                         {
                             continue;
                         }
@@ -92,7 +92,7 @@
                             Core.Server.Instance.Logices.VehicleEnergyTransmission.VehicleEnergyUpdateQueue(worldEntity, true);
                         }
                     }
-                    else if (ghostCrafter.needsPower)
+                    else if (ghostCrafter.needsPower && ghostCrafter.powerRelay != null)
                     {
                         Core.Server.Instance.Logices.PowerConsumer.ConsumePower(ghostCrafter.powerRelay, this.EnergyAmount, out var ____);
                     }

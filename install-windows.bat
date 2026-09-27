@@ -127,6 +127,13 @@ if exist "%~dp0lib\plugins" (
     xcopy /E /I /Y "%~dp0lib\plugins\*" "%GAME_DIR%\BepInEx\plugins\"
 )
 
+if exist "%~dp0lib\config" (
+    echo.
+    echo Deploying mod configurations to BepInEx\config...
+    if not exist "%GAME_DIR%\BepInEx\config" mkdir "%GAME_DIR%\BepInEx\config"
+    xcopy /E /I /Y "%~dp0lib\config\*" "%GAME_DIR%\BepInEx\config\"
+)
+
 if exist "%~dp0lib\QMods" (
     echo.
     echo Deploying QMods to game folder...
