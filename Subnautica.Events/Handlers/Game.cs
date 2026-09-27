@@ -495,20 +495,20 @@
 
         /**
          *
-         * PetKilledAll İşleyicisi
+         * PetSpawned İşleyicisi
          *
          * @author Ismail <ismaiil_0234@hotmail.com>
          *
          */
-        public static event SubnauticaPluginEventHandler<PetKilledAllEventArgs> PetKilledAll;
+        public static event SubnauticaPluginEventHandler<PetSpawnedEventArgs> PetSpawned;
 
         /**
          *
-         * PetKilledAll Olayı
+         * PetSpawned Olayı
          *
          * @author Ismail <ismaiil_0234@hotmail.com>
          *
          */
-        public static void OnPetKilledAll(PetKilledAllEventArgs ev) => PetKilledAll.CustomInvoke(ev);
+        public static void OnPetSpawned(PetSpawnedEventArgs ev) => PetSpawned.CustomInvoke(ev);
     }
 }

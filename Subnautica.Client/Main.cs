@@ -70,7 +70,7 @@
             Handlers.Game.SubNameInputSelecting              += this.Router.OnSubNameInputSelecting;
             Handlers.Game.PetRenamed                         += this.Router.OnPetRenamed;
             Handlers.Game.PetKilled                          += this.Router.OnPetKilled;
-            Handlers.Game.PetKilledAll                       += this.Router.OnPetKilledAll;
+            Handlers.Game.PetSpawned                         += this.Router.OnPetSpawned;
 
             Handlers.PDA.EncyclopediaAdded                   += this.Router.OnEncyclopediaAdded;
             Handlers.PDA.TechnologyAdded                     += this.Router.OnTechnologyAdded;

@@ -7,7 +7,7 @@ namespace Subnautica.Server.Processors.Game
 
     using ServerModel = Subnautica.Network.Models.Server;
 
-    public class PetKilledAllProcessor : NormalProcessor
+    public class PetSpawnedProcessor : NormalProcessor
     {
         /**
          *
@@ -18,7 +18,7 @@ namespace Subnautica.Server.Processors.Game
          */
         public override bool OnExecute(AuthorizationProfile profile, NetworkPacket networkPacket)
         {
-            var packet = networkPacket.GetPacket<ServerModel.PetKilledAllArgs>();
+            var packet = networkPacket.GetPacket<ServerModel.PetSpawnedArgs>();
             if (packet == null)
             {
                 return this.SendEmptyPacketErrorLog(networkPacket);

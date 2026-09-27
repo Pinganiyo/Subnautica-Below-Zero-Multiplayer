@@ -117,7 +117,7 @@ namespace Subnautica.Client.Abstracts
             { ProcessType.CreatureMeleeAttack                , new Creatures.MeleeAttackProcessor()},
             { ProcessType.PetRenamed                         , new General.PetRenamedProcessor()},
             { ProcessType.PetKilled                          , new General.PetKilledProcessor()},
-            { ProcessType.PetKilledAll                       , new General.PetKilledAllProcessor()},
+            { ProcessType.PetSpawned                         , new General.PetSpawnedProcessor()},
             { ProcessType.WorldEntityAction                  , new WorldEntities.WorldEntityActionProcessor()},
             { ProcessType.VehicleEnergyTransmission          , new EnergyTransmission.VehicleEnergyTransmission()},
             { ProcessType.PlayerItemAction                   , new Items.PlayerItemActionProcessor()},

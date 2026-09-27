@@ -81,6 +81,13 @@ namespace Subnautica.Client.Synchronizations.Processors.General
                         return;
                     }
 
+                    var setNameMethod = componentType.GetMethod("set_PetName", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                    if (setNameMethod != null)
+                    {
+                        setNameMethod.Invoke(component, new object[] { newName });
+                        return;
+                    }
+
                     var nameField = componentType.GetField("petName", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
                     if (nameField != null && nameField.FieldType == typeof(string))
                     {

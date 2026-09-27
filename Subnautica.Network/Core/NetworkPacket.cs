@@ -129,7 +129,7 @@ namespace Subnautica.Network.Models.Core
     [Union(208, typeof(ServerModel.PlayerSuitColorArgs))]
     [Union(209, typeof(ServerModel.PetRenamedArgs))]
     [Union(210, typeof(ServerModel.PetKilledArgs))]
-    [Union(211, typeof(ServerModel.PetKilledAllArgs))]
+    [Union(211, typeof(ServerModel.PetSpawnedArgs))]
     [MessagePackObject]
     public abstract class NetworkPacket
     {

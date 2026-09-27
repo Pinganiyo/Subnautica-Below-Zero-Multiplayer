@@ -129,7 +129,7 @@ namespace Subnautica.Server.Abstracts
              { ProcessType.CreatureMeleeAttack           , new Creatures.MeleeAttackProcessor()},
             { ProcessType.PetRenamed                    , new Game.PetRenamedProcessor()},
             { ProcessType.PetKilled                     , new Game.PetKilledProcessor()},
-            { ProcessType.PetKilledAll                  , new Game.PetKilledAllProcessor()},
+            { ProcessType.PetSpawned                    , new Game.PetSpawnedProcessor()},
             { ProcessType.StoryBridge                   , new Story.BridgeProcessor()},
             { ProcessType.StoryRadioTower               , new Story.RadioTowerProcessor()},
             { ProcessType.StorySignal                   , new Story.SignalProcessor()},

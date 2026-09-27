@@ -128,7 +128,7 @@ namespace Subnautica.API.Enums
         PlayerSuitColor,
         PetRenamed,
         PetKilled,
-        PetKilledAll,
+        PetSpawned,
     }
 
     /**

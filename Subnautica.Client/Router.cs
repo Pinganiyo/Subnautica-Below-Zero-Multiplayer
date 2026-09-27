@@ -1034,14 +1034,14 @@ namespace Subnautica.Client
 
         /**
          *
-         * Tüm evcil hayvanlar öldürüldüğünde tetiklenir.
+         * Evcil hayvan üretildiğinde tetiklenir.
          *
          * @author Ismail <ismaiil_0234@hotmail.com>
          *
          */
-        public void OnPetKilledAll(PetKilledAllEventArgs ev)
+        public void OnPetSpawned(PetSpawnedEventArgs ev)
         {
-            General.PetKilledAllProcessor.OnPetKilledAll(ev);
+            General.PetSpawnedProcessor.OnPetSpawned(ev);
         }
 
         /**
