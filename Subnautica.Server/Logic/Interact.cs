@@ -168,6 +168,39 @@
 
         /**
          *
+         * Bloklu listeden inşaat kimliğine göre kaldırır.
+         * Kenetlenmiş araçlara binilirken kalan eski blokları temizler.
+         *
+         */
+        public bool RemoveBlockByConstruction(string constructionId, bool autoSend = true)
+        {
+            if (constructionId.IsNull())
+            {
+                return false;
+            }
+
+            var response = false;
+
+            foreach (var playerUniqueId in this.List.Where(q => q.Value == constructionId).Select(q => q.Key).ToList())
+            {
+                this.RemoveTimingItem(playerUniqueId);
+
+                if (this.List.Remove(playerUniqueId))
+                {
+                    response = true;
+                }
+            }
+
+            if (autoSend)
+            {
+                this.SendListToPlayers();
+            }
+
+            return response;
+        }
+
+        /**
+         *
          * Bloklu olup olmadığını döner.
          *
          * @author Ismail <ismaiil_0234@hotmail.com>

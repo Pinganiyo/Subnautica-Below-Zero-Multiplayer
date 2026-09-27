@@ -41,9 +41,16 @@
         {
             if (__instance.dockingBay.GetDockedObject() != null)
             {
-                if (Interact.IsBlocked(Network.Identifier.GetIdentityId(__instance.dockingBay.GetDockedObject().gameObject, false)))
+                var dockedObject = __instance.dockingBay.GetDockedObject();
+
+                // A docked Exosuit is always unoccupied, so any interact block on it is stale.
+                // Never deny hovering it: the server clears the block and mounts on entry.
+                if (!dockedObject.TryGetComponent<global::Exosuit>(out _))
                 {
-                    return true;
+                    if (Interact.IsBlocked(Network.Identifier.GetIdentityId(dockedObject.gameObject, false)))
+                    {
+                        return true;
+                    }
                 }
             }
 

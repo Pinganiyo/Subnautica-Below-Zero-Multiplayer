@@ -108,5 +108,14 @@
          */
         [Key(13)]
         public ZeroQuaternion Rotation { get; set; }
+
+        /**
+         *
+         * Bağlanan modülün türünü barındırır.
+         * Sunucuda bilinmeyen modüller bununla üretilir.
+         *
+         */
+        [Key(14)]
+        public TechType ModuleTechType { get; set; }
     }
 }

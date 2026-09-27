@@ -54,7 +54,13 @@ namespace Subnautica.Server.Processors.Vehicle
                 return false;
             }
 
-            if (Server.Instance.Logices.Interact.IsBlocked(packet.UniqueId))
+            if (packet.TechType == TechType.Exosuit && this.IsDockedInMoonpool(packet.UniqueId))
+            {
+                // A docked Exosuit is always unoccupied, so any interact block on it is stale.
+                // Clear it so the entering player can mount and the vehicle state resets.
+                Server.Instance.Logices.Interact.RemoveBlockByConstruction(packet.UniqueId, true);
+            }
+            else if (Server.Instance.Logices.Interact.IsBlocked(packet.UniqueId))
             {
                 return false;
             }
@@ -199,6 +205,31 @@ namespace Subnautica.Server.Processors.Vehicle
             }
 
             return null;
+        }
+
+        /**
+         *
+         * Aracın moonpool'a kenetli olup olmadığını döner.
+         *
+         */
+        private bool IsDockedInMoonpool(string vehicleId)
+        {
+            foreach (var item in Server.Instance.Storages.Construction.Storage.Constructions
+                         .Where(q => q.Value.TechType == TechType.BaseMoonpool || q.Value.TechType == TechType.BaseMoonpoolExpansion))
+            {
+                var component = item.Value.Component.GetComponent<MetadataModel.BaseMoonpool>();
+                if (component == null || !component.IsDocked || component.Vehicle == null)
+                {
+                    continue;
+                }
+
+                if (component.Vehicle.UniqueId == vehicleId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /**

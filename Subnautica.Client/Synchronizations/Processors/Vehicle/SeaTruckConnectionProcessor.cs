@@ -10,6 +10,7 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
     using Subnautica.Client.MonoBehaviours.World;
     using Subnautica.Events.EventArgs;
     using Subnautica.Network.Models.Core;
+    using Subnautica.Network.Models.Storage.World.Childrens;
     using Subnautica.Network.Structures;
 
     using ServerModel = Subnautica.Network.Models.Server;
@@ -34,9 +35,10 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
             action.RegisterProperty("IsConnect"    , packet.IsConnect);
             action.RegisterProperty("IsEject"      , packet.IsEject);
             action.RegisterProperty("PlayerId"     , packet.GetPacketOwnerId());
-            action.RegisterProperty("ModuleId"     , packet.ModuleId);
-            action.RegisterProperty("Position"     , packet.Position);
-            action.RegisterProperty("Rotation"     , packet.Rotation);
+            action.RegisterProperty("ModuleId"       , packet.ModuleId);
+            action.RegisterProperty("Position"       , packet.Position);
+            action.RegisterProperty("Rotation"       , packet.Rotation);
+            action.RegisterProperty("ModuleTechType" , packet.ModuleTechType);
 
             if (packet.IsMoonpoolExpansion)
             {
@@ -60,11 +62,14 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
          */
         private void OnMoonpoolProcessCompleted(ItemQueueProcess item)
         {
-            var frontModuleId = item.Action.GetProperty<string>("FrontModuleId");
-            var backModuleId  = item.Action.GetProperty<string>("BackModuleId");
-            var firstModuleId = item.Action.GetProperty<string>("FirstModuleId");
-            var playerId      = item.Action.GetProperty<byte>("PlayerId");
-            var isConnect     = item.Action.GetProperty<bool>("IsConnect");
+            var frontModuleId  = item.Action.GetProperty<string>("FrontModuleId");
+            var backModuleId   = item.Action.GetProperty<string>("BackModuleId");
+            var firstModuleId  = item.Action.GetProperty<string>("FirstModuleId");
+            var playerId       = item.Action.GetProperty<byte>("PlayerId");
+            var isConnect      = item.Action.GetProperty<bool>("IsConnect");
+            var moduleTechType = item.Action.GetProperty<TechType>("ModuleTechType");
+            var position       = item.Action.GetProperty<ZeroVector3>("Position");
+            var rotation       = item.Action.GetProperty<ZeroQuaternion>("Rotation");
 
             var entity = Network.DynamicEntity.GetEntity(backModuleId);
             if (entity != null)
@@ -79,30 +84,45 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                 }
             }
 
-            var dockingBay = Network.Identifier.GetComponentByGameObject<global::VehicleDockingBay>(frontModuleId);
-            var backModule = Network.Identifier.GetComponentByGameObject<global::SeaTruckSegment>(backModuleId);
-            if (dockingBay && backModule)
+            System.Action applyDockState = () =>
             {
-                var vehicleDockingBay = dockingBay.gameObject.EnsureComponent<MultiplayerVehicleDockingBay>();
-                if (vehicleDockingBay)
+                var dockingBay = Network.Identifier.GetComponentByGameObject<global::VehicleDockingBay>(frontModuleId);
+                var backModule = Network.Identifier.GetComponentByGameObject<global::SeaTruckSegment>(backModuleId);
+                if (dockingBay && backModule)
                 {
-                    using (EventBlocker.Create(ProcessType.SeaTruckConnection))
+                    var vehicleDockingBay = dockingBay.gameObject.EnsureComponent<MultiplayerVehicleDockingBay>();
+                    if (vehicleDockingBay)
                     {
-                        if (isConnect)
+                        using (EventBlocker.Create(ProcessType.SeaTruckConnection))
                         {
-                            vehicleDockingBay.ExpansionManager.DockTail(backModule, isConnection: true);
-                        }
-                        else
-                        {
-                            vehicleDockingBay.ExpansionManager.UndockTail();
+                            if (isConnect)
+                            {
+                                vehicleDockingBay.ExpansionManager.DockTail(backModule, isConnection: true);
+                            }
+                            else
+                            {
+                                vehicleDockingBay.ExpansionManager.UndockTail();
+                            }
                         }
                     }
-                }
 
-                if (ZeroPlayer.IsPlayerMine(playerId) == false)
-                {
-                    backModule.rb.SetKinematic();
+                    if (ZeroPlayer.IsPlayerMine(playerId) == false)
+                    {
+                        backModule.rb.SetKinematic();
+                    }
                 }
+            };
+
+            if (isConnect)
+            {
+                if (!this.EnsureModuleSpawned(moduleTechType, position, rotation, playerId, backModuleId, firstModuleId, applyDockState))
+                {
+                    applyDockState();
+                }
+            }
+            else
+            {
+                applyDockState();
             }
         }
 
@@ -123,6 +143,7 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
             var moduleId      = item.Action.GetProperty<ushort>("ModuleId");
             var position      = item.Action.GetProperty<ZeroVector3>("Position");
             var rotation      = item.Action.GetProperty<ZeroQuaternion>("Rotation");
+            var moduleTechType = item.Action.GetProperty<TechType>("ModuleTechType");
 
             if (moduleId > 0)
             {
@@ -138,27 +159,35 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                     entity.SetParent(backModuleId);
                 }
 
-                var backModule  = Network.Identifier.GetComponentByGameObject<global::SeaTruckSegment>(frontModuleId);
-                var frontModule = Network.Identifier.GetComponentByGameObject<global::SeaTruckSegment>(backModuleId);
-
-                if (frontModule && frontModule)
+                System.Action applyAttach = () =>
                 {
-                    var moonpoolExpansion = frontModule.GetFirstSegment().GetDockedMoonpoolExpansion();
-                    if (moonpoolExpansion && global::Player.main.IsUnderwater() == false)
+                    var backModule  = Network.Identifier.GetComponentByGameObject<global::SeaTruckSegment>(frontModuleId);
+                    var frontModule = Network.Identifier.GetComponentByGameObject<global::SeaTruckSegment>(backModuleId);
+
+                    if (frontModule && frontModule)
                     {
-                        var underSeaTruckSegment = global::Player.main.GetUnderGameObject<SeaTruckSegment>();
-                        if (underSeaTruckSegment && underSeaTruckSegment.GetFirstSegment() == backModule)
+                        var moonpoolExpansion = frontModule.GetFirstSegment().GetDockedMoonpoolExpansion();
+                        if (moonpoolExpansion && global::Player.main.IsUnderwater() == false)
                         {
-                            backModule.Exit(skipAnimations: true, newInterior: moonpoolExpansion.interior);
+                            var underSeaTruckSegment = global::Player.main.GetUnderGameObject<SeaTruckSegment>();
+                            if (underSeaTruckSegment && underSeaTruckSegment.GetFirstSegment() == backModule)
+                            {
+                                backModule.Exit(skipAnimations: true, newInterior: moonpoolExpansion.interior);
+                            }
+                        }
+
+                        using (EventBlocker.Create(ProcessType.SeaTruckConnection))
+                        {
+                            backModule.frontConnection.SetConnectedTo(frontModule.rearConnection);
+
+                            Utils.PlayFMODAsset(backModule.frontConnection.connectSound, backModule.frontConnection.connectionPoint);
                         }
                     }
+                };
 
-                    using (EventBlocker.Create(ProcessType.SeaTruckConnection))
-                    {
-                        backModule.frontConnection.SetConnectedTo(frontModule.rearConnection);
-
-                        Utils.PlayFMODAsset(backModule.frontConnection.connectSound, backModule.frontConnection.connectionPoint);
-                    }
+                if (!this.EnsureModuleSpawned(moduleTechType, position, rotation, playerId, frontModuleId, backModuleId, applyAttach))
+                {
+                    applyAttach();
                 }
             }
             else
@@ -230,6 +259,60 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
 
         /**
          *
+         * Bağlanan modül yerelde yoksa üretir, üretildikten sonra ekleme işlemini çalıştırır.
+         * Üretim sırasında üretilen modüller ancak böyle görünür olur.
+         *
+         */
+        private bool EnsureModuleSpawned(TechType moduleTechType, ZeroVector3 position, ZeroQuaternion rotation, byte ownerId, string moduleId, string parentModuleId, System.Action onSpawned)
+        {
+            if (Network.Identifier.GetGameObject(moduleId, true) != null)
+            {
+                return false;
+            }
+
+            if (!moduleTechType.IsSeaTruckModule() || position == null || rotation == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                var owner = ZeroPlayer.GetPlayerById(ownerId);
+
+                var entity = new WorldDynamicEntity()
+                {
+                    UniqueId    = moduleId,
+                    TechType    = moduleTechType,
+                    Position    = position,
+                    Rotation    = rotation,
+                    IsDeployed  = true,
+                    OwnershipId = owner?.UniqueId,
+                };
+                entity.SetParent(parentModuleId);
+
+                Network.DynamicEntity.Spawn(entity, (item, pickupable, spawnedGameObject) =>
+                {
+                    try
+                    {
+                        onSpawned?.Invoke();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Log.Error($"SeaTruckConnectionProcessor.EnsureModuleSpawned.Callback: {ex}");
+                    }
+                });
+
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                Log.Error($"SeaTruckConnectionProcessor.EnsureModuleSpawned: {ex}");
+                return false;
+            }
+        }
+
+        /**
+         *
          * Seatruck modülü bağlanırken/ayrılırken tetiklenir.
          *
          * @author Ismail <ismaiil_0234@hotmail.com>
@@ -246,7 +329,7 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                     var backModule = Network.DynamicEntity.GetEntity(ev.BackModuleId);
                     if (backModule != null && backModule.IsMine(ZeroPlayer.CurrentPlayer.UniqueId) && backModule.IsUsingByPlayer)
                     {
-                        SeaTruckConnectionProcessor.SendPacketToServer(ev.IsConnect, frontModuleId: ev.FrontModuleId, backModuleId: ev.BackModuleId, firstModuleId: ev.FirstModuleId, isMoonpoolExpansion: ev.IsMoonpoolExpansion);
+                        SeaTruckConnectionProcessor.SendPacketToServer(ev.IsConnect, frontModuleId: ev.FrontModuleId, backModuleId: ev.BackModuleId, firstModuleId: ev.FirstModuleId, isMoonpoolExpansion: ev.IsMoonpoolExpansion, spawnSubjectModuleId: ev.BackModuleId);
                     }
                 }
                 else
@@ -267,7 +350,7 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                     {
                         if ((frontModule.IsMine(ZeroPlayer.CurrentPlayer.UniqueId) && frontModule.IsUsingByPlayer) || (backModule.IsMine(ZeroPlayer.CurrentPlayer.UniqueId) && backModule.IsUsingByPlayer))
                         {
-                            SeaTruckConnectionProcessor.SendPacketToServer(ev.IsConnect, frontModuleId: ev.FrontModuleId, backModuleId: ev.BackModuleId, firstModuleId: ev.FirstModuleId, isMoonpoolExpansion: ev.IsMoonpoolExpansion);
+                            SeaTruckConnectionProcessor.SendPacketToServer(ev.IsConnect, frontModuleId: ev.FrontModuleId, backModuleId: ev.BackModuleId, firstModuleId: ev.FirstModuleId, isMoonpoolExpansion: ev.IsMoonpoolExpansion, spawnSubjectModuleId: ev.FrontModuleId);
                         }
                     }
                 }
@@ -303,7 +386,7 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
          * @author Ismail <ismaiil_0234@hotmail.com>
          *
          */
-        public static void SendPacketToServer(bool isConnect, bool isEject = false, string frontModuleId = null, string backModuleId = null, string firstModuleId = null, bool isMoonpoolExpansion = false)
+        public static void SendPacketToServer(bool isConnect, bool isEject = false, string frontModuleId = null, string backModuleId = null, string firstModuleId = null, bool isMoonpoolExpansion = false, string spawnSubjectModuleId = null)
         {
             ServerModel.SeaTruckConnectionArgs request = new ServerModel.SeaTruckConnectionArgs()
             {
@@ -314,6 +397,17 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                 FirstModuleId = firstModuleId,
                 IsMoonpoolExpansion = isMoonpoolExpansion
             };
+
+            if (isConnect && !string.IsNullOrEmpty(spawnSubjectModuleId))
+            {
+                var subjectGameObject = Network.Identifier.GetGameObject(spawnSubjectModuleId, true);
+                if (subjectGameObject != null)
+                {
+                    request.ModuleTechType = CraftData.GetTechType(subjectGameObject);
+                    request.Position       = subjectGameObject.transform.position.ToZeroVector3();
+                    request.Rotation       = subjectGameObject.transform.rotation.ToZeroQuaternion();
+                }
+            }
 
             NetworkClient.SendPacket(request);
         }
