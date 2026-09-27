@@ -456,5 +456,59 @@
          *
          */
         public static void OnEntityDistributionLoaded() => EntityDistributionLoaded.CustomInvoke();
+
+        /**
+         *
+         * PetRenamed İşleyicisi
+         *
+         * @author Ismail <ismaiil_0234@hotmail.com>
+         *
+         */
+        public static event SubnauticaPluginEventHandler<PetRenamedEventArgs> PetRenamed;
+
+        /**
+         *
+         * PetRenamed Olayı
+         *
+         * @author Ismail <ismaiil_0234@hotmail.com>
+         *
+         */
+        public static void OnPetRenamed(PetRenamedEventArgs ev) => PetRenamed.CustomInvoke(ev);
+
+        /**
+         *
+         * PetKilled İşleyicisi
+         *
+         * @author Ismail <ismaiil_0234@hotmail.com>
+         *
+         */
+        public static event SubnauticaPluginEventHandler<PetKilledEventArgs> PetKilled;
+
+        /**
+         *
+         * PetKilled Olayı
+         *
+         * @author Ismail <ismaiil_0234@hotmail.com>
+         *
+         */
+        public static void OnPetKilled(PetKilledEventArgs ev) => PetKilled.CustomInvoke(ev);
+
+        /**
+         *
+         * PetKilledAll İşleyicisi
+         *
+         * @author Ismail <ismaiil_0234@hotmail.com>
+         *
+         */
+        public static event SubnauticaPluginEventHandler<PetKilledAllEventArgs> PetKilledAll;
+
+        /**
+         *
+         * PetKilledAll Olayı
+         *
+         * @author Ismail <ismaiil_0234@hotmail.com>
+         *
+         */
+        public static void OnPetKilledAll(PetKilledAllEventArgs ev) => PetKilledAll.CustomInvoke(ev);
     }
 }

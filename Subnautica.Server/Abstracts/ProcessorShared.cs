@@ -18,9 +18,10 @@ namespace Subnautica.Server.Abstracts
     using WorldEntities = Subnautica.Server.Processors.WorldEntities;
     using Items         = Subnautica.Server.Processors.Items;
     using Vehicle       = Subnautica.Server.Processors.Vehicle;
-    using Creatures     = Subnautica.Server.Processors.Creatures;
+     using Creatures     = Subnautica.Server.Processors.Creatures;
     using Story         = Subnautica.Server.Processors.Story;
     using World         = Subnautica.Server.Processors.World;
+    using Game          = Subnautica.Server.Processors.Game;
 
     public class ProcessorShared
     {
@@ -125,7 +126,10 @@ namespace Subnautica.Server.Abstracts
             { ProcessType.CreatureCallSound             , new Creatures.CallSoundProcessor()},    
             { ProcessType.CreatureAttackLastTarget      , new Creatures.AttackLastTargetProcessor()},
             { ProcessType.CreatureLeviathanMeleeAttack  , new Creatures.LeviathanMeleeAttackProcessor()},
-            { ProcessType.CreatureMeleeAttack           , new Creatures.MeleeAttackProcessor()},
+             { ProcessType.CreatureMeleeAttack           , new Creatures.MeleeAttackProcessor()},
+            { ProcessType.PetRenamed                    , new Game.PetRenamedProcessor()},
+            { ProcessType.PetKilled                     , new Game.PetKilledProcessor()},
+            { ProcessType.PetKilledAll                  , new Game.PetKilledAllProcessor()},
             { ProcessType.StoryBridge                   , new Story.BridgeProcessor()},
             { ProcessType.StoryRadioTower               , new Story.RadioTowerProcessor()},
             { ProcessType.StorySignal                   , new Story.SignalProcessor()},

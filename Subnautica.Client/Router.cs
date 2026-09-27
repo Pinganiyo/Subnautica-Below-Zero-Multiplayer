@@ -1010,6 +1010,42 @@ namespace Subnautica.Client
 
         /**
          *
+         * Evcil hayvan yeniden adlandırıldığında tetiklenir.
+         *
+         * @author Ismail <ismaiil_0234@hotmail.com>
+         *
+         */
+        public void OnPetRenamed(PetRenamedEventArgs ev)
+        {
+            General.PetRenamedProcessor.OnPetRenamed(ev);
+        }
+
+        /**
+         *
+         * Evcil hayvan öldürüldüğünde tetiklenir.
+         *
+         * @author Ismail <ismaiil_0234@hotmail.com>
+         *
+         */
+        public void OnPetKilled(PetKilledEventArgs ev)
+        {
+            General.PetKilledProcessor.OnPetKilled(ev);
+        }
+
+        /**
+         *
+         * Tüm evcil hayvanlar öldürüldüğünde tetiklenir.
+         *
+         * @author Ismail <ismaiil_0234@hotmail.com>
+         *
+         */
+        public void OnPetKilledAll(PetKilledAllEventArgs ev)
+        {
+            General.PetKilledAllProcessor.OnPetKilledAll(ev);
+        }
+
+        /**
+         *
          * Depolamaya eşya eklenirken tetiklenir.
          *
          * @author Ismail <ismaiil_0234@hotmail.com>

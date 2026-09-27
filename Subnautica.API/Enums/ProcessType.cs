@@ -126,6 +126,9 @@ namespace Subnautica.API.Enums
         PlayerSpawn,
         CreatureMeleeAttack,
         PlayerSuitColor,
+        PetRenamed,
+        PetKilled,
+        PetKilledAll,
     }
 
     /**
