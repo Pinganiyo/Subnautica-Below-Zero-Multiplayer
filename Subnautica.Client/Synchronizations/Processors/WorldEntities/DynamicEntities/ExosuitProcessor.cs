@@ -36,11 +36,19 @@ namespace Subnautica.Client.Synchronizations.Processors.WorldEntities.DynamicEnt
                 return false;
             }
 
-            var uniqueId = Network.Identifier.GetIdentityId(vehicle.gameObject);
+            var uniqueId = Network.Identifier.GetIdentityId(gameObject);
+            if (string.IsNullOrEmpty(uniqueId))
+            {
+                uniqueId = Network.Identifier.GetIdentityId(vehicle.gameObject);
+            }
+
             if (string.IsNullOrEmpty(uniqueId))
             {
                 return false;
             }
+
+            Network.Identifier.SetIdentityId(vehicle.gameObject, uniqueId);
+            Network.Identifier.SetIdentityId(gameObject, uniqueId);
 
             vehicle.LazyInitialize();
 

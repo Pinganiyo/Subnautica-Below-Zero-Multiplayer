@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Synchronizations.Processors.Metadata
+namespace Subnautica.Client.Synchronizations.Processors.Metadata
 {
     using Subnautica.API.Extensions;
     using Subnautica.API.Features;
@@ -361,7 +361,7 @@
             {
                 ev.IsAllowed = false;
 
-                if (!Interact.IsBlocked(ev.UniqueId) && !Interact.IsBlocked(ev.VehicleId))
+                if (!Interact.IsBlocked(ev.UniqueId))
                 {
                     MoonpoolProcessor.SendPacketToServer(ev.UniqueId, isUndocking: true, isUndockingLeft: ev.IsLeft);
                 }

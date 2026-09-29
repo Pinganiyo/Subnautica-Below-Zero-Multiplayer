@@ -1,5 +1,7 @@
-﻿namespace Subnautica.Network.Models.Storage.World.Childrens
+namespace Subnautica.Network.Models.Storage.World.Childrens
 {
+    using System.Linq;
+
     using MessagePack;
 
     using Subnautica.API.Extensions;
@@ -451,6 +453,20 @@
             if (this.GameObject == null)
             {
                 this.GameObject = Network.Identifier.GetGameObject(this.UniqueId, true);
+
+                if (this.GameObject == null && this.TechType == TechType.Exosuit)
+                {
+                    var exos = UnityEngine.Object.FindObjectsOfType<global::Exosuit>();
+                    if (exos != null && exos.Length > 0)
+                    {
+                        var exo = exos.OrderBy(e => UnityEngine.Vector3.Distance(e.transform.position, this.Position.ToVector3())).FirstOrDefault();
+                        if (exo != null)
+                        {
+                            this.GameObject = exo.gameObject;
+                            Network.Identifier.SetIdentityId(this.GameObject, this.UniqueId);
+                        }
+                    }
+                }
 
                 if (this.GameObject)
                 {

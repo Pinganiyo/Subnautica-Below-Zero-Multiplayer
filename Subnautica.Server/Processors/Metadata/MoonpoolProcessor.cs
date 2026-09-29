@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Processors.Metadata
+namespace Subnautica.Server.Processors.Metadata
 {
     using Subnautica.API.Extensions;
     using Subnautica.API.Features;
@@ -96,9 +96,14 @@
             }
             else if (component.IsUndocking)
             {
-                if (Server.Instance.Logices.Interact.IsBlocked(construction.UniqueId) || Server.Instance.Logices.Interact.IsBlocked(moonpool.VehicleId))
+                if (Server.Instance.Logices.Interact.IsBlocked(construction.UniqueId))
                 {
                     return false;
+                }
+
+                if (moonpool.VehicleId.IsNotNull())
+                {
+                    Server.Instance.Logices.Interact.RemoveBlockByConstruction(moonpool.VehicleId, true);
                 }
 
                 if (moonpool.Undock(out var vehicle))

@@ -54,13 +54,12 @@ namespace Subnautica.Server.Processors.Vehicle
                 return false;
             }
 
-            if (packet.TechType == TechType.Exosuit && this.IsDockedInMoonpool(packet.UniqueId))
+            if (this.IsDockedInMoonpool(packet.UniqueId))
             {
-                // A docked Exosuit is always unoccupied, so any interact block on it is stale.
-                // Clear it so the entering player can mount and the vehicle state resets.
-                Server.Instance.Logices.Interact.RemoveBlockByConstruction(packet.UniqueId, true);
+                return false;
             }
-            else if (Server.Instance.Logices.Interact.IsBlocked(packet.UniqueId))
+
+            if (Server.Instance.Logices.Interact.IsBlocked(packet.UniqueId))
             {
                 return false;
             }
@@ -68,43 +67,52 @@ namespace Subnautica.Server.Processors.Vehicle
             var entity = this.GetVehicle(packet.UniqueId);
             if (entity == null)
             {
-                if (packet.TechType == TechType.Exosuit || packet.TechType == TechType.Hoverbike || packet.TechType.IsSeaTruckModule(true))
+                if (packet.TechType == TechType.Exosuit)
                 {
-                    entity = new WorldDynamicEntity()
-                    {
-                        UniqueId   = packet.UniqueId,
-                        TechType   = packet.TechType,
-                        Position   = profile.Position,
-                        Rotation   = profile.Rotation,
-                        IsDeployed = true,
-                    };
+                    entity = Server.Instance.Storages.World.Storage.DynamicEntities
+                        .Where(e => e.TechType == TechType.Exosuit)
+                        .OrderBy(e => e.Position.Distance(profile.Position))
+                        .FirstOrDefault();
 
-                    if (packet.TechType == TechType.Exosuit)
+                    if (entity != null)
                     {
-                        entity.Component = new WorldEntityModel.Exosuit().Initialize(null);
+                        packet.UniqueId = entity.UniqueId;
                     }
-                    else if (packet.TechType == TechType.Hoverbike)
-                    {
-                        entity.Component = new WorldEntityModel.Hoverbike();
-                    }
-                    else if (packet.TechType.IsSeaTruckModule(true))
-                    {
-                        entity.Component = new WorldEntityModel.SeaTruck().Initialize(null);
-                    }
-
-                    Server.Instance.Storages.World.AddWorldDynamicEntity(entity);
-                    packet.Vehicle = entity;
                 }
-                else
+
+                if (entity == null)
                 {
-                    return false;
+                    if (packet.TechType == TechType.Hoverbike || packet.TechType.IsSeaTruckModule(true))
+                    {
+                        entity = new WorldDynamicEntity()
+                        {
+                            UniqueId   = packet.UniqueId,
+                            TechType   = packet.TechType,
+                            Position   = profile.Position,
+                            Rotation   = profile.Rotation,
+                            IsDeployed = true,
+                        };
+
+                        if (packet.TechType == TechType.Hoverbike)
+                        {
+                            entity.Component = new WorldEntityModel.Hoverbike();
+                        }
+                        else if (packet.TechType.IsSeaTruckModule(true))
+                        {
+                            entity.Component = new WorldEntityModel.SeaTruck().Initialize(null);
+                        }
+
+                        Server.Instance.Storages.World.AddWorldDynamicEntity(entity);
+                        packet.Vehicle = entity;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
             
-            if (packet.TechType == TechType.MapRoomCamera)
-            {
-                packet.Vehicle = entity;
-            }
+            packet.Vehicle = entity;
 
             entity.IsUsingByPlayer = true;
             entity.SetParent(null);
@@ -173,30 +181,6 @@ namespace Subnautica.Server.Processors.Vehicle
                     {
                         vehicle.RenewId();
 
-                        Server.Instance.Storages.World.AddWorldDynamicEntity(vehicle);
-                        return vehicle;
-                    }
-
-                    return null;
-                }
-            }
-
-            // Search BaseMoonpool docks (Exosuit / Prawn Suit docked in moonpool).
-            // The Exosuit entity lives inside the moonpool's metadata, not in WorldDynamicEntities.
-            foreach (var item in Server.Instance.Storages.Construction.Storage.Constructions
-                         .Where(q => q.Value.TechType == TechType.BaseMoonpool || q.Value.TechType == TechType.BaseMoonpoolExpansion))
-            {
-                var component = item.Value.Component.GetComponent<MetadataModel.BaseMoonpool>();
-                if (component == null || !component.IsDocked || component.Vehicle == null)
-                {
-                    continue;
-                }
-
-                if (component.Vehicle.UniqueId == vehicleId)
-                {
-                    if (component.Undock(out var vehicle))
-                    {
-                        // The undocked vehicle becomes a free dynamic entity again.
                         Server.Instance.Storages.World.AddWorldDynamicEntity(vehicle);
                         return vehicle;
                     }

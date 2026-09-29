@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Extensions
+namespace Subnautica.Client.Extensions
 {
     using Subnautica.API.Extensions;
     using Subnautica.API.Features;
@@ -72,15 +72,21 @@
                 }
             }
 
+            if (handTarget == null)
+            {
+                handTarget = dockingBay.transform.parent.GetComponentInChildren<DockedVehicleHandTarget>();
+            }
+
             if (handTarget)
             {
                 using (EventBlocker.Create(TechType.BaseMoonpool))
                 {
-                    if (CraftData.GetTechType(handTarget.dockingBay.GetDockedObject().gameObject) == TechType.Exosuit)
+                    var dockedObj = handTarget.dockingBay?.GetDockedObject();
+                    if (dockedObj != null && CraftData.GetTechType(dockedObj.gameObject) == TechType.Exosuit)
                     {
                         handTarget.dockingBay.exosuitDockPlayerCinematic.SkipCinematic();
                     }
-                    else
+                    else if (dockedObj != null)
                     {
                         handTarget.dockingBay.dockPlayerCinematic.SkipCinematic();
                     }

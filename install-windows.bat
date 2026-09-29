@@ -6,7 +6,8 @@ echo  Subnautica Below Zero Multiplayer - Windows Installer
 echo ==========================================================
 echo.
 echo Options: set SUBNAUTICA_DIR to override the game path,
-echo          set PREBUILT_DIR to deploy DLLs from a custom folder.
+echo          set PREBUILT_DIR to deploy DLLs from a custom folder,
+echo          set MUSIC_SOURCE_DIR to override the custom music source path.
 echo BepInEx 5.x (5.4.23.2 x64) must be extracted into lib\BepInEx\.
 echo.
 
@@ -44,7 +45,7 @@ if not exist "%GAME_DIR%" (
 echo Game directory: "%GAME_DIR%"
 
 echo.
-echo [1/4] Building mod in Release mode...
+echo [1/5] Building mod in Release mode...
 
 REM Upstream is source-only (no .sln/.csproj): build only if project files exist,
 REM otherwise deploy prebuilt DLLs from .\build\ or %PREBUILT_DIR%.
@@ -72,7 +73,7 @@ if not defined BUILD_DIR if exist "%~dp0bin\Release\net48\*.dll" set "BUILD_DIR=
 if not defined BUILD_DIR if not "%PREBUILT_DIR%"=="" set "BUILD_DIR=%PREBUILT_DIR%"
 
 echo.
-echo [2/4] Installing BepInEx 5 to game folder...
+echo [2/5] Installing BepInEx 5 to game folder...
 if not exist "%~dp0lib\BepInEx\winhttp.dll" (
     echo Error: BepInEx 5 not found in "%~dp0lib\BepInEx\".
     echo Download BepInEx_x64_5.4.23.2.zip from
@@ -87,7 +88,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/4] Deploying multiplayer mod assemblies...
+echo [3/5] Deploying multiplayer mod assemblies...
 set "PLUGIN_DIR=%GAME_DIR%\BepInEx\plugins\SubnauticaMultiplayer"
 if exist "%PLUGIN_DIR%" if not exist "%PLUGIN_DIR%\*" del /F /Q "%PLUGIN_DIR%"
 if not exist "%PLUGIN_DIR%" mkdir "%PLUGIN_DIR%"
@@ -142,10 +143,27 @@ if exist "%~dp0lib\QMods" (
 )
 
 echo.
-echo [4/4] Setting up AppData directories...
+echo [4/5] Setting up AppData directories...
 set "BOTBENSON=%APPDATA%\.botbenson\Subnautica Below Zero\Game"
 for %%D in (Plugins Dependencies Logs Saves) do (
     if not exist "!BOTBENSON!\%%D" mkdir "!BOTBENSON!\%%D"
+)
+
+echo.
+echo [5/5] Setting up Custom Music in Music\Unknown Worlds\Subnautica...
+set "MUSIC_TARGET=%USERPROFILE%\Music\Unknown Worlds\Subnautica"
+if not exist "%MUSIC_TARGET%" mkdir "%MUSIC_TARGET%"
+
+set "MUSIC_SRC=%MUSIC_SOURCE_DIR%"
+if "%MUSIC_SRC%"=="" if exist "%USERPROFILE%\Music\a.Flac\A..General" set "MUSIC_SRC=%USERPROFILE%\Music\a.Flac\A..General"
+if "%MUSIC_SRC%"=="" if exist "C:\Users\Ruben\Music\a.Flac\A..General" set "MUSIC_SRC=C:\Users\Ruben\Music\a.Flac\A..General"
+if "%MUSIC_SRC%"=="" if exist "%~dp0Music" set "MUSIC_SRC=%~dp0Music"
+
+if defined MUSIC_SRC (
+    echo Linking tracks from Bad-Bunny, C.R.O, and Feid directly into Subnautica music folder...
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "& { $src = '%MUSIC_SRC%'; $dest = '%MUSIC_TARGET%'; foreach ($a in @('Bad-Bunny','C.R.O','Feid')) { $p = Join-Path $src $a; if (Test-Path $p) { foreach ($f in (Get-ChildItem -Path $p -Recurse -File | Where-Object { $_.Extension -match '^\.(flac|mp3|ogg|wav)$' })) { $targetFile = Join-Path $dest $f.Name; if (-not (Test-Path $targetFile)) { New-Item -ItemType HardLink -Path $targetFile -Value $f.FullName -Force -ErrorAction SilentlyContinue | Out-Null; if (-not (Test-Path $targetFile)) { Copy-Item $f.FullName $targetFile } } } } }; Write-Host '  Synced Bad-Bunny, C.R.O, and Feid tracks!' }"
+) else (
+    echo NOTE: Music source not found. Set MUSIC_SOURCE_DIR if you want to auto-link your music.
 )
 
 echo.

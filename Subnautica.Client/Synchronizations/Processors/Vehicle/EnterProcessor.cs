@@ -40,18 +40,21 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                 Network.DynamicEntity.AddEntity(packet.Vehicle);
             }
 
-            var entity = Network.DynamicEntity.GetEntity(packet.UniqueId);
+            var entity = Network.DynamicEntity.GetEntity(packet.UniqueId) ?? packet.Vehicle;
+            if (entity == null && packet.Vehicle != null)
+            {
+                entity = packet.Vehicle;
+                Network.DynamicEntity.AddEntity(entity);
+            }
+
+            if (entity == null && packet.TechType == TechType.Exosuit)
+            {
+                entity = Network.DynamicEntity.GetEntities().FirstOrDefault(e => e.Value.TechType == TechType.Exosuit).Value;
+            }
+
             if (entity == null)
             {
-                if (packet.Vehicle != null)
-                {
-                    entity = packet.Vehicle;
-                    Network.DynamicEntity.AddEntity(entity);
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
 
             API.Features.Log.Info("EnterProcessor 1 ==> " + packet.Vehicle?.UniqueId + ", pos: " + packet.Vehicle?.Position);
@@ -93,7 +96,7 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
             else if (packet.TechType == TechType.Exosuit)
             {
                 var vehicle = Network.Identifier.GetComponentByGameObject<global::Exosuit>(packet.UniqueId);
-                if (vehicle == null && player.IsMine)
+                if (vehicle == null)
                 {
                     vehicle = UnityEngine.Object.FindObjectsOfType<global::Exosuit>()
                         .OrderBy(e => UnityEngine.Vector3.Distance(e.transform.position, global::Player.main.transform.position))
@@ -110,8 +113,6 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                     return false;
                 }
 
-                vehicle.mainAnimator.Rebind();
-
                 if (player.IsMine)
                 {
                     vehicle.useRigidbody.SetNonKinematic(true);
@@ -120,17 +121,24 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                     // before entering, otherwise the cinematic hasn't run and the bay still
                     // holds the vehicle.
                     var dockable = vehicle.GetComponent<global::Dockable>();
+                    bool wasDocked = false;
                     if (dockable != null && dockable.bay != null)
                     {
                         var bay = dockable.bay as global::VehicleDockingBay;
                         if (bay != null)
                         {
+                            wasDocked = true;
                             bay.OnUndockingStart();
                             bay.OnUndockingComplete(global::Player.main);
                         }
                     }
 
-                    vehicle.EnterVehicle(global::Player.main, true);
+                    if (!wasDocked)
+                    {
+                        vehicle.EnterVehicle(global::Player.main, true, false);
+                    }
+
+                    vehicle.playerFullyEntered = true;
                 }
                 else
                 {

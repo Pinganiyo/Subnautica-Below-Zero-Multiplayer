@@ -1,10 +1,11 @@
-﻿namespace Subnautica.Server.Logic.Furnitures
+namespace Subnautica.Server.Logic.Furnitures
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
 
+    using System.IO;
     using Subnautica.API.Enums;
     using Subnautica.API.Extensions;
     using Subnautica.Server.Abstracts;
@@ -12,6 +13,7 @@
     using Subnautica.Server.Extensions;
     using UnityEngine;
 
+    using MetadataModel    = Subnautica.Network.Models.Metadata;
     using ServerModel      = Subnautica.Network.Models.Server;
     using WorldEntityModel = Subnautica.Network.Models.WorldEntity.DynamicEntityComponents;
 
@@ -83,7 +85,7 @@
          * @author Ismail <ismaiil_0234@hotmail.com>
          *
          */
-        public Network.Models.Metadata.Jukebox CurrentMusic { get; set; }
+        public MetadataModel.Jukebox CurrentMusic { get; set; }
 
         /**
          *
@@ -105,6 +107,13 @@
 
         /**
          *
+         * CustomDisks verilerini barındırır.
+         *
+         */
+        public List<string> CustomDisks { get; set; } = new List<string>();
+
+        /**
+         *
          * Sınıfı başlatır
          *
          * @author Ismail <ismaiil_0234@hotmail.com>
@@ -118,7 +127,90 @@
             }
 
             this.Reset();
+            this.RefreshCustomDisks();
             this.SortPlaylist();
+        }
+
+        /**
+         *
+         * Özel müzik dosyalarını tarar ve listeye ekler.
+         *
+         */
+        public void RefreshCustomDisks()
+        {
+            try
+            {
+                var newTracks = new HashSet<string>();
+
+                if (global::Jukebox._main != null && global::Jukebox._main._playlist != null)
+                {
+                    foreach (var track in global::Jukebox._main._playlist)
+                    {
+                        if (!string.IsNullOrEmpty(track) && !track.StartsWith("event:/"))
+                        {
+                            newTracks.Add(track);
+                        }
+                    }
+                }
+
+                string musicDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), "Unknown Worlds", "Subnautica");
+                if (Directory.Exists(musicDir))
+                {
+                    var files = Directory.GetFiles(musicDir, "*", SearchOption.AllDirectories);
+                    foreach (var file in files)
+                    {
+                        string ext = Path.GetExtension(file)?.ToLowerInvariant();
+                        if (ext == ".flac" || ext == ".mp3" || ext == ".ogg" || ext == ".wav")
+                        {
+                            newTracks.Add(Path.GetFileName(file));
+                        }
+                    }
+                }
+
+                foreach (var track in newTracks)
+                {
+                    if (!this.CustomDisks.Contains(track))
+                    {
+                        this.CustomDisks.Add(track);
+                    }
+                }
+
+                this.CustomDisks.Sort(new Comparison<string>(this.PlaylistComparer));
+            }
+            catch (Exception ex)
+            {
+                API.Features.Log.Error($"Jukebox.RefreshCustomDisks: {ex}");
+            }
+        }
+
+        /**
+         *
+         * Mevcut tüm parçaları döner (Oyun diskleri + Özel müzikler).
+         *
+         */
+        public List<string> GetAllTracks()
+        {
+            if (this.CustomDisks.Count == 0)
+            {
+                this.RefreshCustomDisks();
+            }
+
+            var tracks = new List<string>();
+
+            if (Core.Server.Instance?.Storages?.World?.Storage?.JukeboxDisks != null)
+            {
+                tracks.AddRange(Core.Server.Instance.Storages.World.Storage.JukeboxDisks);
+            }
+
+            foreach (var track in this.CustomDisks)
+            {
+                if (!tracks.Contains(track))
+                {
+                    tracks.Add(track);
+                }
+            }
+
+            return tracks;
         }
 
         /**
@@ -451,9 +543,10 @@
          * @author Ismail <ismaiil_0234@hotmail.com>
          *
          */
-        public Network.Models.Metadata.Jukebox GetCurrentMetadata()
+        public MetadataModel.Jukebox GetCurrentMetadata()
         {
-            return new Network.Models.Metadata.Jukebox()
+            var musicLength = this.GetMusicLength();
+            return new MetadataModel.Jukebox()
             {
                 CurrentPlayingTrack = this.CurrentMusic.CurrentPlayingTrack,
                 IsPaused            = this.CurrentMusic.IsPaused,
@@ -462,7 +555,7 @@
                 IsPrevious          = this.CurrentMusic.IsPrevious,
                 RepeatMode          = this.CurrentMusic.RepeatMode,
                 IsShuffled          = this.CurrentMusic.IsShuffled,
-                Position            = this.GetCurrentPosition() / this.GetMusicLength(),
+                Position            = musicLength > 0f ? (this.GetCurrentPosition() / musicLength) : 0f,
                 Length              = this.GetOriginalMusicLength(),
                 Volume              = this.CurrentMusic.Volume,
             };
@@ -494,7 +587,7 @@
         private void Reset()
         {
             this.CurrentJukeboxId      = null;
-            this.CurrentMusic          = new Network.Models.Metadata.Jukebox();
+            this.CurrentMusic          = new MetadataModel.Jukebox();
             this.CurrentMusic.Volume   = 1f;
             this.CurrentMusic.IsStoped = true;
             this.StopwatchMusicTime.Reset();
@@ -508,9 +601,15 @@
          */
         private string GetNextMusic(global::Jukebox.Repeat repeatMode, string currentTrack, bool forward, bool isIgnoreRepeat = false, bool shuffle = false)
         {
-            if (string.IsNullOrEmpty(currentTrack))
+            var tracks = this.GetAllTracks();
+            if (tracks.Count == 0)
             {
                 return MusicLabels.First().Key;
+            }
+
+            if (string.IsNullOrEmpty(currentTrack))
+            {
+                return tracks.First();
             }
 
             if (!isIgnoreRepeat)
@@ -538,35 +637,42 @@
          */
         private string GetInternalNextMusic(string currentTrack, bool forward, bool shuffle = false)
         {
-            int diskCount = Core.Server.Instance.Storages.World.Storage.JukeboxDisks.Count;
-            if (diskCount == 1)
+            var tracks = this.GetAllTracks();
+            int trackCount = tracks.Count;
+            if (trackCount <= 1)
             {
-                return currentTrack;
+                return tracks.FirstOrDefault() ?? currentTrack;
             }
 
             if (shuffle)
             {
-                int currentIndex = Core.Server.Instance.Storages.World.Storage.JukeboxDisks.FindIndex(q => q == currentTrack);
+                int currentIndex = tracks.FindIndex(q => q == currentTrack);
                 int randomIndex  = currentIndex;
 
                 do
                 {
-                    randomIndex = API.Features.Tools.Random.Next(0, diskCount);
+                    randomIndex = API.Features.Tools.Random.Next(0, trackCount);
                 } while (currentIndex == randomIndex);
 
-                return Core.Server.Instance.Storages.World.Storage.JukeboxDisks.ElementAt(randomIndex);
+                return tracks.ElementAt(randomIndex);
             }
 
-            int foundedIndex = Core.Server.Instance.Storages.World.Storage.JukeboxDisks.IndexOf(currentTrack);
+            int foundedIndex = tracks.IndexOf(currentTrack);
+            if (foundedIndex < 0 && !string.IsNullOrEmpty(currentTrack))
+            {
+                string nameWithoutExt = Path.GetFileNameWithoutExtension(currentTrack);
+                foundedIndex = tracks.FindIndex(q => Path.GetFileNameWithoutExtension(q).Equals(nameWithoutExt, StringComparison.OrdinalIgnoreCase));
+            }
+
             if (foundedIndex < 0)
             {
-                return currentTrack;
+                return tracks.First();
             }
 
             if (forward)
             {
                 foundedIndex++;
-                if (foundedIndex >= diskCount)
+                if (foundedIndex >= trackCount)
                 {
                     foundedIndex = 0;
                 }
@@ -576,11 +682,11 @@
                 foundedIndex--;
                 if (foundedIndex < 0)
                 {
-                    foundedIndex = diskCount - 1;
+                    foundedIndex = trackCount - 1;
                 }
             }
 
-            return Core.Server.Instance.Storages.World.Storage.JukeboxDisks.ElementAt(foundedIndex);
+            return tracks.ElementAt(foundedIndex);
         }
 
         /**
@@ -604,12 +710,7 @@
          */
         private float GetMusicLength()
         {
-            if (this.CurrentMusic.CurrentPlayingTrack != null && this.MusicLengths.TryGetValue(this.CurrentMusic.CurrentPlayingTrack, out uint length))
-            {
-                return (float)length / 1000f;
-            }
-
-            return 0f;
+            return (float)this.GetOriginalMusicLength() / 1000f;
         }
 
         /**
@@ -621,9 +722,43 @@
          */
         private uint GetOriginalMusicLength()
         {
-            if (this.CurrentMusic.CurrentPlayingTrack != null && this.MusicLengths.TryGetValue(this.CurrentMusic.CurrentPlayingTrack, out uint length))
+            if (string.IsNullOrEmpty(this.CurrentMusic.CurrentPlayingTrack))
+            {
+                return 0;
+            }
+
+            if (this.MusicLengths.TryGetValue(this.CurrentMusic.CurrentPlayingTrack, out uint length))
             {
                 return length;
+            }
+
+            string trackWithoutExt = Path.GetFileNameWithoutExtension(this.CurrentMusic.CurrentPlayingTrack);
+            foreach (var kvp in this.MusicLengths)
+            {
+                if (Path.GetFileNameWithoutExtension(kvp.Key).Equals(trackWithoutExt, StringComparison.OrdinalIgnoreCase))
+                {
+                    return kvp.Value;
+                }
+            }
+
+            try
+            {
+                var info = global::Jukebox.GetInfo(this.CurrentMusic.CurrentPlayingTrack);
+                if (info.length > 0)
+                {
+                    this.MusicLengths[this.CurrentMusic.CurrentPlayingTrack] = info.length;
+                    return info.length;
+                }
+
+                if (global::Jukebox._main != null && global::Jukebox._main._file == this.CurrentMusic.CurrentPlayingTrack && global::Jukebox.length > 0)
+                {
+                    this.MusicLengths[this.CurrentMusic.CurrentPlayingTrack] = global::Jukebox.length;
+                    return global::Jukebox.length;
+                }
+            }
+            catch (Exception ex)
+            {
+                API.Features.Log.Error($"Jukebox.GetOriginalMusicLength: {ex}");
             }
 
             return 0;
@@ -639,6 +774,7 @@
         public void SortPlaylist()
         {
             Core.Server.Instance.Storages.World.Storage.JukeboxDisks.Sort(new Comparison<string>(this.PlaylistComparer));
+            this.CustomDisks.Sort(new Comparison<string>(this.PlaylistComparer));
         }
 
         /**
@@ -650,10 +786,36 @@
          */
         private int PlaylistComparer(string strA, string strB)
         {
-            this.MusicLabels.TryGetValue(strA, out strA);
-            this.MusicLabels.TryGetValue(strB, out strB);
+            string labelA = strA;
+            string labelB = strB;
 
-            return string.Compare(strA, strB, StringComparison.OrdinalIgnoreCase);
+            if (strA != null && !this.MusicLabels.TryGetValue(strA, out labelA))
+            {
+                try
+                {
+                    var info = global::Jukebox.GetInfo(strA);
+                    labelA = !string.IsNullOrEmpty(info.label) ? info.label : strA;
+                }
+                catch
+                {
+                    labelA = strA;
+                }
+            }
+
+            if (strB != null && !this.MusicLabels.TryGetValue(strB, out labelB))
+            {
+                try
+                {
+                    var info = global::Jukebox.GetInfo(strB);
+                    labelB = !string.IsNullOrEmpty(info.label) ? info.label : strB;
+                }
+                catch
+                {
+                    labelB = strB;
+                }
+            }
+
+            return string.Compare(labelA, labelB, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

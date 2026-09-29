@@ -63,7 +63,7 @@ fi
 
 # ---------------------------------------------------------------- 1. build (if possible)
 echo ""
-echo "[1/4] Building mod (if project files exist)..."
+echo "[1/5] Building mod (if project files exist)..."
 
 CSPROJ_COUNT=$(find "$SCRIPT_DIR" -maxdepth 3 -name "*.csproj" | wc -l)
 SLN_COUNT=$(find "$SCRIPT_DIR" -maxdepth 2 -name "*.sln" | wc -l)
@@ -114,7 +114,7 @@ fi
 
 # ---------------------------------------------------------------- 2. BepInEx 5
 echo ""
-echo "[2/4] Installing BepInEx 5 to game directory..."
+echo "[2/5] Installing BepInEx 5 to game directory..."
 
 BEPINEX_VERSION="5.4.22"
 BEPINEX_URL="https://github.com/BepInEx/BepInEx/releases/download/v${BEPINEX_VERSION}/BepInEx_x64_${BEPINEX_VERSION}.0.zip"
@@ -156,7 +156,7 @@ PLUGIN_DIR="$GAME_DIR/BepInEx/plugins/SubnauticaMultiplayer"
 
 # ---------------------------------------------------------------- 3. Deploy mod
 echo ""
-echo "[3/4] Deploying multiplayer mod assemblies..."
+echo "[3/5] Deploying multiplayer mod assemblies..."
 
 if [ -n "$BUILD_DIR" ]; then
     # copy dlls (and pdbs for debugging)
@@ -213,7 +213,7 @@ fi
 
 # ---------------------------------------------------------------- 4. AppData
 echo ""
-echo "[4/4] Setting up AppData directories..."
+echo "[4/5] Setting up AppData directories..."
 
 # NOTE: C# Environment.SpecialFolder.ApplicationData resolves to ~/.config
 # on Linux/Mono, while older docs mention ~/.botbenson. Create both layouts
@@ -248,6 +248,53 @@ if [ -n "$PROTON_APPDATA" ] && [ -d "$PROTON_APPDATA" ]; then
         cp "$SCRIPT_DIR/Data/SpawnPoints.bin" "$PROTON_BASE/Game/Core/"
     fi
     echo "Configured Proton prefix AppData at: $PROTON_BASE"
+fi
+
+# ---------------------------------------------------------------- 5. Custom Music
+echo ""
+echo "[5/5] Setting up Custom Music in Music/Unknown Worlds/Subnautica..."
+
+MUSIC_DIRS=(
+    "$HOME/Music/Unknown Worlds/Subnautica"
+)
+
+PROTON_MUSIC=$(find "$HOME/.steam" -path "*compatdata/848450/pfx/drive_c/users/*/Music" 2>/dev/null | head -n 1 || true)
+if [ -n "$PROTON_MUSIC" ] && [ -d "$PROTON_MUSIC" ]; then
+    MUSIC_DIRS+=("$PROTON_MUSIC/Unknown Worlds/Subnautica")
+fi
+
+MUSIC_SRC="${MUSIC_SOURCE_DIR:-}"
+if [ -z "$MUSIC_SRC" ] && [ -d "$HOME/Music/Subnautica_Music_Compressed" ]; then
+    MUSIC_SRC="$HOME/Music/Subnautica_Music_Compressed"
+fi
+if [ -z "$MUSIC_SRC" ] && [ -d "$HOME/Music/a.Flac/A..General" ]; then
+    MUSIC_SRC="$HOME/Music/a.Flac/A..General"
+fi
+if [ -z "$MUSIC_SRC" ] && [ -d "$SCRIPT_DIR/Music_Compressed" ]; then
+    MUSIC_SRC="$SCRIPT_DIR/Music_Compressed"
+fi
+if [ -z "$MUSIC_SRC" ] && [ -d "$SCRIPT_DIR/Music" ]; then
+    MUSIC_SRC="$SCRIPT_DIR/Music"
+fi
+
+if [ -n "$MUSIC_SRC" ] && [ -d "$MUSIC_SRC" ]; then
+    echo "Linking custom music from $MUSIC_SRC ..."
+    for mdir in "${MUSIC_DIRS[@]}"; do
+        mkdir -p "$mdir"
+        for artist in Bad-Bunny C.R.O Feid; do
+            if [ -d "$MUSIC_SRC/$artist" ]; then
+                find "$MUSIC_SRC/$artist" -type f \( -name "*.flac" -o -name "*.mp3" -o -name "*.ogg" -o -name "*.wav" \) | while read -r trackfile; do
+                    bname="$(basename "$trackfile")"
+                    if [ ! -e "$mdir/$bname" ]; then
+                        ln -s "$trackfile" "$mdir/$bname" 2>/dev/null || cp -n "$trackfile" "$mdir/$bname" 2>/dev/null || true
+                    fi
+                done
+                echo "  Linked $artist tracks -> $mdir"
+            fi
+        done
+    done
+else
+    echo "NOTE: Music source not found. Set MUSIC_SOURCE_DIR to auto-link your music on Linux."
 fi
 
 echo ""

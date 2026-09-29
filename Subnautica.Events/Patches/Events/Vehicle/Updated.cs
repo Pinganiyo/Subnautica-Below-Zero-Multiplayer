@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.Vehicle
+namespace Subnautica.Events.Patches.Events.Vehicle
 {
     using System;
 
@@ -89,17 +89,34 @@
          */
         private static GameObject GetLargeWorldEntity(Transform parentTransform)
         {
-            if (SpyPenguinRemoteManager.main.GetActivePenguin())
+            if (SpyPenguinRemoteManager.main != null && SpyPenguinRemoteManager.main.GetActivePenguin())
             {
                 return SpyPenguinRemoteManager.main.GetActivePenguin().gameObject;
             }
 
-            if (uGUI_CameraDrone.main.activeCamera)
+            if (uGUI_CameraDrone.main != null && uGUI_CameraDrone.main.activeCamera)
             {
                 return uGUI_CameraDrone.main.activeCamera.gameObject;
             }
 
-            return parentTransform.GetComponentInParent<LargeWorldEntity>().gameObject;
+            if (parentTransform == null)
+            {
+                return null;
+            }
+
+            var lwe = parentTransform.GetComponentInParent<LargeWorldEntity>();
+            if (lwe != null)
+            {
+                return lwe.gameObject;
+            }
+
+            var vehicle = parentTransform.GetComponentInParent<global::Vehicle>();
+            if (vehicle != null)
+            {
+                return vehicle.gameObject;
+            }
+
+            return parentTransform.gameObject;
         }
 
         /**

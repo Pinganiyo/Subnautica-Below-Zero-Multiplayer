@@ -1,5 +1,6 @@
 namespace Subnautica.API.Extensions
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
 
@@ -359,25 +360,53 @@ namespace Subnautica.API.Extensions
          * @author Ismail <ismaiil_0234@hotmail.com>
          *
          */
+        public static string ResolveLocalTrack(string trackName)
+        {
+            if (string.IsNullOrEmpty(trackName) || trackName.StartsWith("event:/"))
+            {
+                return trackName;
+            }
+
+            if (global::Jukebox._main != null && global::Jukebox._main._playlist != null)
+            {
+                if (global::Jukebox._main._playlist.Contains(trackName))
+                {
+                    return trackName;
+                }
+
+                string nameWithoutExt = Path.GetFileNameWithoutExtension(trackName);
+                foreach (var track in global::Jukebox._main._playlist)
+                {
+                    if (Path.GetFileNameWithoutExtension(track).Equals(nameWithoutExt, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return track;
+                    }
+                }
+            }
+
+            return trackName;
+        }
+
         public static bool ChangeMusic(this global::JukeboxInstance jukebox, string currentPlayingTrack, bool isPaused, global::Jukebox.Repeat repeatMode, bool isShuffled, float volume, float position, uint length)
         {
             using (EventBlocker.Create(TechType.Jukebox))
             {
-                if (currentPlayingTrack.IsNull())
+                string trackToPlay = ResolveLocalTrack(currentPlayingTrack);
+                if (trackToPlay.IsNull())
                 {
                     jukebox.imagePlayPause.sprite = jukebox.spritePlay;
                     global::Jukebox.Stop();
                 }
                 else
                 {
-                    if (jukebox.file != currentPlayingTrack)
+                    if (jukebox.file != trackToPlay)
                     {
-                        jukebox.file = currentPlayingTrack;
+                        jukebox.file = trackToPlay;
                         global::Jukebox.Play(jukebox);
                     }
                     else
                     {
-                        jukebox.file = currentPlayingTrack;
+                        jukebox.file = trackToPlay;
                         jukebox.OnButtonPlayPause();
                     }
 
@@ -413,12 +442,15 @@ namespace Subnautica.API.Extensions
                     }
 
                     // Position
-                    float difference = (position - jukebox._position) * (float) (global::Jukebox.length / 1000f);
-                    if (difference == 0 || difference > 1.5f || difference < 1.5f)
+                    if (length > 0)
                     {
-                        jukebox._position = position / length;
-                        jukebox.UpdatePositionSlider();
-                        global::Jukebox.position = (uint)((double)position * (double)length);
+                        float difference = (position - jukebox._position) * (float) (length / 1000f);
+                        if (difference == 0 || difference > 1.5f || difference < -1.5f)
+                        {
+                            jukebox._position = Mathf.Clamp01(position);
+                            jukebox.UpdatePositionSlider();
+                            global::Jukebox.position = (uint)((double)jukebox._position * (double)length);
+                        }
                     }
                 }
             }
