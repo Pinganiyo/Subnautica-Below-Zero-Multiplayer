@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Fixes.Vehicle
+namespace Subnautica.Events.Patches.Fixes.Vehicle
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -90,7 +90,7 @@
                 return timing;
             }
 
-            Timings[uniqueId] = new StopwatchItem(1000f);
+            Timings[uniqueId] = new StopwatchItem(250f);
             return Timings[uniqueId];
         }
     }

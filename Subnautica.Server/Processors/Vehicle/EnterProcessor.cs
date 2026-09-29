@@ -72,15 +72,16 @@ namespace Subnautica.Server.Processors.Vehicle
                 {
                     entity = new WorldDynamicEntity()
                     {
-                        UniqueId = packet.UniqueId,
-                        TechType = packet.TechType,
-                        Position = profile.Position,
-                        Rotation = profile.Rotation,
+                        UniqueId   = packet.UniqueId,
+                        TechType   = packet.TechType,
+                        Position   = profile.Position,
+                        Rotation   = profile.Rotation,
+                        IsDeployed = true,
                     };
 
                     if (packet.TechType == TechType.Exosuit)
                     {
-                        entity.Component = new WorldEntityModel.Exosuit();
+                        entity.Component = new WorldEntityModel.Exosuit().Initialize(null);
                     }
                     else if (packet.TechType == TechType.Hoverbike)
                     {
@@ -88,7 +89,7 @@ namespace Subnautica.Server.Processors.Vehicle
                     }
                     else if (packet.TechType.IsSeaTruckModule(true))
                     {
-                        entity.Component = new WorldEntityModel.SeaTruck();
+                        entity.Component = new WorldEntityModel.SeaTruck().Initialize(null);
                     }
 
                     Server.Instance.Storages.World.AddWorldDynamicEntity(entity);

@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Processors.Items
+namespace Subnautica.Server.Processors.Items
 {
     using Subnautica.API.Enums;
     using Subnautica.Network.Core.Components;
@@ -67,7 +67,7 @@
 
                 component.CraftingFinishTime = constructor.CraftingFinishTime = Server.Instance.Logices.World.GetServerTime() + this.GetDuration(component.CraftingTechType);
 
-                var dynamicEntity = Server.Instance.Logices.World.CreateDynamicEntity(Subnautica.API.Features.Network.Identifier.GenerateUniqueId(), component.CraftingTechType, component.CraftingPosition, component.CraftingRotation, profile.UniqueId);
+                var dynamicEntity = Server.Instance.Logices.World.CreateDynamicEntity(Subnautica.API.Features.Network.Identifier.GenerateUniqueId(), component.CraftingTechType, component.CraftingPosition, component.CraftingRotation, profile.UniqueId, isDeployed: true);
                 if (dynamicEntity != null)
                 {
                     component.Entity = dynamicEntity.SetComponent(this.GetEntityComponent(component.CraftingTechType));

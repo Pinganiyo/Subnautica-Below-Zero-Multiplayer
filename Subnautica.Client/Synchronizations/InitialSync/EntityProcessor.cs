@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Synchronizations.InitialSync
+namespace Subnautica.Client.Synchronizations.InitialSync
 {
     using System.Linq;
     using Oculus.Platform;
@@ -82,14 +82,23 @@
         public static void OnEntitySpawned(ItemQueueProcess item, Pickupable pickupable, GameObject gameObject)
         {
             var entity = item.Action.GetProperty<WorldDynamicEntity>("Entity");
-            if (entity.IsDeployed == false)
+            if (entity == null)
             {
-                pickupable.MultiplayerDrop();
+                return;
+            }
+
+            bool isVehicle = entity.TechType.IsVehicle(true, true);
+            if (!entity.IsDeployed && !isVehicle)
+            {
+                if (pickupable != null)
+                {
+                    pickupable.MultiplayerDrop();
+                }
             }
 
             if (entity.Component != null)
             {
-                WorldDynamicEntityProcessor.ExecuteItemSpawnProcessor(entity.TechType, entity.Component, entity.IsDeployed, pickupable, gameObject);
+                WorldDynamicEntityProcessor.ExecuteItemSpawnProcessor(entity.TechType, entity.Component, isVehicle || entity.IsDeployed, pickupable, gameObject);
             }
         }
 

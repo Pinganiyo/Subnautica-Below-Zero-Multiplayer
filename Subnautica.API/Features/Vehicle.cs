@@ -318,6 +318,11 @@ namespace Subnautica.API.Features
          */
         public static void ApplyModules(List<UpgradeConsoleItem> modules, Equipment equipment, TechType techType)
         {
+            if (modules == null || equipment == null)
+            {
+                return;
+            }
+
             for (int i = 0; i < modules.Count; i++)
             {
                 var item = modules.ElementAt(i);
@@ -365,14 +370,23 @@ namespace Subnautica.API.Features
          */
         public static void ApplyPowerCells(string uniqueId, List<PowerCell> powerCells)
         {
-            foreach (var powerCell in powerCells)
+            if (powerCells == null)
             {
+                return;
+            }
+
+            Log.Info($"[VehicleBattery] ApplyPowerCells: Vehicle={uniqueId}, Count={powerCells.Count}");
+            for (int i = 0; i < powerCells.Count; i++)
+            {
+                var powerCell = powerCells[i];
+                Log.Info($"[VehicleBattery] ApplyPowerCells[{i}]: Slot={powerCell.UniqueId}, Type={powerCell.TechType}, Charge={powerCell.Charge}");
                 if (powerCell.Charge != -1f)
                 {
                     var action = new ItemQueueAction();
                     action.OnEntitySpawned = OnPowerCellSpawned;
                     action.RegisterProperty("UniqueId"  , uniqueId);
                     action.RegisterProperty("PowerCell" , powerCell);
+                    action.RegisterProperty("SlotIndex" , i);
 
                     Entity.SpawnToQueue(powerCell.TechType, Network.Identifier.GenerateUniqueId(), new ZeroTransform(Vector3.down.ToZeroVector3(), Quaternion.identity.ToZeroQuaternion()), action);
                 }
@@ -429,6 +443,65 @@ namespace Subnautica.API.Features
          */
         public static void ApplyBatterySlotIds(GameObject gameObject, TechType techType, string firstPowerCellId, string secondPowerCellId)
         {
+            var uniqueId = gameObject.GetIdentityId();
+            if (string.IsNullOrEmpty(firstPowerCellId))
+            {
+                firstPowerCellId = string.IsNullOrEmpty(uniqueId) ? Network.Identifier.GenerateUniqueId() : $"{uniqueId}_PowerCell1";
+            }
+            if (string.IsNullOrEmpty(secondPowerCellId))
+            {
+                secondPowerCellId = string.IsNullOrEmpty(uniqueId) ? Network.Identifier.GenerateUniqueId() : $"{uniqueId}_PowerCell2";
+            }
+
+            if (techType == TechType.SeaTruck)
+            {
+                var batterySources = gameObject.GetComponentsInChildren<global::BatterySource>();
+                if (batterySources != null)
+                {
+                    for (int i = 0; i < batterySources.Length; i++)
+                    {
+                        var source = batterySources[i];
+                        if (source == null) continue;
+                        var slotId = (source.name.Contains("Right") || (i == 1 && !source.name.Contains("Left"))) ? secondPowerCellId : firstPowerCellId;
+                        if (source.storageRoot != null && source.storageRoot.gameObject != null)
+                        {
+                            Network.Identifier.SetIdentityId(source.storageRoot.gameObject, slotId);
+                        }
+                        Network.Identifier.SetIdentityId(source.gameObject, slotId);
+
+                        var handTarget = source.GetComponentInChildren<GenericHandTarget>() ?? source.GetComponent<GenericHandTarget>() ?? source.GetComponentInParent<GenericHandTarget>();
+                        if (handTarget != null)
+                        {
+                            Network.Identifier.SetIdentityId(handTarget.gameObject, ZeroGame.GetVehicleBatteryLabelUniqueId(slotId));
+                        }
+                    }
+                }
+            }
+            else if (techType == TechType.Exosuit)
+            {
+                var exosuit = gameObject.GetComponent<global::Exosuit>();
+                if (exosuit != null && exosuit.energyInterface != null && exosuit.energyInterface.sources != null)
+                {
+                    for (int i = 0; i < exosuit.energyInterface.sources.Length; i++)
+                    {
+                        var source = exosuit.energyInterface.sources[i];
+                        if (source == null) continue;
+                        var slotId = i == 0 ? firstPowerCellId : secondPowerCellId;
+                        if (source.storageRoot != null && source.storageRoot.gameObject != null)
+                        {
+                            Network.Identifier.SetIdentityId(source.storageRoot.gameObject, slotId);
+                        }
+                        Network.Identifier.SetIdentityId(source.gameObject, slotId);
+
+                        var handTarget = source.GetComponentInChildren<GenericHandTarget>() ?? source.GetComponent<GenericHandTarget>() ?? source.GetComponentInParent<GenericHandTarget>();
+                        if (handTarget != null)
+                        {
+                            Network.Identifier.SetIdentityId(handTarget.gameObject, ZeroGame.GetVehicleBatteryLabelUniqueId(slotId));
+                        }
+                    }
+                }
+            }
+
             foreach (var batterySlot in gameObject.GetComponentsInChildren<ChildObjectIdentifier>())
             {
                 if ((techType == TechType.Exosuit && batterySlot.name.Contains("BatterySlot1")) || (techType == TechType.SeaTruck && batterySlot.name.Contains("BatterySlotLeft")))
@@ -464,7 +537,9 @@ namespace Subnautica.API.Features
         private static void OnPowerCellSpawned(ItemQueueProcess item, Pickupable pickupable, GameObject gameObject)
         {
             var powerCell = item.Action.GetProperty<PowerCell>("PowerCell");
-            var vehicle   = Network.Identifier.GetGameObject(item.Action.GetProperty<string>("UniqueId"));
+            var uniqueId  = item.Action.GetProperty<string>("UniqueId");
+            var slotIndex = item.Action.GetProperty<int>("SlotIndex");
+            var vehicle   = Network.Identifier.GetGameObject(uniqueId);
 
             EnergyMixin energyMixin = null;
             if (vehicle)
@@ -472,29 +547,79 @@ namespace Subnautica.API.Features
                 var exosuit = vehicle.GetComponent<global::Exosuit>();
                 if (exosuit)
                 {
-                    foreach (var _item in exosuit.energyInterface.sources)
+                    if (powerCell != null && !string.IsNullOrEmpty(powerCell.UniqueId))
                     {
-                        if (_item.storageRoot.gameObject.GetIdentityId() == powerCell.UniqueId)
+                        foreach (var _item in exosuit.energyInterface.sources)
                         {
-                            energyMixin = _item;
-                            break;
+                            if (_item != null && _item.storageRoot != null && _item.storageRoot.gameObject.GetIdentityId() == powerCell.UniqueId)
+                            {
+                                energyMixin = _item;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (energyMixin == null && exosuit.energyInterface != null && exosuit.energyInterface.sources != null)
+                    {
+                        if (slotIndex >= 0 && slotIndex < exosuit.energyInterface.sources.Length)
+                        {
+                            energyMixin = exosuit.energyInterface.sources[slotIndex];
+                        }
+                        else
+                        {
+                            foreach (var _item in exosuit.energyInterface.sources)
+                            {
+                                if (_item != null && _item.batterySlot != null && _item.batterySlot.storedItem == null)
+                                {
+                                    energyMixin = _item;
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
                 else
                 {
-                    foreach (var _item in vehicle.GetComponentsInChildren<global::BatterySource>())
+                    var batterySources = vehicle.GetComponentsInChildren<global::BatterySource>();
+                    if (powerCell != null && !string.IsNullOrEmpty(powerCell.UniqueId))
                     {
-                        if (_item.storageRoot.gameObject.GetIdentityId() == powerCell.UniqueId)
+                        foreach (var _item in batterySources)
                         {
-                            energyMixin = _item;
-                            break;
+                            if (_item != null && _item.storageRoot != null && _item.storageRoot.gameObject.GetIdentityId() == powerCell.UniqueId)
+                            {
+                                energyMixin = _item;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (energyMixin == null && batterySources != null)
+                    {
+                        if (slotIndex >= 0 && slotIndex < batterySources.Length)
+                        {
+                            energyMixin = batterySources[slotIndex];
+                        }
+                        else
+                        {
+                            foreach (var _item in batterySources)
+                            {
+                                if (_item != null && _item.batterySlot != null && _item.batterySlot.storedItem == null)
+                                {
+                                    energyMixin = _item;
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
 
                 if (energyMixin != null)
                 {
+                    if (powerCell != null && !string.IsNullOrEmpty(powerCell.UniqueId) && energyMixin.storageRoot != null)
+                    {
+                        Network.Identifier.SetIdentityId(energyMixin.storageRoot.gameObject, powerCell.UniqueId);
+                    }
+
                     var storedItem = energyMixin.batterySlot.storedItem;
                     if (storedItem != null)
                     {
@@ -503,12 +628,26 @@ namespace Subnautica.API.Features
                     }
 
                     energyMixin.batterySlot.AddItem(pickupable);
-                    energyMixin.battery.charge = powerCell.Charge;
+                    if (energyMixin.battery != null)
+                    {
+                        energyMixin.battery.charge = powerCell.Charge;
+                    }
+                    else
+                    {
+                        var batteryComp = pickupable.GetComponent<IBattery>();
+                        if (batteryComp != null)
+                        {
+                            batteryComp.charge = powerCell.Charge;
+                        }
+                    }
+
+                    Log.Info($"[VehicleBattery] OnPowerCellSpawned: Attached battery to vehicle={uniqueId}, mixin={energyMixin.name}, charge={powerCell.Charge}");
                 }
             }
 
             if (energyMixin == null)
             {
+                Log.Warn($"[VehicleBattery] OnPowerCellSpawned: energyMixin not found for vehicle={uniqueId}, slot={powerCell?.UniqueId}, destroying spawned battery");
                 World.DestroyGameObject(gameObject);
             }
         }

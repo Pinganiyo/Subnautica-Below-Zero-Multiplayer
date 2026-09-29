@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.Player
+namespace Subnautica.Events.Patches.Events.Player
 {
     using System;
 
@@ -109,7 +109,38 @@
          */
         public static string GetBatterySlotId(global::EnergyMixin energyMixin)
         {
-            return energyMixin.storageRoot.gameObject.GetIdentityId();
+            if (energyMixin == null)
+            {
+                return null;
+            }
+
+            string id = null;
+            if (energyMixin.storageRoot != null && energyMixin.storageRoot.gameObject != null)
+            {
+                id = energyMixin.storageRoot.gameObject.GetIdentityId();
+            }
+
+            if (string.IsNullOrEmpty(id))
+            {
+                id = energyMixin.gameObject.GetIdentityId();
+            }
+
+            if (string.IsNullOrEmpty(id))
+            {
+                var vehicleId = GetVehicleUniqueId(energyMixin);
+                if (!string.IsNullOrEmpty(vehicleId))
+                {
+                    bool isSlot2 = energyMixin.name.Contains("Right") || energyMixin.name.Contains("2") || (energyMixin.storageRoot != null && (energyMixin.storageRoot.name.Contains("Right") || energyMixin.storageRoot.name.Contains("2")));
+                    id = $"{vehicleId}_PowerCell{(isSlot2 ? 2 : 1)}";
+                    if (energyMixin.storageRoot != null && energyMixin.storageRoot.gameObject != null)
+                    {
+                        Network.Identifier.SetIdentityId(energyMixin.storageRoot.gameObject, id);
+                    }
+                    Network.Identifier.SetIdentityId(energyMixin.gameObject, id);
+                }
+            }
+
+            return id;
         }
 
         /**
@@ -124,6 +155,12 @@
             if (item == null || item.item == null)
             {
                 return TechType.None;
+            }
+
+            var techType = item.item.GetTechType();
+            if (techType != TechType.None)
+            {
+                return techType;
             }
 
             return CraftData.GetTechType(item.item.gameObject);
@@ -162,6 +199,16 @@
                 return TechType.None;
             }
 
+            if (vehicleGameObject.GetComponent<global::Exosuit>() != null)
+            {
+                return TechType.Exosuit;
+            }
+
+            if (vehicleGameObject.GetComponent<global::SeaTruckSegment>() != null)
+            {
+                return TechType.SeaTruck;
+            }
+
             return CraftData.GetTechType(vehicleGameObject);
         }
 
@@ -174,12 +221,35 @@
          */
         public static GameObject GetVehicleGameObject(global::EnergyMixin energyMixin)
         {
-            if (energyMixin.storageRoot.transform.parent == null)
+            if (energyMixin == null)
             {
                 return null;
             }
 
-            return energyMixin.storageRoot.transform.parent.gameObject;
+            var exosuit = energyMixin.GetComponentInParent<global::Exosuit>();
+            if (exosuit != null)
+            {
+                return exosuit.gameObject;
+            }
+
+            var seaTruck = energyMixin.GetComponentInParent<global::SeaTruckSegment>();
+            if (seaTruck != null)
+            {
+                return seaTruck.gameObject;
+            }
+
+            var lwe = energyMixin.GetComponentInParent<LargeWorldEntity>();
+            if (lwe != null)
+            {
+                return lwe.gameObject;
+            }
+
+            if (energyMixin.storageRoot != null && energyMixin.storageRoot.transform.parent != null)
+            {
+                return energyMixin.storageRoot.transform.parent.gameObject;
+            }
+
+            return null;
         }
     }
 }

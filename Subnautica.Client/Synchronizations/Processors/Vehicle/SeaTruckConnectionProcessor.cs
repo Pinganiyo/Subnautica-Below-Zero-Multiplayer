@@ -164,7 +164,7 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                     var backModule  = Network.Identifier.GetComponentByGameObject<global::SeaTruckSegment>(frontModuleId);
                     var frontModule = Network.Identifier.GetComponentByGameObject<global::SeaTruckSegment>(backModuleId);
 
-                    if (frontModule && frontModule)
+                    if (frontModule && backModule)
                     {
                         var moonpoolExpansion = frontModule.GetFirstSegment().GetDockedMoonpoolExpansion();
                         if (moonpoolExpansion && global::Player.main.IsUnderwater() == false)
@@ -344,14 +344,63 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
             {
                 if (ev.IsConnect)
                 {
-                    var frontModule = Network.DynamicEntity.GetEntity(ev.FrontModuleId);
-                    var backModule  = Network.DynamicEntity.GetEntity(ev.BackModuleId);
-                    if (frontModule != null && backModule != null)
+                    var frontSeg = Network.Identifier.GetComponentByGameObject<global::SeaTruckSegment>(ev.FrontModuleId);
+                    var backSeg  = Network.Identifier.GetComponentByGameObject<global::SeaTruckSegment>(ev.BackModuleId);
+
+                    var frontHead = frontSeg?.GetFirstSegment() ?? frontSeg;
+                    var backHead  = backSeg?.GetFirstSegment() ?? backSeg;
+
+                    bool isPilotedByMe = (global::Player.main.currentMountedVehicle != null && (global::Player.main.currentMountedVehicle == frontHead?.motor || global::Player.main.currentMountedVehicle == backHead?.motor))
+                                      || (global::Player.main.transform.parent && ((frontHead?.motor?.pilotPosition != null && global::Player.main.transform.parent.transform == frontHead.motor.pilotPosition) || (backHead?.motor?.pilotPosition != null && global::Player.main.transform.parent.transform == backHead.motor.pilotPosition)));
+
+                    bool isAnyPiloted = (frontHead != null && frontHead.IsPiloted()) || (backHead != null && backHead.IsPiloted());
+
+                    bool canSend = false;
+                    if (isPilotedByMe)
                     {
-                        if ((frontModule.IsMine(ZeroPlayer.CurrentPlayer.UniqueId) && frontModule.IsUsingByPlayer) || (backModule.IsMine(ZeroPlayer.CurrentPlayer.UniqueId) && backModule.IsUsingByPlayer))
+                        canSend = true;
+                    }
+                    else if (!isAnyPiloted)
+                    {
+                        var frontModule = Network.DynamicEntity.GetEntity(ev.FrontModuleId);
+                        var backModule  = Network.DynamicEntity.GetEntity(ev.BackModuleId);
+
+                        if (frontModule != null && frontModule.IsMine(ZeroPlayer.CurrentPlayer.UniqueId))
                         {
-                            SeaTruckConnectionProcessor.SendPacketToServer(ev.IsConnect, frontModuleId: ev.FrontModuleId, backModuleId: ev.BackModuleId, firstModuleId: ev.FirstModuleId, isMoonpoolExpansion: ev.IsMoonpoolExpansion, spawnSubjectModuleId: ev.FrontModuleId);
+                            canSend = true;
                         }
+                        else if (backModule != null && backModule.IsMine(ZeroPlayer.CurrentPlayer.UniqueId))
+                        {
+                            canSend = true;
+                        }
+                        else
+                        {
+                            var connPoint = frontSeg?.frontConnection?.connectionPoint?.position ?? frontSeg?.transform.position ?? UnityEngine.Vector3.zero;
+                            float myDist = UnityEngine.Vector3.Distance(global::Player.main.transform.position, connPoint);
+                            if (myDist < 30f)
+                            {
+                                bool isClosest = true;
+                                foreach (var player in ZeroPlayer.GetAllPlayers())
+                                {
+                                    if (player.IsMine) continue;
+                                    if (UnityEngine.Vector3.Distance(player.Position, connPoint) < myDist)
+                                    {
+                                        isClosest = false;
+                                        break;
+                                    }
+                                }
+
+                                if (isClosest)
+                                {
+                                    canSend = true;
+                                }
+                            }
+                        }
+                    }
+
+                    if (canSend)
+                    {
+                        SeaTruckConnectionProcessor.SendPacketToServer(ev.IsConnect, frontModuleId: ev.FrontModuleId, backModuleId: ev.BackModuleId, firstModuleId: ev.FirstModuleId, isMoonpoolExpansion: ev.IsMoonpoolExpansion, spawnSubjectModuleId: ev.FrontModuleId);
                     }
                 }
                 else

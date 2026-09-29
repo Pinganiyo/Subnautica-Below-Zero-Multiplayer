@@ -116,6 +116,9 @@ namespace Subnautica.Events.Patches.Events.Vehicle
                 return false;
             }
 
+            var rootVehicle = __instance.GetComponentInParent<global::SeaTruckSegment>()?.gameObject ?? __instance.GetComponentInParent<LargeWorldEntity>()?.gameObject ?? __instance.gameObject;
+            var vehicleUniqueId = rootVehicle.GetIdentityId();
+
             if (__instance.dockable && __instance.dockable.isDocked && __instance.dockable.bay != null)
             {
                 var vehicleDockingBay = __instance.dockable.bay as VehicleDockingBay;
@@ -123,7 +126,7 @@ namespace Subnautica.Events.Patches.Events.Vehicle
                 {
                     try
                     {
-                        VehicleUndockingEventArgs args = new VehicleUndockingEventArgs(vehicleDockingBay.GetComponentInParent<BaseDeconstructable>().gameObject.GetIdentityId(), __instance.gameObject.GetIdentityId(), TechType.BaseMoonpoolExpansion, vehicleDockingBay.GetDockedObject().transform.position, vehicleDockingBay.GetDockedObject().transform.rotation, true);
+                        VehicleUndockingEventArgs args = new VehicleUndockingEventArgs(vehicleDockingBay.GetComponentInParent<BaseDeconstructable>().gameObject.GetIdentityId(), vehicleUniqueId, TechType.BaseMoonpoolExpansion, vehicleDockingBay.GetDockedObject().transform.position, vehicleDockingBay.GetDockedObject().transform.rotation, true);
 
                         Handlers.Vehicle.OnUndocking(args);
 
@@ -140,7 +143,7 @@ namespace Subnautica.Events.Patches.Events.Vehicle
 
             try
             {
-                VehicleEnteringEventArgs args = new VehicleEnteringEventArgs(__instance.gameObject.GetIdentityId(), CraftData.GetTechType(__instance.gameObject));
+                VehicleEnteringEventArgs args = new VehicleEnteringEventArgs(vehicleUniqueId, TechType.SeaTruck);
 
                 Handlers.Vehicle.OnEntering(args);
 

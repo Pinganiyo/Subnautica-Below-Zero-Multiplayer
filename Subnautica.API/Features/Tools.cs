@@ -156,7 +156,13 @@ namespace Subnautica.API.Features
          */
         public static string GetLoggedInName()
         {
-            return global::PlatformUtils.main.GetLoggedInUserName();
+            var name = global::PlatformUtils.main?.GetLoggedInUserName();
+            if (string.IsNullOrEmpty(name) || name == "UnityEditorPlayer")
+            {
+                return "Pinganiyo";
+            }
+
+            return name;
         }
 
         /**
@@ -168,10 +174,10 @@ namespace Subnautica.API.Features
          */
         public static string GetLoggedId()
         {
-            var userId = global::PlatformUtils.main.GetCurrentUserId();
-            if (userId == "0" || userId.IsNull())
+            var userId = global::PlatformUtils.main?.GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId) || userId == "0" || userId == "UnityEditorPlayer")
             {
-                return null;
+                return "76561198978426052";
             }
 
             return userId;

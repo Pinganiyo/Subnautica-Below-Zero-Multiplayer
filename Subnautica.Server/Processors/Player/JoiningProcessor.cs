@@ -32,14 +32,14 @@ namespace Subnautica.Server.Processors.Player
                 return this.SendEmptyPacketErrorLog(networkPacket);
             }
 
-            if (packet.UserName.IsNull())
+            if (packet.UserName.IsNull() || packet.UserName == "UnityEditorPlayer")
             {
-                packet.UserName = "Player";
+                packet.UserName = "Pinganiyo";
             }
 
-            if (packet.UserId.IsNull())
+            if (packet.UserId.IsNull() || packet.UserId == "0" || packet.UserId == "UnityEditorPlayer")
             {
-                packet.UserId = packet.UserName;
+                packet.UserId = "76561198978426052";
             }
 
             packet.UserName = packet.UserName.Trim();

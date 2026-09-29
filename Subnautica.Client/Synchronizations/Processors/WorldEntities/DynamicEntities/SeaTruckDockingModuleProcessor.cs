@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Synchronizations.Processors.WorldEntities.DynamicEntities
+namespace Subnautica.Client.Synchronizations.Processors.WorldEntities.DynamicEntities
 {
     using Subnautica.API.Extensions;
     using Subnautica.API.Features;
@@ -23,10 +23,6 @@
          */
         public override bool OnWorldLoadItemSpawn(NetworkDynamicEntityComponent packet, bool isDeployed, Pickupable pickupable, GameObject gameObject)
         {
-            if (!isDeployed)
-            {
-                return false;
-            }
 
             gameObject.SetActive(true);
 

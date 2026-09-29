@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.Building
+namespace Subnautica.Events.Patches.Events.Building
 {
     using HarmonyLib;
     using Subnautica.API.Features;
@@ -28,9 +28,13 @@
                     if (__instance.constructedAmount >= 1f && !__instance.GetComponentInParent<ConstructableBase>())
                     {
                         string baseId = null;
-                        if(__instance.GetComponentInParent<Base>() != null)
+                        if (__instance.GetComponentInParent<Base>() != null)
                         {
                             baseId = Network.Identifier.GetIdentityId(__instance.GetComponentInParent<Base>().gameObject);
+                        }
+                        else if (__instance.GetComponentInParent<global::SeaTruckSegment>() != null)
+                        {
+                            baseId = Network.Identifier.GetIdentityId(__instance.GetComponentInParent<global::SeaTruckSegment>().gameObject);
                         }
 
                         ConstructionCompletedEventArgs args = new ConstructionCompletedEventArgs(__instance.gameObject.GetIdentityId(), baseId, __instance.techType, new Vector3());

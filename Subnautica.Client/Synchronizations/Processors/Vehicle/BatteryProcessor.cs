@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Synchronizations.Processors.Vehicle
+namespace Subnautica.Client.Synchronizations.Processors.Vehicle
 {
     using System.Collections.Generic;
 
@@ -151,10 +151,9 @@
         {
             if (ev.TechType == TechType.Exosuit || ev.TechType == TechType.SeaTruck)
             {
-                if (Interact.IsBlockedByMe(ev.BatterySlotId))
-                {
-                    BatteryProcessor.SendPacketToServer(ev.UniqueId, batterySlotId: ev.BatterySlotId, batteryType: ev.BatteryType, isAdding: ev.IsAdding || ev.IsChanging, charge: ev.Item == null ? 0f : ev.Item.GetComponent<IBattery>().charge);
-                }
+                var charge = ev.Item == null ? 0f : (ev.Item.GetComponent<IBattery>() != null ? ev.Item.GetComponent<IBattery>().charge : 0f);
+                Log.Info($"[VehicleBattery] OnEnergyMixinSelecting: Vehicle={ev.UniqueId}, Slot={ev.BatterySlotId}, Type={ev.BatteryType}, IsAdding={ev.IsAdding}, IsChanging={ev.IsChanging}, Charge={charge}");
+                BatteryProcessor.SendPacketToServer(ev.UniqueId, batterySlotId: ev.BatterySlotId, batteryType: ev.BatteryType, isAdding: ev.IsAdding || ev.IsChanging, charge: charge);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.Player
+namespace Subnautica.Events.Patches.Events.Player
 {
     using System;
 
@@ -96,6 +96,16 @@
                 return TechType.None;
             }
 
+            if (vehicleGameObject.GetComponent<global::Exosuit>() != null)
+            {
+                return TechType.Exosuit;
+            }
+
+            if (vehicleGameObject.GetComponent<global::SeaTruckSegment>() != null)
+            {
+                return TechType.SeaTruck;
+            }
+
             return CraftData.GetTechType(vehicleGameObject);
         }
 
@@ -108,13 +118,30 @@
          */
         private static GameObject GetVehicleGameObject(GameObject gameObject)
         {
+            if (gameObject == null)
+            {
+                return null;
+            }
+
             var exosuit = gameObject.GetComponentInParent<global::Exosuit>();
             if (exosuit)
             {
                 return exosuit.gameObject;
             }
 
-            return gameObject.transform.parent.gameObject;
+            var seaTruck = gameObject.GetComponentInParent<global::SeaTruckSegment>();
+            if (seaTruck)
+            {
+                return seaTruck.gameObject;
+            }
+
+            var lwe = gameObject.GetComponentInParent<LargeWorldEntity>();
+            if (lwe)
+            {
+                return lwe.gameObject;
+            }
+
+            return gameObject.transform.parent != null ? gameObject.transform.parent.gameObject : null;
         }
     }
 }

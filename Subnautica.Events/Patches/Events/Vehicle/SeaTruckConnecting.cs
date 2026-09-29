@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.Vehicle
+namespace Subnautica.Events.Patches.Events.Vehicle
 {
     using HarmonyLib;
 
@@ -60,7 +60,16 @@
             {
                 try
                 {
-                    SeaTruckConnectingEventArgs args = new SeaTruckConnectingEventArgs(GetFrontModuleId(__instance, otherConnection), GetBackModuleId(__instance, otherConnection), Network.Identifier.GetIdentityId(otherConnection.truckSegment.GetFirstSegment().gameObject, false), true, false);
+                    var rearModule = __instance.connectionType == SeaTruckConnection.ConnectionType.Front ? __instance.truckSegment : otherConnection.truckSegment;
+                    var frontModule = __instance.connectionType == SeaTruckConnection.ConnectionType.Front ? otherConnection.truckSegment : __instance.truckSegment;
+                    var trainHead = frontModule.GetFirstSegment() ?? frontModule;
+
+                    SeaTruckConnectingEventArgs args = new SeaTruckConnectingEventArgs(
+                        Network.Identifier.GetIdentityId(rearModule.gameObject, false), 
+                        Network.Identifier.GetIdentityId(frontModule.gameObject, false), 
+                        Network.Identifier.GetIdentityId(trainHead.gameObject, false), 
+                        true, 
+                        false);
 
                     Handlers.Vehicle.OnSeaTruckConnecting(args);
 

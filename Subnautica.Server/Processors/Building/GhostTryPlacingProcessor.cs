@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Processors.Building
+namespace Subnautica.Server.Processors.Building
 {
     using Server.Core;
     
@@ -38,7 +38,8 @@
                     TechType      = packet.TechType,
                     LastRotation  = packet.LastRotation,
                     PlacePosition = packet.Position,
-                    IsBasePiece   = packet.IsBasePiece
+                    IsBasePiece   = packet.IsBasePiece,
+                    BaseId        = packet.SubrootId
                 };
 
                 API.Features.Log.Info("TRYPLACE -> " + packet.UniqueId + ", TechType: " + packet.TechType);

@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Multiplayer.Constructing
+namespace Subnautica.Client.Multiplayer.Constructing
 {
     using System;
     using System.Collections;
@@ -1028,10 +1028,15 @@
             bool flag1 = false;
             bool flag2 = false;
             SubRoot currentSub = null;
+            global::SeaTruckSegment currentSegment = null;
 
             if (this.SubRootId.IsNotNull())
             {
                 currentSub = Network.Identifier.GetComponentByGameObject<SubRoot>(this.SubRootId);
+                if (currentSub == null)
+                {
+                    currentSegment = Network.Identifier.GetComponentByGameObject<global::SeaTruckSegment>(this.SubRootId);
+                }
             }
             
             if (currentSub != null)
@@ -1039,6 +1044,11 @@
                 flag1 = currentSub.isBase;
                 flag2 = currentSub.isCyclops;
                 target.transform.parent = currentSub.GetModulesRoot();  
+            }
+            else if (currentSegment != null)
+            {
+                flag1 = true;
+                target.transform.parent = currentSegment.transform;
             }
             else if (this.IsAllowedOutside)
             {
@@ -1050,12 +1060,31 @@
                     {
                         target.transform.parent = componentInParent2.GetModulesRoot();
                     }
+                    else
+                    {
+                        var seg = placementTarget.GetComponentInParent<global::SeaTruckSegment>();
+                        if (seg != null)
+                        {
+                            currentSegment = seg;
+                            flag1 = true;
+                            target.transform.parent = seg.transform;
+                        }
+                    }
                 }
             }
 
             Transform transform = target.transform;
-            transform.position = this.PlacePosition;
-            transform.rotation = this.PlaceRotation;
+            if (currentSegment != null)
+            {
+                transform.localPosition = this.PlacePosition;
+                transform.localRotation = this.PlaceRotation;
+                Events.Patches.Fixes.Building.SeatruckInteriorConstructionParent.SetupSeatruckInterior(target, currentSegment);
+            }
+            else
+            {
+                transform.position = this.PlacePosition;
+                transform.rotation = this.PlaceRotation;
+            }
 
             var constructable = target.GetComponentInParent<Constructable>();
             constructable.SetState(false);

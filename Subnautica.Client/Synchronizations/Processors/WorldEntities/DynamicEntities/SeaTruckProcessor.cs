@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Synchronizations.Processors.WorldEntities.DynamicEntities
+namespace Subnautica.Client.Synchronizations.Processors.WorldEntities.DynamicEntities
 {
     using System.Linq;
 
@@ -21,10 +21,6 @@
          */
         public override bool OnWorldLoadItemSpawn(NetworkDynamicEntityComponent packet, bool isDeployed, Pickupable pickupable, GameObject gameObject)
         {
-            if (!isDeployed)
-            {
-                return false;
-            }
 
             gameObject.SetActive(true);
 
@@ -44,6 +40,24 @@
             if (string.IsNullOrEmpty(uniqueId))
             {
                 return false;
+            }
+
+            vehicle.upgrades.LazyInitialize();
+
+            if (component.PowerCells == null || component.PowerCells.Count < 2)
+            {
+                component.PowerCells = new System.Collections.Generic.List<Subnautica.Network.Models.WorldEntity.DynamicEntityComponents.Shared.PowerCell> 
+                { 
+                    new Subnautica.Network.Models.WorldEntity.DynamicEntityComponents.Shared.PowerCell(), 
+                    new Subnautica.Network.Models.WorldEntity.DynamicEntityComponents.Shared.PowerCell() 
+                };
+            }
+            for (int i = 0; i < component.PowerCells.Count; i++)
+            {
+                if (string.IsNullOrEmpty(component.PowerCells[i].UniqueId))
+                {
+                    component.PowerCells[i].UniqueId = $"{uniqueId}_PowerCell{i + 1}";
+                }
             }
 
             Vehicle.ApplyModules(component.Modules, vehicle.upgrades.modules, TechType.SeaTruck);
