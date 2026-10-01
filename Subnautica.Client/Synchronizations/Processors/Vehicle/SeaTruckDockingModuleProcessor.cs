@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.Synchronizations.Processors.Vehicle
+namespace Subnautica.Client.Synchronizations.Processors.Vehicle
 {
     using Subnautica.API.Extensions;
     using Subnautica.API.Features;
@@ -79,6 +79,11 @@
          */
         private void StartDocking(string uniqueId, string vehicleId)
         {
+            if (!string.IsNullOrEmpty(vehicleId) && vehicleId.Contains("_PowerCell"))
+            {
+                vehicleId = vehicleId.Substring(0, vehicleId.IndexOf("_PowerCell"));
+            }
+
             var bayFound = Network.Identifier.GetGameObject(uniqueId, true) != null;
             var vehicleFound = Network.Identifier.GetGameObject(vehicleId, true) != null;
             Log.Info($"SeaTruckDockingModule.StartDocking: bay={uniqueId} found={bayFound}, vehicle={vehicleId} found={vehicleFound}");

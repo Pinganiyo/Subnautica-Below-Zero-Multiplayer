@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Processors.Vehicle
+namespace Subnautica.Server.Processors.Vehicle
 {
     using Server.Core;
 
@@ -51,6 +51,11 @@
 
             if (packet.IsDocking)
             {
+                if (!string.IsNullOrEmpty(packet.VehicleId) && packet.VehicleId.Contains("_PowerCell"))
+                {
+                    packet.VehicleId = packet.VehicleId.Substring(0, packet.VehicleId.IndexOf("_PowerCell"));
+                }
+
                 var exosuitModule = Server.Instance.Storages.World.GetDynamicEntity(packet.VehicleId);
                 if (exosuitModule == null)
                 {

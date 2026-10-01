@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Storage
+namespace Subnautica.Server.Storage
 {
     using System;
     using System.IO;
@@ -13,6 +13,7 @@
 
     using ConstructionStorage = Network.Models.Storage.Construction;
     using MetadataModel       = Subnautica.Network.Models.Metadata;
+    using WorldEntityModel    = Subnautica.Network.Models.WorldEntity.DynamicEntityComponents;
 
     public class Construction : BaseStorage
     {
@@ -56,6 +57,34 @@
                     try
                     {
                         this.Storage = NetworkTools.Deserialize<ConstructionStorage.Construction>(File.ReadAllBytes(this.FilePath));
+
+                        if (this.Storage?.Constructions != null)
+                        {
+                            foreach (var item in this.Storage.Constructions.Values)
+                            {
+                                var moonpool = item.Component?.GetComponent<MetadataModel.BaseMoonpool>();
+                                if (moonpool != null && moonpool.Vehicle != null && moonpool.Vehicle.TechType == TechType.Exosuit)
+                                {
+                                    var comp = moonpool.Vehicle.Component?.GetComponent<WorldEntityModel.Exosuit>();
+                                    if (comp != null)
+                                    {
+                                        if (comp.PowerCells == null || comp.PowerCells.Count < 2)
+                                        {
+                                            comp.PowerCells = new System.Collections.Generic.List<WorldEntityModel.Shared.PowerCell>() { new WorldEntityModel.Shared.PowerCell(), new WorldEntityModel.Shared.PowerCell() };
+                                        }
+                                        foreach (var cell in comp.PowerCells)
+                                        {
+                                            if (cell.Charge == -1f || cell.TechType == TechType.None)
+                                            {
+                                                cell.TechType = TechType.PowerCell;
+                                                cell.Capacity = 200f;
+                                                cell.Charge = 200f;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     catch (Exception e)
                     {

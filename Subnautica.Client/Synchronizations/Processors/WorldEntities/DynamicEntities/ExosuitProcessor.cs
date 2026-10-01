@@ -62,15 +62,30 @@ namespace Subnautica.Client.Synchronizations.Processors.WorldEntities.DynamicEnt
             }
             for (int i = 0; i < component.PowerCells.Count; i++)
             {
-                if (string.IsNullOrEmpty(component.PowerCells[i].UniqueId))
+                var cell = component.PowerCells[i];
+                if (cell == null)
                 {
-                    component.PowerCells[i].UniqueId = $"{uniqueId}_PowerCell{i + 1}";
+                    cell = component.PowerCells[i] = new Subnautica.Network.Models.WorldEntity.DynamicEntityComponents.Shared.PowerCell();
+                }
+
+                if (string.IsNullOrEmpty(cell.UniqueId))
+                {
+                    cell.UniqueId = $"{uniqueId}_PowerCell{i + 1}";
+                }
+
+                // JUST IN PRAWN SUITS: always have installed powercells
+                if (cell.Charge == -1f || cell.TechType == TechType.None)
+                {
+                    cell.TechType = TechType.PowerCell;
+                    cell.Capacity = 200f;
+                    cell.Charge   = 200f;
                 }
             }
 
             Vehicle.ApplyModules(component.Modules, vehicle.upgradesInput.equipment, TechType.Exosuit);
             Vehicle.ApplyBatterySlotIds(gameObject, TechType.Exosuit, component.PowerCells.ElementAt(0).UniqueId, component.PowerCells.ElementAt(1).UniqueId);
             Vehicle.ApplyPowerCells(uniqueId, component.PowerCells);
+            Vehicle.EnsurePrawnSuitHasPowerCells(gameObject.GetComponent<global::Exosuit>() ?? vehicle as global::Exosuit);
             Vehicle.ApplyStorageContainer(uniqueId, component.StorageContainer);
             Vehicle.ApplyLiveMixin(vehicle.liveMixin, component.LiveMixin.Health);
             Vehicle.ApplyColorCustomizer(component.ColorCustomizer, vehicle.colorNameControl);

@@ -130,6 +130,16 @@ namespace Subnautica.Events.Patches.Fixes.Vehicle
             return false;
         }
 
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(global::Exosuit), nameof(global::Exosuit.Start))]
+        private static void ExosuitStart(global::Exosuit __instance)
+        {
+            if (Network.IsMultiplayerActive)
+            {
+                Vehicle.EnsurePrawnSuitHasPowerCells(__instance);
+            }
+        }
+
         /**
          *
          * Aracı döner.

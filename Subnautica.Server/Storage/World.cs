@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Storage
+namespace Subnautica.Server.Storage
 {
     using System;
     using System.IO;
@@ -63,6 +63,77 @@
                     try
                     {
                         this.Storage = NetworkTools.Deserialize<WorldStorage.World>(File.ReadAllBytes(this.FilePath));
+
+                        if (this.Storage?.DynamicEntities != null)
+                        {
+                            foreach (var entity in this.Storage.DynamicEntities)
+                            {
+                                if (entity.TechType == TechType.Exosuit)
+                                {
+                                    if (!string.IsNullOrEmpty(entity.UniqueId) && entity.UniqueId.Contains("_PowerCell"))
+                                    {
+                                        entity.UniqueId = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 22);
+                                    }
+
+                                    var comp = entity.Component?.GetComponent<WorldEntityModel.Exosuit>();
+                                    if (comp != null)
+                                    {
+                                        if (comp.PowerCells == null || comp.PowerCells.Count < 2)
+                                        {
+                                            comp.PowerCells = new System.Collections.Generic.List<WorldEntityModel.Shared.PowerCell>() { new WorldEntityModel.Shared.PowerCell(), new WorldEntityModel.Shared.PowerCell() };
+                                        }
+                                        for (int i = 0; i < comp.PowerCells.Count; i++)
+                                        {
+                                            var cell = comp.PowerCells[i];
+                                            if (string.IsNullOrEmpty(cell.UniqueId) || cell.UniqueId.Contains("_PowerCell"))
+                                            {
+                                                cell.UniqueId = $"{entity.UniqueId}_PowerCell{i + 1}";
+                                            }
+                                            if (cell.Charge == -1f || cell.TechType == TechType.None)
+                                            {
+                                                cell.TechType = TechType.PowerCell;
+                                                cell.Capacity = 200f;
+                                                cell.Charge = 200f;
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (entity.TechType == TechType.SeaTruckDockingModule)
+                                {
+                                    var dockModule = entity.Component?.GetComponent<WorldEntityModel.SeaTruckDockingModule>();
+                                    if (dockModule != null && dockModule.Vehicle != null && dockModule.Vehicle.TechType == TechType.Exosuit)
+                                    {
+                                        if (!string.IsNullOrEmpty(dockModule.Vehicle.UniqueId) && dockModule.Vehicle.UniqueId.Contains("_PowerCell"))
+                                        {
+                                            dockModule.Vehicle.UniqueId = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 22);
+                                        }
+
+                                        var comp = dockModule.Vehicle.Component?.GetComponent<WorldEntityModel.Exosuit>();
+                                        if (comp != null)
+                                        {
+                                            if (comp.PowerCells == null || comp.PowerCells.Count < 2)
+                                            {
+                                                comp.PowerCells = new System.Collections.Generic.List<WorldEntityModel.Shared.PowerCell>() { new WorldEntityModel.Shared.PowerCell(), new WorldEntityModel.Shared.PowerCell() };
+                                            }
+                                            for (int i = 0; i < comp.PowerCells.Count; i++)
+                                            {
+                                                var cell = comp.PowerCells[i];
+                                                if (string.IsNullOrEmpty(cell.UniqueId) || cell.UniqueId.Contains("_PowerCell"))
+                                                {
+                                                    cell.UniqueId = $"{dockModule.Vehicle.UniqueId}_PowerCell{i + 1}";
+                                                }
+                                                if (cell.Charge == -1f || cell.TechType == TechType.None)
+                                                {
+                                                    cell.TechType = TechType.PowerCell;
+                                                    cell.Capacity = 200f;
+                                                    cell.Charge = 200f;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     catch (Exception e)
                     {

@@ -449,6 +449,12 @@ namespace Subnautica.API.Features
         public static void ApplyBatterySlotIds(GameObject gameObject, TechType techType, string firstPowerCellId, string secondPowerCellId)
         {
             var uniqueId = gameObject.GetIdentityId();
+            if (!string.IsNullOrEmpty(uniqueId) && uniqueId.Contains("_PowerCell"))
+            {
+                uniqueId = uniqueId.Substring(0, uniqueId.IndexOf("_PowerCell"));
+                Network.Identifier.SetIdentityId(gameObject, uniqueId);
+            }
+
             if (string.IsNullOrEmpty(firstPowerCellId))
             {
                 firstPowerCellId = string.IsNullOrEmpty(uniqueId) ? Network.Identifier.GenerateUniqueId() : $"{uniqueId}_PowerCell1";
@@ -472,7 +478,10 @@ namespace Subnautica.API.Features
                         {
                             Network.Identifier.SetIdentityId(source.storageRoot.gameObject, slotId);
                         }
-                        Network.Identifier.SetIdentityId(source.gameObject, slotId);
+                        if (source.gameObject != gameObject)
+                        {
+                            Network.Identifier.SetIdentityId(source.gameObject, slotId);
+                        }
 
                         var handTarget = source.GetComponentInChildren<GenericHandTarget>() ?? source.GetComponent<GenericHandTarget>() ?? source.GetComponentInParent<GenericHandTarget>();
                         if (handTarget != null)
@@ -496,7 +505,10 @@ namespace Subnautica.API.Features
                         {
                             Network.Identifier.SetIdentityId(source.storageRoot.gameObject, slotId);
                         }
-                        Network.Identifier.SetIdentityId(source.gameObject, slotId);
+                        if (source.gameObject != gameObject)
+                        {
+                            Network.Identifier.SetIdentityId(source.gameObject, slotId);
+                        }
 
                         var handTarget = source.GetComponentInChildren<GenericHandTarget>() ?? source.GetComponent<GenericHandTarget>() ?? source.GetComponentInParent<GenericHandTarget>();
                         if (handTarget != null)
@@ -654,6 +666,55 @@ namespace Subnautica.API.Features
             {
                 Log.Warn($"[VehicleBattery] OnPowerCellSpawned: energyMixin not found for vehicle={uniqueId}, slot={powerCell?.UniqueId}, destroying spawned battery");
                 World.DestroyGameObject(gameObject);
+            }
+        }
+
+        /**
+         *
+         * Exosuit / Prawn Suit her zaman takılı güç hücrelerine sahip olmasını sağlar.
+         *
+         */
+        public static void EnsurePrawnSuitHasPowerCells(global::Exosuit exosuit)
+        {
+            if (exosuit == null || exosuit.energyInterface == null || exosuit.energyInterface.sources == null)
+            {
+                return;
+            }
+
+            var uniqueId = Network.Identifier.GetIdentityId(exosuit.gameObject, false) ?? exosuit.gameObject.GetIdentityId(false);
+            if (!string.IsNullOrEmpty(uniqueId) && uniqueId.Contains("_PowerCell"))
+            {
+                uniqueId = uniqueId.Substring(0, uniqueId.IndexOf("_PowerCell"));
+            }
+
+            for (int i = 0; i < exosuit.energyInterface.sources.Length; i++)
+            {
+                var source = exosuit.energyInterface.sources[i];
+                if (source == null || source.batterySlot == null)
+                {
+                    continue;
+                }
+
+                if (source.batterySlot.storedItem == null)
+                {
+                    var slotId = i == 0 ? $"{uniqueId}_PowerCell1" : $"{uniqueId}_PowerCell2";
+                    var powerCell = new PowerCell()
+                    {
+                        UniqueId = slotId,
+                        TechType = TechType.PowerCell,
+                        Charge   = 200f,
+                        Capacity = 200f,
+                    };
+
+                    var action = new ItemQueueAction();
+                    action.OnEntitySpawned = OnPowerCellSpawned;
+                    action.RegisterProperty("UniqueId"  , uniqueId);
+                    action.RegisterProperty("PowerCell" , powerCell);
+                    action.RegisterProperty("SlotIndex" , i);
+
+                    Entity.SpawnToQueue(powerCell.TechType, Network.Identifier.GenerateUniqueId(), new ZeroTransform(Vector3.down.ToZeroVector3(), Quaternion.identity.ToZeroQuaternion()), action);
+                    Log.Info($"[VehicleBattery] EnsurePrawnSuitHasPowerCells: Queued spawn of missing powercell for Prawn Suit {uniqueId} slot {i}");
+                }
             }
         }
 

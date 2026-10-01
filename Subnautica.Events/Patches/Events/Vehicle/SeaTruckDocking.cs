@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Events.Patches.Events.Vehicle
+namespace Subnautica.Events.Patches.Events.Vehicle
 {
     using HarmonyLib;
 
@@ -44,22 +44,35 @@
                 gameObject = other.gameObject;
             }
 
-            var lwe = other.GetComponentInParent<LargeWorldEntity>();
-            if (lwe == null)
+            var dockable = other.GetComponentInParent<Dockable>() ?? gameObject.GetComponent<Dockable>() ?? gameObject.GetComponentInChildren<Dockable>();
+            if (dockable == null)
             {
-                Log.Info("SeaTruckDocking.Trigger: blocked. No LargeWorldEntity.");
+                Log.Info("SeaTruckDocking.Trigger: blocked. No Dockable component.");
                 return false;
             }
 
-            if (!gameObject.TryGetComponent<Dockable>(out var dockable) || ((IDockingBay)__instance).AllowedToDock(dockable) == false)
+            if (((IDockingBay)__instance).AllowedToDock(dockable) == false)
             {
-                Log.Info("SeaTruckDocking.Trigger: blocked. Not dockable or not allowed.");
+                Log.Info($"SeaTruckDocking.Trigger: blocked. AllowedToDock returned false. isRearConnected={__instance.truckSegment?.isRearConnected}");
                 return false;
+            }
+
+            var exosuit = dockable.GetComponent<global::Exosuit>() ?? dockable.GetComponentInParent<global::Exosuit>() ?? other.GetComponentInParent<global::Exosuit>();
+            var vehicleObj = exosuit?.gameObject ?? dockable.gameObject;
+            var vehicleId = Network.Identifier.GetIdentityId(vehicleObj, false) ?? vehicleObj.GetIdentityId(false);
+            if (!string.IsNullOrEmpty(vehicleId) && vehicleId.Contains("_PowerCell"))
+            {
+                vehicleId = vehicleId.Substring(0, vehicleId.IndexOf("_PowerCell"));
+                Network.Identifier.SetIdentityId(vehicleObj, vehicleId);
             }
 
             try
             {
-                VehicleDockingEventArgs args = new VehicleDockingEventArgs(__instance.truckSegment.gameObject.GetIdentityId(), lwe.gameObject, TechType.SeaTruckDockingModule, Vector3.zero, Vector3.zero, Quaternion.identity);
+                VehicleDockingEventArgs args = new VehicleDockingEventArgs(__instance.truckSegment.gameObject.GetIdentityId(), vehicleObj, TechType.SeaTruckDockingModule, Vector3.zero, Vector3.zero, Quaternion.identity);
+                if (!string.IsNullOrEmpty(vehicleId))
+                {
+                    args.VehicleId = vehicleId;
+                }
 
                 Handlers.Vehicle.OnDocking(args);
 
@@ -150,10 +163,16 @@
                         continue;
                     }
 
-                    var prawnId = exosuit.gameObject.GetIdentityId(false);
+                    var prawnId = Network.Identifier.GetIdentityId(exosuit.gameObject, false) ?? exosuit.gameObject.GetIdentityId(false);
                     if (string.IsNullOrEmpty(prawnId))
                     {
                         continue;
+                    }
+
+                    if (prawnId.Contains("_PowerCell"))
+                    {
+                        prawnId = prawnId.Substring(0, prawnId.IndexOf("_PowerCell"));
+                        Network.Identifier.SetIdentityId(exosuit.gameObject, prawnId);
                     }
 
                     seen.Add(prawnId);
@@ -211,9 +230,20 @@
                     return;
                 }
 
-                Log.Info($"SeaTruckDockingProximity: sending dock request. bay={bayId}, prawn={prawnGameObject.GetIdentityId(false)}");
+                var prawnId = Network.Identifier.GetIdentityId(prawnGameObject, false) ?? prawnGameObject.GetIdentityId(false);
+                if (!string.IsNullOrEmpty(prawnId) && prawnId.Contains("_PowerCell"))
+                {
+                    prawnId = prawnId.Substring(0, prawnId.IndexOf("_PowerCell"));
+                    Network.Identifier.SetIdentityId(prawnGameObject, prawnId);
+                }
+
+                Log.Info($"SeaTruckDockingProximity: sending dock request. bay={bayId}, prawn={prawnId}");
 
                 VehicleDockingEventArgs args = new VehicleDockingEventArgs(bayId, prawnGameObject, TechType.SeaTruckDockingModule, Vector3.zero, Vector3.zero, Quaternion.identity);
+                if (!string.IsNullOrEmpty(prawnId))
+                {
+                    args.VehicleId = prawnId;
+                }
 
                 Handlers.Vehicle.OnDocking(args);
             }

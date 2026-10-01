@@ -125,6 +125,7 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
 
                 if (player.IsMine)
                 {
+                    Vehicle.EnsurePrawnSuitHasPowerCells(vehicle);
                     vehicle.useRigidbody.SetNonKinematic(true);
 
                     // If the Exosuit is still docked in a moonpool bay, physically undock it

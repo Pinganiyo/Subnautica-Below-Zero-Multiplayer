@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Server.Logic
+namespace Subnautica.Server.Logic
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -121,6 +121,32 @@
                     this.VehicleEnergyUpdateQueue(vehicle);
 
                     this.OldPositions[vehicle.UniqueId] = vehicle.Position;
+                }
+
+                foreach (var entity in Core.Server.Instance.Storages.World.Storage.DynamicEntities.Where(q => q.TechType == TechType.SeaTruckDockingModule))
+                {
+                    var dockModule = entity.Component?.GetComponent<WorldEntityModel.SeaTruckDockingModule>();
+                    if (dockModule != null && dockModule.Vehicle != null && dockModule.Vehicle.TechType == TechType.Exosuit)
+                    {
+                        var comp = dockModule.Vehicle.Component?.GetComponent<WorldEntityModel.Exosuit>();
+                        if (comp != null && comp.PowerCells != null)
+                        {
+                            bool charged = false;
+                            foreach (var cell in comp.PowerCells)
+                            {
+                                if (cell.Charge < cell.Capacity && cell.Charge != -1f)
+                                {
+                                    cell.Charge = Mathf.Min(cell.Capacity, cell.Charge + 10f);
+                                    charged = true;
+                                }
+                            }
+
+                            if (charged)
+                            {
+                                this.VehicleEnergyUpdateQueue(dockModule.Vehicle);
+                            }
+                        }
+                    }
                 }
 
                 this.SendPacketToAllClient();

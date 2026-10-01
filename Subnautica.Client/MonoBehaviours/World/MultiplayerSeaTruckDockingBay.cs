@@ -1,4 +1,4 @@
-﻿namespace Subnautica.Client.MonoBehaviours.World
+namespace Subnautica.Client.MonoBehaviours.World
 {
     using UnityEngine;
 
@@ -48,8 +48,26 @@
          */
         public void StartDocking(string vehicleId, bool playSound = true, bool fastTeleport = false)
         {
+            if (!string.IsNullOrEmpty(vehicleId) && vehicleId.Contains("_PowerCell"))
+            {
+                vehicleId = vehicleId.Substring(0, vehicleId.IndexOf("_PowerCell"));
+            }
+
             var vehicle = Network.Identifier.GetGameObject(vehicleId);
-            if (vehicle && vehicle.TryGetComponent<Dockable>(out var dockAble))
+            if (vehicle == null)
+            {
+                foreach (var exo in UnityEngine.Object.FindObjectsOfType<global::Exosuit>())
+                {
+                    var id = Network.Identifier.GetIdentityId(exo.gameObject, false) ?? exo.gameObject.GetIdentityId(false);
+                    if (id == vehicleId || (id != null && id.StartsWith(vehicleId)))
+                    {
+                        vehicle = exo.gameObject;
+                        break;
+                    }
+                }
+            }
+
+            if (vehicle && (vehicle.TryGetComponent<Dockable>(out var dockAble) || (dockAble = vehicle.GetComponentInChildren<Dockable>()) != null))
             {
                 if (vehicle.TryGetComponent<global::Exosuit>(out var exosuit))
                 {
