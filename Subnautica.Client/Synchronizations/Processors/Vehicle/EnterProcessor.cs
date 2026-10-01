@@ -47,11 +47,6 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                 Network.DynamicEntity.AddEntity(entity);
             }
 
-            if (entity == null && packet.TechType == TechType.Exosuit)
-            {
-                entity = Network.DynamicEntity.GetEntities().FirstOrDefault(e => e.Value.TechType == TechType.Exosuit).Value;
-            }
-
             if (entity == null)
             {
                 return false;
@@ -98,13 +93,28 @@ namespace Subnautica.Client.Synchronizations.Processors.Vehicle
                 var vehicle = Network.Identifier.GetComponentByGameObject<global::Exosuit>(packet.UniqueId);
                 if (vehicle == null)
                 {
+                    var go = Network.Identifier.GetGameObject(packet.UniqueId);
+                    if (go != null)
+                    {
+                        vehicle = go.GetComponentInChildren<global::Exosuit>() ?? go.GetComponentInParent<global::Exosuit>();
+                    }
+                }
+
+                if (vehicle == null && player.IsMine)
+                {
                     vehicle = UnityEngine.Object.FindObjectsOfType<global::Exosuit>()
+                        .Where(e => UnityEngine.Vector3.Distance(e.transform.position, global::Player.main.transform.position) < 8f)
                         .OrderBy(e => UnityEngine.Vector3.Distance(e.transform.position, global::Player.main.transform.position))
                         .FirstOrDefault();
 
                     if (vehicle != null)
                     {
                         Network.Identifier.SetIdentityId(vehicle.gameObject, packet.UniqueId);
+                        var root = vehicle.GetComponentInParent<LargeWorldEntity>()?.gameObject;
+                        if (root != null && root != vehicle.gameObject)
+                        {
+                            Network.Identifier.SetIdentityId(root, packet.UniqueId);
+                        }
                     }
                 }
 

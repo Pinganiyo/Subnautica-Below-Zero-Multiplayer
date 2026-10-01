@@ -102,7 +102,13 @@ namespace Subnautica.Events.Patches.Events.Vehicle
             try
             {
                 var rootVehicle = __instance.GetComponentInParent<global::Exosuit>()?.gameObject ?? __instance.GetComponentInParent<LargeWorldEntity>()?.gameObject ?? __instance.gameObject;
-                var uniqueId = Network.Identifier.GetIdentityId(rootVehicle, false) ?? Network.Identifier.GetIdentityId(__instance.gameObject, true);
+                var uniqueId = Network.Identifier.GetIdentityId(rootVehicle, false) ?? Network.Identifier.GetIdentityId(__instance.gameObject, false);
+                if (string.IsNullOrEmpty(uniqueId))
+                {
+                    uniqueId = Network.Identifier.GetIdentityId(rootVehicle, true);
+                    Network.Identifier.SetIdentityId(__instance.gameObject, uniqueId);
+                }
+
                 if (string.IsNullOrEmpty(uniqueId))
                 {
                     return true;

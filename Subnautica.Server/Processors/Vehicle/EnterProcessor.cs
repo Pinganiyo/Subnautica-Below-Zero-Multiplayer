@@ -67,48 +67,36 @@ namespace Subnautica.Server.Processors.Vehicle
             var entity = this.GetVehicle(packet.UniqueId);
             if (entity == null)
             {
-                if (packet.TechType == TechType.Exosuit)
+                if (packet.TechType == TechType.Hoverbike || packet.TechType.IsSeaTruckModule(true) || packet.TechType == TechType.Exosuit)
                 {
-                    entity = Server.Instance.Storages.World.Storage.DynamicEntities
-                        .Where(e => e.TechType == TechType.Exosuit)
-                        .OrderBy(e => e.Position.Distance(profile.Position))
-                        .FirstOrDefault();
-
-                    if (entity != null)
+                    entity = new WorldDynamicEntity()
                     {
-                        packet.UniqueId = entity.UniqueId;
+                        UniqueId   = packet.UniqueId,
+                        TechType   = packet.TechType,
+                        Position   = profile.Position,
+                        Rotation   = profile.Rotation,
+                        IsDeployed = true,
+                    };
+
+                    if (packet.TechType == TechType.Hoverbike)
+                    {
+                        entity.Component = new WorldEntityModel.Hoverbike();
                     }
+                    else if (packet.TechType == TechType.Exosuit)
+                    {
+                        entity.Component = new WorldEntityModel.Exosuit();
+                    }
+                    else if (packet.TechType.IsSeaTruckModule(true))
+                    {
+                        entity.Component = new WorldEntityModel.SeaTruck().Initialize(null);
+                    }
+
+                    Server.Instance.Storages.World.AddWorldDynamicEntity(entity);
+                    packet.Vehicle = entity;
                 }
-
-                if (entity == null)
+                else
                 {
-                    if (packet.TechType == TechType.Hoverbike || packet.TechType.IsSeaTruckModule(true))
-                    {
-                        entity = new WorldDynamicEntity()
-                        {
-                            UniqueId   = packet.UniqueId,
-                            TechType   = packet.TechType,
-                            Position   = profile.Position,
-                            Rotation   = profile.Rotation,
-                            IsDeployed = true,
-                        };
-
-                        if (packet.TechType == TechType.Hoverbike)
-                        {
-                            entity.Component = new WorldEntityModel.Hoverbike();
-                        }
-                        else if (packet.TechType.IsSeaTruckModule(true))
-                        {
-                            entity.Component = new WorldEntityModel.SeaTruck().Initialize(null);
-                        }
-
-                        Server.Instance.Storages.World.AddWorldDynamicEntity(entity);
-                        packet.Vehicle = entity;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
             

@@ -82,6 +82,11 @@ namespace Subnautica.API.Features
                 else
                 {
                     Network.Identifier.SetIdentityId(gameObject, entity.UniqueId);
+                    var childVehicle = gameObject.GetComponentInChildren<global::Vehicle>();
+                    if (childVehicle != null && childVehicle.gameObject != gameObject)
+                    {
+                        Network.Identifier.SetIdentityId(childVehicle.gameObject, entity.UniqueId);
+                    }
 
                     gameObject.transform.position = entity.Position.ToVector3();
                     gameObject.transform.rotation = entity.Rotation.ToQuaternion();
